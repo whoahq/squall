@@ -1,0 +1,50 @@
+---
+Language: Cpp
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: Never
+AlwaysBreakTemplateDeclarations: Yes
+BraceWrapping:
+  AfterCaseLabel: false
+  AfterClass: false
+  AfterControlStatement: Never
+  AfterEnum: false
+  AfterFunction: false
+  AfterStruct: false
+  AfterUnion: false
+  BeforeElse: false
+BreakBeforeTernaryOperators: true
+BreakConstructorInitializers: BeforeComma
+ColumnLimit: 0
+ContinuationIndentWidth: 4
+DeriveLineEnding: false
+DerivePointerAlignment: false
+IncludeBlocks: Merge
+IncludeCategories:
+  - Regex: '^"(llvm|llvm-c|clang|clang-c)/'
+    Priority: 2
+    SortPriority: 2
+  - Regex: '^(<|"(gtest|gmock|isl|json)/)'
+    Priority: 3
+  - Regex: "<[[:alnum:].]+>"
+    Priority: 4
+  - Regex: ".*"
+    Priority: 1
+    SortPriority: 0
+IndentGotoLabels: false
+IndentWidth: 4
+MaxEmptyLinesToKeep: 1
+PointerAlignment: Left
+SortIncludes: true
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyBlock: false
+SpacesInAngles: false
+SpacesInCStyleCastParentheses: false
+SpacesInConditionalStatement: false
+Standard: c++11
+UseCRLF: false
+UseTab: Never
