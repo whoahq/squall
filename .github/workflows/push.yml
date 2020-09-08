@@ -37,3 +37,6 @@ jobs:
 
       - name: Build
         run: cd build && make
+
+      - name: Test
+        run: ./build/test/StormTest
