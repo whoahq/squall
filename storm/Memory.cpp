@@ -61,6 +61,6 @@ void* SMemReAlloc(void* ptr, size_t bytes, const char* filename, int32_t linenum
             // TODO handle errors
         }
 
-        return NULL;
+        return nullptr;
     }
 }
