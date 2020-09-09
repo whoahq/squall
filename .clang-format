@@ -1,5 +1,6 @@
 ---
 Language: Cpp
+AccessModifierOffset: 0
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
 AllowShortBlocksOnASingleLine: Never
