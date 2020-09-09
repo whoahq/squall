@@ -1,5 +1,4 @@
 ---
-Language: Cpp
 AccessModifierOffset: 0
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
@@ -37,6 +36,9 @@ IncludeCategories:
 IndentGotoLabels: false
 IndentWidth: 4
 MaxEmptyLinesToKeep: 1
+ObjCBlockIndentWidth: 4
+ObjCSpaceAfterProperty: false
+ObjCSpaceBeforeProtocolList: false
 PointerAlignment: Left
 SortIncludes: true
 SpaceBeforeCtorInitializerColon: true
