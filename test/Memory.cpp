@@ -1,5 +1,5 @@
-#include "Test.hpp"
 #include "Memory.hpp"
+#include "Test.hpp"
 
 TEST_CASE("SMemAlloc", "[memory]") {
     SECTION("allocates memory") {

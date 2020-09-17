@@ -1,5 +1,5 @@
-#include "Test.hpp"
 #include "List.hpp"
+#include "Test.hpp"
 
 struct TestListNode : TSLinkedNode<TestListNode> {
     uint32_t index = 0;
@@ -21,6 +21,6 @@ TEST_CASE("TSList::LinkToHead", "[list]") {
 
         REQUIRE(list.Head() == node);
 
-        delete(node);
+        delete node;
     }
 }
