@@ -24,33 +24,6 @@ TEST_CASE("TSList::LinkToHead", "[list]") {
         delete node;
     }
 
-    SECTION("links node to tail correctly") {
-        STORM_LIST(TestListNode) list;
-
-        auto node = new TestListNode();
-        list.LinkToTail(node);
-
-        REQUIRE(list.Tail() == node);
-
-        delete node;
-    }
-
-    SECTION("links nodes to head and tail correctly") {
-        STORM_LIST(TestListNode) list;
-
-        auto node1 = new TestListNode();
-        list.LinkToHead(node1);
-
-        auto node2 = new TestListNode();
-        list.LinkToTail(node2);
-
-        REQUIRE(list.Head() == node1);
-        REQUIRE(list.Tail() == node2);
-
-        delete node1;
-        delete node2;
-    }
-
     SECTION("links multiple nodes to head correctly") {
         STORM_LIST(TestListNode) list;
 
@@ -62,6 +35,67 @@ TEST_CASE("TSList::LinkToHead", "[list]") {
 
         REQUIRE(list.Head() == node2);
         REQUIRE(list.Tail() == node1);
+
+        delete node1;
+        delete node2;
+    }
+
+    SECTION("links node to head after linking node to tail correctly") {
+        STORM_LIST(TestListNode) list;
+
+        auto node1 = new TestListNode();
+        list.LinkToTail(node1);
+
+        auto node2 = new TestListNode();
+        list.LinkToHead(node2);
+
+        REQUIRE(list.Head() == node2);
+        REQUIRE(list.Tail() == node1);
+
+        delete node1;
+        delete node2;
+    }
+}
+
+TEST_CASE("TSList::LinkToTail", "[list]") {
+    SECTION("links node to tail correctly") {
+        STORM_LIST(TestListNode) list;
+
+        auto node = new TestListNode();
+        list.LinkToTail(node);
+
+        REQUIRE(list.Tail() == node);
+
+        delete node;
+    }
+
+    SECTION("links multiple nodes to tail correctly") {
+        STORM_LIST(TestListNode) list;
+
+        auto node1 = new TestListNode();
+        list.LinkToTail(node1);
+
+        auto node2 = new TestListNode();
+        list.LinkToTail(node2);
+
+        REQUIRE(list.Head() == node1);
+        REQUIRE(list.Tail() == node2);
+
+        delete node1;
+        delete node2;
+    }
+
+    SECTION("links node to tail after linking node to head correctly") {
+        STORM_LIST(TestListNode) list;
+
+        auto node1 = new TestListNode();
+        list.LinkToHead(node1);
+
+        auto node2 = new TestListNode();
+        list.LinkToTail(node2);
+
+        REQUIRE(list.Head() == node1);
+        REQUIRE(list.Tail() == node2);
 
         delete node1;
         delete node2;
