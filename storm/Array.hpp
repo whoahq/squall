@@ -3,5 +3,6 @@
 
 #include "array/TSBaseArray.hpp"
 #include "array/TSFixedArray.hpp"
+#include "array/TSGrowableArray.hpp"
 
 #endif

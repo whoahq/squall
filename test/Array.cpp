@@ -14,3 +14,10 @@ TEST_CASE("TSFixedArray", "[list]") {
         REQUIRE(array.Count() == 0);
     }
 }
+
+TEST_CASE("TSGrowableArray", "[list]") {
+    SECTION("constructs correctly") {
+        TSGrowableArray<uint32_t> array;
+        REQUIRE(array.Count() == 0);
+    }
+}
