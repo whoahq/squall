@@ -12,6 +12,13 @@ TEST_CASE("TSList", "[list]") {
     }
 }
 
+TEST_CASE("TSList::Head", "[list]") {
+    SECTION("returns nullptr for uninitialized list") {
+        STORM_LIST(TestListNode) list;
+        REQUIRE(list.Head() == nullptr);
+    }
+}
+
 TEST_CASE("TSList::LinkToHead", "[list]") {
     SECTION("links node to head correctly") {
         STORM_LIST(TestListNode) list;
@@ -99,5 +106,12 @@ TEST_CASE("TSList::LinkToTail", "[list]") {
 
         delete node1;
         delete node2;
+    }
+}
+
+TEST_CASE("TSList::Tail", "[list]") {
+    SECTION("returns nullptr for uninitialized list") {
+        STORM_LIST(TestListNode) list;
+        REQUIRE(list.Tail() == nullptr);
     }
 }
