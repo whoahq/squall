@@ -7,3 +7,10 @@ TEST_CASE("TSBaseArray", "[list]") {
         REQUIRE(array.Count() == 0);
     }
 }
+
+TEST_CASE("TSFixedArray", "[list]") {
+    SECTION("constructs correctly") {
+        TSFixedArray<uint32_t> array;
+        REQUIRE(array.Count() == 0);
+    }
+}
