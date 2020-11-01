@@ -1,4 +1,4 @@
-#include "thread/SEvent.hpp"
+#include "storm/thread/SEvent.hpp"
 
 SEvent::SEvent(int32_t manualReset, int32_t initialValue)
     : SSyncObject() {

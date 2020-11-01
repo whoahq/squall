@@ -19,5 +19,5 @@ add_library(storm STATIC
 
 target_include_directories(storm
     PRIVATE
-        ${CMAKE_SOURCE_DIR}/storm
+        ${PROJECT_SOURCE_DIR}
 )

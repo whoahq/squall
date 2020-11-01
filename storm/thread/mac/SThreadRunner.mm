@@ -1,5 +1,5 @@
-#include "thread/mac/SThreadRunner.h"
-#include "thread/S_Thread.hpp"
+#include "storm/thread/mac/SThreadRunner.h"
+#include "storm/thread/S_Thread.hpp"
 
 @implementation SThreadRunner
 

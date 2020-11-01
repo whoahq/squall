@@ -1,4 +1,4 @@
-#include "thread/SSyncObject.hpp"
+#include "storm/thread/SSyncObject.hpp"
 
 #if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX)
 #include <cerrno>

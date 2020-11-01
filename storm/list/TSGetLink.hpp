@@ -1,8 +1,8 @@
 #ifndef STORM_LIST_TS_GET_LINK_HPP
 #define STORM_LIST_TS_GET_LINK_HPP
 
-#include "list/TSLink.hpp"
-#include "list/TSLinkedNode.hpp"
+#include "storm/list/TSLink.hpp"
+#include "storm/list/TSLinkedNode.hpp"
 #include <cstddef>
 #include <cstdint>
 

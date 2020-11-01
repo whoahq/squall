@@ -1,7 +1,7 @@
 #ifndef STORM_ARRAY_TS_GROWABLE_ARRAY_HPP
 #define STORM_ARRAY_TS_GROWABLE_ARRAY_HPP
 
-#include "array/TSFixedArray.hpp"
+#include "storm/array/TSFixedArray.hpp"
 #include <algorithm>
 #include <cstdint>
 #include <cstring>

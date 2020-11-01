@@ -1,8 +1,8 @@
-#include "Thread.hpp"
-#include "Memory.hpp"
-#include "String.hpp"
-#include "thread/S_Thread.hpp"
-#include "thread/mac/SThreadRunner.h"
+#include "storm/Thread.hpp"
+#include "storm/Memory.hpp"
+#include "storm/String.hpp"
+#include "storm/thread/S_Thread.hpp"
+#include "storm/thread/mac/SThreadRunner.h"
 #include <new>
 
 int32_t SCreateThread(uint32_t (*threadProc)(void*), void* threadParam, void* a3, SThread* syncObject, const char* threadName) {

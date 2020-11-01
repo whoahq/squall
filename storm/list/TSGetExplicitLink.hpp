@@ -1,7 +1,7 @@
 #ifndef STORM_LIST_TS_GET_EXPLICIT_LINK_HPP
 #define STORM_LIST_TS_GET_EXPLICIT_LINK_HPP
 
-#include "list/TSLink.hpp"
+#include "storm/list/TSLink.hpp"
 #include <cstddef>
 #include <cstdint>
 

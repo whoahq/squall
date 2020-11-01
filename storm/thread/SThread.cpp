@@ -1,5 +1,5 @@
-#include "thread/SThread.hpp"
-#include "Thread.hpp"
+#include "storm/thread/SThread.hpp"
+#include "storm/Thread.hpp"
 
 int32_t SThread::Create(uint32_t (*threadProc)(void*), void* param, SThread& thread, char* threadName, uint32_t a5) {
 #if defined(PLATFORM_WIN)

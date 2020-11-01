@@ -1,5 +1,5 @@
-#include "Array.hpp"
-#include "Test.hpp"
+#include "storm/Array.hpp"
+#include "test/Test.hpp"
 
 TEST_CASE("TSBaseArray", "[list]") {
     SECTION("constructs correctly") {

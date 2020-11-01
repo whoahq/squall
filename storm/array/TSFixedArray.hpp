@@ -1,8 +1,8 @@
 #ifndef STORM_ARRAY_TS_FIXED_ARRAY_HPP
 #define STORM_ARRAY_TS_FIXED_ARRAY_HPP
 
-#include "array/TSBaseArray.hpp"
-#include "Memory.hpp"
+#include "storm/array/TSBaseArray.hpp"
+#include "storm/Memory.hpp"
 #include <cstdint>
 
 template<class T>

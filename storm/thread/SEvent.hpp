@@ -1,7 +1,7 @@
 #ifndef STORM_THREAD_S_EVENT_HPP
 #define STORM_THREAD_S_EVENT_HPP
 
-#include "thread/SSyncObject.hpp"
+#include "storm/thread/SSyncObject.hpp"
 #include <cstdint>
 
 class SEvent : public SSyncObject {

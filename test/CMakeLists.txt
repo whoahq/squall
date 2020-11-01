@@ -27,8 +27,7 @@ endif()
 
 target_include_directories(StormTest
     PRIVATE
-        ${CMAKE_SOURCE_DIR}/storm
-        ${CMAKE_SOURCE_DIR}/test
+        ${PROJECT_SOURCE_DIR}
 )
 
 install(TARGETS StormTest DESTINATION "bin")

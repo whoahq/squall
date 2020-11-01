@@ -1,7 +1,7 @@
 #ifndef STORM_LIST_TS_LINKED_NODE_HPP
 #define STORM_LIST_TS_LINKED_NODE_HPP
 
-#include "list/TSLink.hpp"
+#include "storm/list/TSLink.hpp"
 
 template <class T>
 class TSLinkedNode {

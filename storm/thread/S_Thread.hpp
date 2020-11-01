@@ -1,7 +1,7 @@
 #ifndef STORM_THREAD_S__THREAD_HPP
 #define STORM_THREAD_S__THREAD_HPP
 
-#include "thread/SThread.hpp"
+#include "storm/thread/SThread.hpp"
 #include <cstdint>
 
 typedef SThread SyncObjectData;

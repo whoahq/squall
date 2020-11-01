@@ -1,5 +1,5 @@
-#include "String.hpp"
-#include "Error.hpp"
+#include "storm/String.hpp"
+#include "storm/Error.hpp"
 
 size_t SStrCopy(char* dest, const char* source, size_t destsize) {
     STORM_ASSERT(dest);

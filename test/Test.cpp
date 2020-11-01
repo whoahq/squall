@@ -1,2 +1,2 @@
 #define CATCH_CONFIG_MAIN
-#include "Test.hpp"
+#include "test/Test.hpp"

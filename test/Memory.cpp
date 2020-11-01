@@ -1,5 +1,5 @@
-#include "Memory.hpp"
-#include "Test.hpp"
+#include "storm/Memory.hpp"
+#include "test/Test.hpp"
 
 TEST_CASE("SMemAlloc", "[memory]") {
     SECTION("allocates memory") {

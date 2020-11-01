@@ -1,4 +1,4 @@
-#include "thread/SCritSect.hpp"
+#include "storm/thread/SCritSect.hpp"
 
 void SCritSect::Enter() {
 #if defined(PLATFORM_WIN)
