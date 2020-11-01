@@ -18,6 +18,6 @@ add_library(storm STATIC
 )
 
 target_include_directories(storm
-    PRIVATE
+    PUBLIC
         ${PROJECT_SOURCE_DIR}
 )
