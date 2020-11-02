@@ -1,6 +1,7 @@
 #ifndef STORM_THREAD_HPP
 #define STORM_THREAD_HPP
 
+#include "storm/thread/CSRWLock.hpp"
 #include "storm/thread/SCritSect.hpp"
 #include "storm/thread/SEvent.hpp"
 #include "storm/thread/SSyncObject.hpp"
