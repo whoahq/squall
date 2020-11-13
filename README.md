@@ -1,6 +1,6 @@
-# Storm
+# Squall
 
-This project is an unofficial open source implementation of the Storm standard
+Squall is an unofficial open source implementation of the Storm standard
 library circa 2010.
 
 The Storm standard library is a collection of data structures and functions
