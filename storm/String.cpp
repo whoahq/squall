@@ -134,7 +134,7 @@ size_t SStrCopy(char* dest, const char* source, size_t destsize) {
 
     char* destbuf = dest;
 
-    if (destsize == 0x7FFFFFFF) {
+    if (destsize == STORM_MAX_STR) {
         while (*source) {
             *destbuf = *source;
 
