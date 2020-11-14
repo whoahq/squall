@@ -1,6 +1,25 @@
 #include "storm/String.hpp"
 #include "test/Test.hpp"
 
+TEST_CASE("SStrCmp", "[string]") {
+    SECTION("compares two strings that exactly match correctly") {
+        auto compare = SStrCmp("foo", "foo", STORM_MAX_STR);
+        REQUIRE(compare == 0);
+    }
+
+    SECTION("compares two strings that partially match correctly") {
+        auto compare1 = SStrCmp("bar", "foobar", STORM_MAX_STR);
+        auto compare2 = SStrCmp("foobar", "bar", STORM_MAX_STR);
+        REQUIRE(compare1 < 0);
+        REQUIRE(compare2 > 0);
+    }
+
+    SECTION("compares two strings that do not match correctly") {
+        auto compare = SStrCmp("bar", "xyzzy", STORM_MAX_STR);
+        REQUIRE(compare < 0);
+    }
+}
+
 TEST_CASE("SStrHashHT", "[string]") {
     SECTION("hashes simple string correctly") {
         auto hash = SStrHashHT("foo");
