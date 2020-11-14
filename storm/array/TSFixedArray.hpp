@@ -1,18 +1,18 @@
 #ifndef STORM_ARRAY_TS_FIXED_ARRAY_HPP
 #define STORM_ARRAY_TS_FIXED_ARRAY_HPP
 
-#include "storm/array/TSBaseArray.hpp"
 #include "storm/Memory.hpp"
+#include "storm/array/TSBaseArray.hpp"
 #include <cstdint>
 
-template<class T>
+template <class T>
 class TSFixedArray : public TSBaseArray<T> {
     public:
     void ReallocData(uint32_t count);
     void SetCount(uint32_t count);
 };
 
-template<class T>
+template <class T>
 void TSFixedArray<T>::ReallocData(uint32_t count) {
     T* oldData = this->m_data;
 
@@ -47,7 +47,7 @@ void TSFixedArray<T>::ReallocData(uint32_t count) {
     }
 }
 
-template<class T>
+template <class T>
 void TSFixedArray<T>::SetCount(uint32_t count) {
     if (count != this->m_count) {
         if (count) {

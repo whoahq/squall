@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-template<class T>
+template <class T>
 class TSBaseArray {
     public:
     uint32_t m_alloc = 0;
@@ -15,17 +15,17 @@ class TSBaseArray {
     void Clear(void);
 };
 
-template<class T>
+template <class T>
 T& TSBaseArray<T>::operator[](uint32_t i) {
     return this->m_data[i];
 }
 
-template<class T>
+template <class T>
 uint32_t TSBaseArray<T>::Count() {
     return this->m_count;
 }
 
-template<class T>
+template <class T>
 void TSBaseArray<T>::Clear() {
     delete[] this->m_data;
     TSBaseArray<T>();

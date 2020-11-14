@@ -6,19 +6,12 @@ AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: false
 AllowShortIfStatementsOnASingleLine: Never
 AlwaysBreakTemplateDeclarations: Yes
-BraceWrapping:
-  AfterCaseLabel: false
-  AfterClass: false
-  AfterControlStatement: Never
-  AfterEnum: false
-  AfterFunction: false
-  AfterStruct: false
-  AfterUnion: false
-  BeforeElse: false
+BreakBeforeBraces: Attach
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
 ColumnLimit: 0
 ContinuationIndentWidth: 4
+Cpp11BracedListStyle: false
 DeriveLineEnding: false
 DerivePointerAlignment: false
 IncludeBlocks: Merge
@@ -50,5 +43,6 @@ SpacesInCStyleCastParentheses: false
 SpacesInConditionalStatement: false
 Standard: c++11
 TabWidth: 4
+TypenameMacros: ['STORM_EXPLICIT_LIST', 'STORM_LIST']
 UseCRLF: false
 UseTab: Never

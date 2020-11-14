@@ -7,7 +7,7 @@
 #include <cstring>
 #include <new>
 
-template<class T>
+template <class T>
 class TSGrowableArray : public TSFixedArray<T> {
     public:
     uint32_t m_chunk = 0;
@@ -22,7 +22,7 @@ class TSGrowableArray : public TSFixedArray<T> {
     void SetCount(uint32_t count);
 };
 
-template<class T>
+template <class T>
 uint32_t TSGrowableArray<T>::Add(uint32_t count, const T* data) {
     this->Reserve(count, 1);
 
@@ -35,7 +35,7 @@ uint32_t TSGrowableArray<T>::Add(uint32_t count, const T* data) {
     return this->m_count - count;
 }
 
-template<class T>
+template <class T>
 uint32_t TSGrowableArray<T>::Add(uint32_t count, uint32_t incr, const T* data) {
     this->Reserve(count, 1);
 
@@ -51,7 +51,7 @@ uint32_t TSGrowableArray<T>::Add(uint32_t count, uint32_t incr, const T* data) {
     return this->m_count - count;
 }
 
-template<class T>
+template <class T>
 uint32_t TSGrowableArray<T>::CalcChunkSize(uint32_t count) {
     uint32_t maxChunk = std::max(static_cast<int32_t>(256 / sizeof(T)), 8);
 
@@ -73,7 +73,7 @@ uint32_t TSGrowableArray<T>::CalcChunkSize(uint32_t count) {
     return result;
 }
 
-template<class T>
+template <class T>
 void TSGrowableArray<T>::GrowToFit(uint32_t index, int32_t zero) {
     uint32_t count = this->m_count;
 
@@ -88,14 +88,14 @@ void TSGrowableArray<T>::GrowToFit(uint32_t index, int32_t zero) {
     }
 }
 
-template<class T>
+template <class T>
 T* TSGrowableArray<T>::New() {
     this->Reserve(1, 1);
     void* element = &this->m_data[this->m_count++];
     return new (element) T();
 }
 
-template<class T>
+template <class T>
 void TSGrowableArray<T>::Reserve(uint32_t count, int32_t round) {
     if (count + this->m_count > this->m_alloc) {
         if (round) {
@@ -112,7 +112,7 @@ void TSGrowableArray<T>::Reserve(uint32_t count, int32_t round) {
     }
 }
 
-template<class T>
+template <class T>
 uint32_t TSGrowableArray<T>::RoundToChunk(uint32_t count, uint32_t chunk) {
     if (count % chunk) {
         return chunk - count % chunk + count;
@@ -121,7 +121,7 @@ uint32_t TSGrowableArray<T>::RoundToChunk(uint32_t count, uint32_t chunk) {
     }
 }
 
-template<class T>
+template <class T>
 void TSGrowableArray<T>::SetCount(uint32_t count) {
     if (count > this->m_count) {
         // Expand size
