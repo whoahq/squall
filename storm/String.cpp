@@ -2,6 +2,7 @@
 #include "storm/Error.hpp"
 #include "storm/string/bjhash.hpp"
 #include <cstring>
+#include <strings.h>
 
 uint8_t bytesFromUTF8[256] = {
     0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -131,6 +132,10 @@ void GetNextTextUpper(uint32_t* orig, const char** string, uint32_t* upper) {
 
 int32_t SStrCmp(const char* string1, const char* string2, size_t maxchars) {
     return strncmp(string1, string2, maxchars);
+}
+
+int32_t SStrCmpI(const char* string1, const char* string2, size_t maxchars) {
+    return strncasecmp(string1, string2, maxchars);
 }
 
 size_t SStrCopy(char* dest, const char* source, size_t destsize) {

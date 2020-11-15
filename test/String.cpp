@@ -20,6 +20,23 @@ TEST_CASE("SStrCmp", "[string]") {
     }
 }
 
+TEST_CASE("SStrCmpI", "[string]") {
+    SECTION("compares two strings that exactly match correctly") {
+        auto compare = SStrCmpI("foo", "foo", STORM_MAX_STR);
+        REQUIRE(compare == 0);
+    }
+
+    SECTION("compares two strings that match with differing case correctly") {
+        auto compare = SStrCmpI("foo", "foO", STORM_MAX_STR);
+        REQUIRE(compare == 0);
+    }
+
+    SECTION("compares two strings that do not match correctly") {
+        auto compare = SStrCmpI("bar", "xyzzy", STORM_MAX_STR);
+        REQUIRE(compare < 0);
+    }
+}
+
 TEST_CASE("SStrHashHT", "[string]") {
     SECTION("hashes simple string correctly") {
         auto hash = SStrHashHT("foo");
