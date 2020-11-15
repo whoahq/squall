@@ -1,5 +1,6 @@
 #include "storm/String.hpp"
 #include "storm/Error.hpp"
+#include "storm/Memory.hpp"
 #include "storm/string/bjhash.hpp"
 #include <cstring>
 #include <strings.h>
@@ -169,6 +170,14 @@ size_t SStrCopy(char* dest, const char* source, size_t destsize) {
 
     *destbuf = '\0';
     return static_cast<size_t>(destbuf - dest);
+}
+
+char* SStrDupA(const char* string, const char* filename, uint32_t linenumber) {
+    size_t len = SStrLen(string) + 1;
+    char* dup = static_cast<char*>(SMemAlloc(len, filename, linenumber, 0x0));
+    memcpy(dup, string, len);
+
+    return dup;
 }
 
 uint32_t SStrHashHT(const char* string) {

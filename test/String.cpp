@@ -1,4 +1,5 @@
 #include "storm/String.hpp"
+#include "storm/Memory.hpp"
 #include "test/Test.hpp"
 
 TEST_CASE("SStrCmp", "[string]") {
@@ -34,6 +35,19 @@ TEST_CASE("SStrCmpI", "[string]") {
     SECTION("compares two strings that do not match correctly") {
         auto compare = SStrCmpI("bar", "xyzzy", STORM_MAX_STR);
         REQUIRE(compare < 0);
+    }
+}
+
+TEST_CASE("SStrDupA", "[string]") {
+    SECTION("duplicates string correctly") {
+        auto string1 = "foo bar";
+        auto string2 = SStrDupA(string1, __FILE__, __LINE__);
+        auto compare = SStrCmp(string1, string2, STORM_MAX_STR);
+        auto newPtr = string1 != string2;
+        SMemFree(string2);
+
+        REQUIRE(compare == 0);
+        REQUIRE(newPtr == true);
     }
 }
 
