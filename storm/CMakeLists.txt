@@ -1,5 +1,6 @@
 file(GLOB STORM_SOURCES
     "*.cpp"
+    "hash/*.cpp"
     "string/*.cpp"
     "thread/*.cpp"
 )
