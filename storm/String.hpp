@@ -15,4 +15,6 @@ size_t SStrCopy(char* dest, const char* source, size_t destsize);
 
 uint32_t SStrHashHT(const char* string);
 
+size_t SStrLen(const char* string);
+
 #endif

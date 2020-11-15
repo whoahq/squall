@@ -54,3 +54,10 @@ TEST_CASE("SStrHashHT", "[string]") {
         REQUIRE(hashForwardSlash == hashBackSlash);
     }
 }
+
+TEST_CASE("SStrLen", "[string]") {
+    SECTION("calculates string length correctly") {
+        auto length = SStrLen("foo");
+        REQUIRE(length == 3);
+    }
+}

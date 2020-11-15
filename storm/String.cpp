@@ -201,3 +201,12 @@ uint32_t SStrHashHT(const char* string) {
 
     return bjhash((uint8_t*)&normalized, length, 0);
 }
+
+size_t SStrLen(const char* string) {
+    STORM_ASSERT(string);
+
+    const char* c;
+    for (c = string; *c; ++c)
+        ;
+    return c - string;
+}
