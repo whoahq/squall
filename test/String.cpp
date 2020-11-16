@@ -91,6 +91,20 @@ TEST_CASE("SStrStr", "[string]") {
         REQUIRE(!SStrCmp(search, substring, SStrLen(search)));
     }
 
+    SECTION("finds substring when search is empty") {
+        auto string = "foobar";
+        auto search = "";
+        auto substring = SStrStr(string, search);
+        REQUIRE(!SStrCmp(string, substring, SStrLen(string)));
+    }
+
+    SECTION("returns nullptr when search does not exist in string") {
+        auto string = "foobar";
+        auto search = "xyzzy";
+        auto substring = SStrStr(string, search);
+        REQUIRE(substring == nullptr);
+    }
+
     SECTION("returns nullptr when given empty string") {
         auto string = "";
         auto search = "bar";

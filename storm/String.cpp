@@ -234,8 +234,12 @@ const char* SStrStr(const char* string, const char* search) {
         return nullptr;
     }
 
-    while (*substring && SStrCmp(substring, search, length)) {
+    while (SStrCmp(substring, search, length)) {
         substring++;
+
+        if (!*substring) {
+            return nullptr;
+        }
     }
 
     return substring;
