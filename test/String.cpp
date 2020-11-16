@@ -75,3 +75,26 @@ TEST_CASE("SStrLen", "[string]") {
         REQUIRE(length == 3);
     }
 }
+
+TEST_CASE("SStrStr", "[string]") {
+    SECTION("finds substring when it exists at end of string") {
+        auto string = "foobar";
+        auto search = "bar";
+        auto substring = SStrStr(string, search);
+        REQUIRE(!SStrCmp(search, substring, SStrLen(search)));
+    }
+
+    SECTION("finds substring when it exists at start of string") {
+        auto string = "foobar";
+        auto search = "foo";
+        auto substring = SStrStr(string, search);
+        REQUIRE(!SStrCmp(search, substring, SStrLen(search)));
+    }
+
+    SECTION("returns nullptr when given empty string") {
+        auto string = "";
+        auto search = "bar";
+        auto substring = SStrStr(string, search);
+        REQUIRE(substring == nullptr);
+    }
+}

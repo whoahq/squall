@@ -219,3 +219,24 @@ size_t SStrLen(const char* string) {
         ;
     return c - string;
 }
+
+const char* SStrStr(const char* string, const char* search) {
+    STORM_ASSERT(string);
+    STORM_ASSERT(search);
+
+    const char* i;
+    for (i = search; *i; ++i);
+    size_t length = i - search;
+
+    const char* substring = string;
+
+    if (!*substring) {
+        return nullptr;
+    }
+
+    while (*substring && SStrCmp(substring, search, length)) {
+        substring++;
+    }
+
+    return substring;
+}
