@@ -222,10 +222,9 @@ size_t SStrLen(const char* string) {
 }
 
 void SStrLower(char* string) {
-    char* tmp = string;
-
-    for (; *tmp; tmp++) {
-        *tmp = static_cast<char>(tolower(*tmp));
+    while (*string) {
+        *string = static_cast<char>(tolower(*string));
+        string++;
     }
 }
 
