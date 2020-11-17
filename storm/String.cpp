@@ -233,18 +233,19 @@ const char* SStrStr(const char* string, const char* search) {
     STORM_ASSERT(string);
     STORM_ASSERT(search);
 
-    const char* i;
-    for (i = search; *i; ++i)
-        ;
-    size_t length = i - search;
-
-    const char* substring = string;
-
-    if (!*substring) {
+    if (!*string) {
         return nullptr;
     }
 
-    while (SStrCmp(substring, search, length)) {
+    auto searchEnd = search;
+    while (*searchEnd) {
+        searchEnd++;
+    }
+    size_t searchLength = searchEnd - search;
+
+    auto substring = string;
+
+    while (SStrCmp(substring, search, searchLength)) {
         substring++;
 
         if (!*substring) {
