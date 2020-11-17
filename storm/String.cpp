@@ -2,6 +2,7 @@
 #include "storm/Error.hpp"
 #include "storm/Memory.hpp"
 #include "storm/string/bjhash.hpp"
+#include <cctype>
 #include <cstring>
 #include <strings.h>
 
@@ -218,6 +219,14 @@ size_t SStrLen(const char* string) {
     for (c = string; *c; ++c)
         ;
     return c - string;
+}
+
+void SStrLower(char* string) {
+    char* tmp = string;
+
+    for (; *tmp; tmp++) {
+        *tmp = static_cast<char>(tolower(*tmp));
+    }
 }
 
 const char* SStrStr(const char* string, const char* search) {

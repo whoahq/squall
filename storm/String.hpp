@@ -19,6 +19,8 @@ uint32_t SStrHashHT(const char* string);
 
 size_t SStrLen(const char* string);
 
+void SStrLower(char* string);
+
 const char* SStrStr(const char* string, const char* search);
 
 #endif

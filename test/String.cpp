@@ -76,6 +76,30 @@ TEST_CASE("SStrLen", "[string]") {
     }
 }
 
+TEST_CASE("SStrLower", "[string]") {
+    SECTION("rewrites uppercase string to lowercase correctly") {
+        auto upper = "FOOBAR";
+        char* lower = static_cast<char*>(SMemAlloc(SStrLen(upper) + 1, __FILE__, __LINE__, 0x0));
+        SStrCopy(lower, upper, STORM_MAX_STR);
+        SStrLower(lower);
+        auto compare = SStrCmp(lower, "foobar", SStrLen(lower));
+        SMemFree(lower);
+
+        REQUIRE(!compare);
+    }
+
+    SECTION("rewrites lowercase string to lowercase correctly") {
+        auto lower1 = "foobar";
+        char* lower2 = static_cast<char*>(SMemAlloc(SStrLen(lower1) + 1, __FILE__, __LINE__, 0x0));
+        SStrCopy(lower2, lower1, STORM_MAX_STR);
+        SStrLower(lower2);
+        auto compare = SStrCmp(lower2, "foobar", SStrLen(lower2));
+        SMemFree(lower2);
+
+        REQUIRE(!compare);
+    }
+}
+
 TEST_CASE("SStrStr", "[string]") {
     SECTION("finds substring when it exists at end of string") {
         auto string = "foobar";
