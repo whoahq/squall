@@ -225,7 +225,8 @@ const char* SStrStr(const char* string, const char* search) {
     STORM_ASSERT(search);
 
     const char* i;
-    for (i = search; *i; ++i);
+    for (i = search; *i; ++i)
+        ;
     size_t length = i - search;
 
     const char* substring = string;
