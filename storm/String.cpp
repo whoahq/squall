@@ -215,10 +215,12 @@ uint32_t SStrHashHT(const char* string) {
 size_t SStrLen(const char* string) {
     STORM_ASSERT(string);
 
-    const char* c;
-    for (c = string; *c; ++c)
-        ;
-    return c - string;
+    auto stringEnd = string;
+    while (*stringEnd) {
+        stringEnd++;
+    }
+
+    return stringEnd - string;
 }
 
 void SStrLower(char* string) {
