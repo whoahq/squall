@@ -337,7 +337,7 @@ float SStrToFloat(const char* string) {
     SStrInitialize();
 
     double result;
-    bool negative;
+    bool negative = false;
 
     if (*string == '-') {
         negative = true;
