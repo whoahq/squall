@@ -218,6 +218,68 @@ TEST_CASE("SStrStr", "[string]") {
     }
 }
 
+TEST_CASE("SStrToFloat", "[string]") {
+    SECTION("converts empty string to float") {
+        auto string = "";
+        auto result = SStrToFloat(string);
+        REQUIRE(result == 0.0f);
+    }
+
+    SECTION("converts whitespace string to float") {
+        auto string = " ";
+        auto result = SStrToFloat(string);
+        REQUIRE(result == 0.0f);
+    }
+
+    SECTION("converts string with positive int to float") {
+        auto string = "123";
+        auto result = SStrToFloat(string);
+        REQUIRE(result == 123.0f);
+    }
+
+    SECTION("converts string with negative int to float") {
+        auto string = "-123";
+        auto result = SStrToFloat(string);
+        REQUIRE(result == -123.0f);
+    }
+
+    SECTION("converts string with positive float to float") {
+        auto string = "1.5";
+        auto result = SStrToFloat(string);
+        REQUIRE(result == 1.5f);
+    }
+
+    SECTION("converts string with negative float to float") {
+        auto string = "-1.5";
+        auto result = SStrToFloat(string);
+        REQUIRE(result == -1.5f);
+    }
+
+    SECTION("converts string with float and positive exponent to float") {
+        auto string = "1.5e3";
+        auto result = SStrToFloat(string);
+        REQUIRE(result == 1500.0f);
+    }
+
+    SECTION("converts string with float and negative exponent to float") {
+        auto string = "1500.0e-3";
+        auto result = SStrToFloat(string);
+        REQUIRE(result == 1.5f);
+    }
+
+    SECTION("converts string with zero to float") {
+        auto string = "0";
+        auto result = SStrToFloat(string);
+        REQUIRE(result == 0.0f);
+    }
+
+    SECTION("converts string with leading zero to float") {
+        auto string = "01";
+        auto result = SStrToFloat(string);
+        REQUIRE(result == 1.0f);
+    }
+}
+
 TEST_CASE("SStrToInt", "[string]") {
     SECTION("converts empty string to int") {
         auto string = "";
