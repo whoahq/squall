@@ -2,6 +2,43 @@
 #include "storm/Memory.hpp"
 #include "test/Test.hpp"
 
+TEST_CASE("SStrChr", "[string]") {
+    SECTION("finds first character when it exists at start of string") {
+        auto string = "foobar";
+        auto search = 'f';
+        auto result = SStrChr(string, search);
+        REQUIRE(result == string);
+    }
+
+    SECTION("finds first character when it exists in middle of string") {
+        auto string = "foobar";
+        auto search = 'b';
+        auto result = SStrChr(string, search);
+        REQUIRE(result == string + 3);
+    }
+
+    SECTION("finds first character when it exists at end of string") {
+        auto string = "foobar";
+        auto search = 'r';
+        auto result = SStrChr(string, search);
+        REQUIRE(result == string + 5);
+    }
+
+    SECTION("returns nullptr when character does not exist in string") {
+        auto string = "foobar";
+        auto search = 'z';
+        auto result = SStrChr(string, search);
+        REQUIRE(result == nullptr);
+    }
+
+    SECTION("returns nullptr when string is empty") {
+        auto string = "";
+        auto search = 'z';
+        auto result = SStrChr(string, search);
+        REQUIRE(result == nullptr);
+    }
+}
+
 TEST_CASE("SStrCmp", "[string]") {
     SECTION("compares two strings that exactly match correctly") {
         auto compare = SStrCmp("foo", "foo", STORM_MAX_STR);

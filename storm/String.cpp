@@ -132,6 +132,24 @@ void GetNextTextUpper(uint32_t* orig, const char** string, uint32_t* upper) {
     }
 }
 
+const char* SStrChr(const char* string, char search) {
+    STORM_ASSERT(string);
+
+    if (!*string) {
+        return nullptr;
+    }
+
+    while (*string != search) {
+        string++;
+
+        if (!*string) {
+            return nullptr;
+        }
+    }
+
+    return string;
+}
+
 int32_t SStrCmp(const char* string1, const char* string2, size_t maxchars) {
     return strncmp(string1, string2, maxchars);
 }

@@ -7,6 +7,8 @@
 #define STORM_MAX_PATH 260
 #define STORM_MAX_STR 0x7FFFFFFF
 
+const char* SStrChr(const char* string, char search);
+
 int32_t SStrCmp(const char* string1, const char* string2, size_t maxchars);
 
 int32_t SStrCmpI(const char* string1, const char* string2, size_t maxchars);
