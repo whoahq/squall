@@ -39,6 +39,50 @@ TEST_CASE("SStrChr", "[string]") {
     }
 }
 
+TEST_CASE("SStrChrR", "[string]") {
+    SECTION("finds last character when it exists at start of string") {
+        auto string = "ffoobbaarr";
+        auto search = 'f';
+        auto result = SStrChrR(string, search);
+        REQUIRE(result == string + 1);
+    }
+
+    SECTION("finds last character when it exists in middle of string") {
+        auto string = "ffoobbaarr";
+        auto search = 'b';
+        auto result = SStrChrR(string, search);
+        REQUIRE(result == string + 5);
+    }
+
+    SECTION("finds last character when it exists at end of string") {
+        auto string = "ffoobbaarr";
+        auto search = 'r';
+        auto result = SStrChrR(string, search);
+        REQUIRE(result == string + 9);
+    }
+
+    SECTION("finds last character when it exists at start and end of string") {
+        auto string = "ffoobbaarrff";
+        auto search = 'f';
+        auto result = SStrChrR(string, search);
+        REQUIRE(result == string + 11);
+    }
+
+    SECTION("returns nullptr when character does not exist in string") {
+        auto string = "ffoobbaarr";
+        auto search = 'z';
+        auto result = SStrChrR(string, search);
+        REQUIRE(result == nullptr);
+    }
+
+    SECTION("returns nullptr when string is empty") {
+        auto string = "";
+        auto search = 'z';
+        auto result = SStrChrR(string, search);
+        REQUIRE(result == nullptr);
+    }
+}
+
 TEST_CASE("SStrCmp", "[string]") {
     SECTION("compares two strings that exactly match correctly") {
         auto compare = SStrCmp("foo", "foo", STORM_MAX_STR);

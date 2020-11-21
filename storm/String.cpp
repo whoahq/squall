@@ -150,6 +150,20 @@ const char* SStrChr(const char* string, char search) {
     return string;
 }
 
+const char* SStrChrR(const char* string, char search) {
+    STORM_ASSERT(string);
+
+    const char* result;
+
+    for (result = nullptr; *string; string++) {
+        if (*string == search) {
+            result = string;
+        }
+    }
+
+    return result;
+}
+
 int32_t SStrCmp(const char* string1, const char* string2, size_t maxchars) {
     return strncmp(string1, string2, maxchars);
 }

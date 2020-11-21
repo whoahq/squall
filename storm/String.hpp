@@ -9,6 +9,8 @@
 
 const char* SStrChr(const char* string, char search);
 
+const char* SStrChrR(const char* string, char search);
+
 int32_t SStrCmp(const char* string1, const char* string2, size_t maxchars);
 
 int32_t SStrCmpI(const char* string1, const char* string2, size_t maxchars);
