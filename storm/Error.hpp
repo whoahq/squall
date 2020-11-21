@@ -14,6 +14,8 @@
     if (!(x)) {                                  \
         SErrPrepareAppFatal(__FILE__, __LINE__); \
         SErrDisplayAppFatal(#x);                 \
+        SErrSetLastError(0x57);                  \
+        return 0;                                \
     }
 #endif
 
