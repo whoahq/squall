@@ -288,3 +288,27 @@ const char* SStrStr(const char* string, const char* search) {
 
     return substring;
 }
+
+int32_t SStrToInt(const char* string) {
+    STORM_ASSERT(string);
+
+    int32_t result = 0;
+    bool negative = false;
+
+    if (*string == '-') {
+        negative = true;
+        string++;
+    }
+
+    uint32_t digit;
+    while ((digit = *string - '0') < 10) {
+        result = digit + (10 * result);
+        string++;
+    }
+
+    if (negative) {
+        result = -result;
+    }
+
+    return result;
+}

@@ -217,3 +217,47 @@ TEST_CASE("SStrStr", "[string]") {
         REQUIRE(substring == nullptr);
     }
 }
+
+TEST_CASE("SStrToInt", "[string]") {
+    SECTION("converts empty string to int") {
+        auto string = "";
+        auto result = SStrToInt(string);
+        REQUIRE(result == 0);
+    }
+
+    SECTION("converts whitespace string to int") {
+        auto string = " ";
+        auto result = SStrToInt(string);
+        REQUIRE(result == 0);
+    }
+
+    SECTION("converts string with positive number to int") {
+        auto string = "123";
+        auto result = SStrToInt(string);
+        REQUIRE(result == 123);
+    }
+
+    SECTION("converts string with negative number to int") {
+        auto string = "-123";
+        auto result = SStrToInt(string);
+        REQUIRE(result == -123);
+    }
+
+    SECTION("converts string with zero to int") {
+        auto string = "0";
+        auto result = SStrToInt(string);
+        REQUIRE(result == 0);
+    }
+
+    SECTION("converts string with leading zero to int") {
+        auto string = "01";
+        auto result = SStrToInt(string);
+        REQUIRE(result == 1);
+    }
+
+    SECTION("converts string with two whitespace-separated numbers to int") {
+        auto string = "123 456";
+        auto result = SStrToInt(string);
+        REQUIRE(result == 123);
+    }
+}

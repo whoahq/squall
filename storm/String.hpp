@@ -27,4 +27,6 @@ void SStrLower(char* string);
 
 const char* SStrStr(const char* string, const char* search);
 
+int32_t SStrToInt(const char* string);
+
 #endif
