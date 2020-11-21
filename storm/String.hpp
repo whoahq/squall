@@ -25,6 +25,8 @@ size_t SStrLen(const char* string);
 
 void SStrLower(char* string);
 
+uint32_t SStrPack(char* dest, const char* source, uint32_t destsize);
+
 const char* SStrStr(const char* string, const char* search);
 
 float SStrToFloat(const char* string);

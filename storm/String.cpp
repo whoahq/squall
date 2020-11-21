@@ -304,6 +304,49 @@ void SStrLower(char* string) {
     }
 }
 
+uint32_t SStrPack(char* dest, const char* source, uint32_t destsize) {
+    STORM_ASSERT(dest);
+    STORM_ASSERT(source);
+
+    if (!destsize) {
+        return 0;
+    }
+
+    char* i;
+    const char* v5;
+    char v6;
+    const char* j;
+
+    for (i = dest; *i; i++)
+        ;
+
+    if (destsize == STORM_MAX_STR) {
+        v6 = *source;
+
+        for (j = source; *j; i++) {
+            j++;
+            *i = v6;
+            v6 = *j;
+        }
+    } else {
+        v5 = source;
+
+        if (*source) {
+            while (i < &dest[destsize - 1]) {
+                *i++ = *v5++;
+
+                if (!*v5) {
+                    *i = '\0';
+                    return i - dest;
+                }
+            }
+        }
+    }
+
+    *i = '\0';
+    return i - dest;
+}
+
 const char* SStrStr(const char* string, const char* search) {
     STORM_ASSERT(string);
     STORM_ASSERT(search);

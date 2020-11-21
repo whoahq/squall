@@ -181,6 +181,32 @@ TEST_CASE("SStrLower", "[string]") {
     }
 }
 
+TEST_CASE("SStrPack", "[string]") {
+    SECTION("truncates dest correctly when first byte in source is null") {
+        char dest[10] = { 0 };
+        auto source = "\0foobar";
+        auto length = SStrPack(dest, source, 10);
+        REQUIRE(length == 0);
+        REQUIRE(!SStrCmp(dest, "", SStrLen("")));
+    }
+
+    SECTION("truncates dest correctly when middle byte in source is null") {
+        char dest[10] = { 0 };
+        auto source = "foo\0bar";
+        auto length = SStrPack(dest, source, 10);
+        REQUIRE(length == 3);
+        REQUIRE(!SStrCmp(dest, "foo", SStrLen("foo")));
+    }
+
+    SECTION("does not truncate dest when source has no early null byte") {
+        char dest[10] = { 0 };
+        auto source = "foobar";
+        auto length = SStrPack(dest, source, 10);
+        REQUIRE(length == 6);
+        REQUIRE(!SStrCmp(dest, "foobar", SStrLen("foobar")));
+    }
+}
+
 TEST_CASE("SStrStr", "[string]") {
     SECTION("finds substring when it exists at end of string") {
         auto string = "foobar";
