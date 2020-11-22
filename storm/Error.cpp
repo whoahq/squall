@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-[[ noreturn ]] void SErrDisplayAppFatal(const char* format, ...) {
+[[noreturn]] void SErrDisplayAppFatal(const char* format, ...) {
     va_list args;
     va_start(args, format);
     vprintf(format, args);
