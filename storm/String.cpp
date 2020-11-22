@@ -4,6 +4,8 @@
 #include "storm/string/bjhash.hpp"
 #include <cctype>
 #include <cmath>
+#include <cstdarg>
+#include <cstdio>
 #include <cstring>
 #include <strings.h>
 
@@ -165,6 +167,29 @@ void InitializeFloatDigits() {
             s_realDigit[-i - 1][j] = v7;
         }
     }
+}
+
+size_t ISStrVPrintf(const char* format, va_list va, char* dest, size_t maxchars) {
+    if (!maxchars) {
+        return 0;
+    }
+
+    size_t result;
+
+    if (maxchars == STORM_MAX_STR) {
+        // TODO conditional vsoprintf;
+        result = vsprintf(dest, format, va);
+    } else {
+        // TODO conditional vsnoprintf;
+        result = vsnprintf(dest, maxchars, format, va);
+
+        if (result >= maxchars) {
+            result = maxchars - 1;
+            dest[result] = '\0';
+        }
+    }
+
+    return result;
 }
 
 void SStrInitialize() {
@@ -345,6 +370,16 @@ uint32_t SStrPack(char* dest, const char* source, uint32_t destsize) {
 
     *i = '\0';
     return i - dest;
+}
+
+size_t SStrPrintf(char* dest, size_t maxchars, const char* format, ...) {
+    va_list va;
+    va_start(va, format);
+
+    STORM_ASSERT(dest);
+    STORM_ASSERT(format);
+
+    return ISStrVPrintf(format, va, dest, maxchars);
 }
 
 const char* SStrStr(const char* string, const char* search) {

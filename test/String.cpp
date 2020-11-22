@@ -207,6 +207,24 @@ TEST_CASE("SStrPack", "[string]") {
     }
 }
 
+TEST_CASE("SStrPrintf", "[string]") {
+    SECTION("fills dest with formatted string") {
+        char dest[100] = { 0 };
+        auto format = "%s - %s";
+        auto length = SStrPrintf(dest, 100, format, "foo", "bar");
+        REQUIRE(length == 9);
+        REQUIRE(!SStrCmp(dest, "foo - bar", SStrLen("foo - bar")));
+    }
+
+    SECTION("fills dest with empty string") {
+        char dest[100] = { 0 };
+        auto format = "";
+        auto length = SStrPrintf(dest, 100, format);
+        REQUIRE(length == 0);
+        REQUIRE(!SStrCmp(dest, "", SStrLen("")));
+    }
+}
+
 TEST_CASE("SStrStr", "[string]") {
     SECTION("finds substring when it exists at end of string") {
         auto string = "foobar";

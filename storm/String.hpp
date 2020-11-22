@@ -27,6 +27,8 @@ void SStrLower(char* string);
 
 uint32_t SStrPack(char* dest, const char* source, uint32_t destsize);
 
+size_t SStrPrintf(char* dest, size_t maxchars, const char* format, ...);
+
 const char* SStrStr(const char* string, const char* search);
 
 void SStrTokenize(const char** string, char* buffer, size_t bufferchars, const char* whitespace, int32_t* quoted);
