@@ -244,6 +244,37 @@ TEST_CASE("SStrStr", "[string]") {
     }
 }
 
+TEST_CASE("SStrTokenize", "[string]") {
+    SECTION("finds all tokens in comma-delimited string") {
+        auto string = "foo,bar,baz";
+        char buffer[100] = { 0 };
+        const char* tokens[] = { "foo", "bar", "baz" };
+
+        for (auto& token : tokens) {
+            SStrTokenize(&string, buffer, 1000, " ,", nullptr);
+            REQUIRE(!SStrCmp(buffer, token, STORM_MAX_STR));
+        }
+    }
+
+    SECTION("finds all tokens in comma-and-whitespace-delimited string") {
+        auto string = "foo , bar , baz";
+        char buffer[100] = { 0 };
+        const char* tokens[] = { "foo", "bar", "baz" };
+
+        for (auto& token : tokens) {
+            SStrTokenize(&string, buffer, 1000, " ,", nullptr);
+            REQUIRE(!SStrCmp(buffer, token, STORM_MAX_STR));
+        }
+    }
+
+    SECTION("finds no tokens empty string") {
+        auto string = "";
+        char buffer[100] = { 0 };
+        SStrTokenize(&string, buffer, 1000, " ,", nullptr);
+        REQUIRE(!SStrCmp(buffer, "", STORM_MAX_STR));
+    }
+}
+
 TEST_CASE("SStrToFloat", "[string]") {
     SECTION("converts empty string to float") {
         auto string = "";

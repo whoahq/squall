@@ -374,6 +374,93 @@ const char* SStrStr(const char* string, const char* search) {
     return substring;
 }
 
+void SStrTokenize(const char** string, char* buffer, size_t bufferchars, const char* whitespace, int32_t* quoted) {
+    STORM_ASSERT_VOID(string);
+    STORM_ASSERT_VOID(*string);
+    STORM_ASSERT_VOID(buffer || !bufferchars);
+    STORM_ASSERT_VOID(whitespace);
+
+    int32_t inquotes = 0;
+    int32_t usedquotes = 0;
+    auto curstring = *string;
+
+    auto v17 = false;
+    for (const char* w = whitespace; w && *w; w++) {
+        if (*w == '"') {
+            v17 = true;
+            break;
+        }
+    }
+
+    while (*curstring && SStrChr(whitespace, *curstring)) {
+        if (v17 && *curstring == '"') {
+            inquotes = 1;
+            usedquotes = 1;
+            curstring++;
+
+            break;
+        }
+
+        curstring++;
+    }
+
+    uint32_t bufferlen = 0;
+
+    if (*curstring) {
+        auto curbuffer = buffer;
+
+        while (v17 && *curstring == '"') {
+            if (bufferlen && !inquotes) {
+                goto LABEL_35;
+            }
+
+            curstring++;
+            usedquotes = 1;
+            inquotes = inquotes == 0;
+
+            if (!inquotes) {
+                goto LABEL_35;
+            }
+LABEL_32:
+            if (!*curstring) {
+                goto LABEL_35;
+            }
+        }
+
+        if (inquotes) {
+LABEL_29:
+            if (curbuffer - buffer < bufferchars) {
+                bufferlen++;
+                *curbuffer = *curstring;
+                curbuffer++;
+            }
+
+            curstring++;
+
+            goto LABEL_32;
+        }
+
+        auto v14 = SStrChr(whitespace, *curstring);
+
+        if (!v14) {
+            goto LABEL_29;
+        }
+
+        curstring++;
+    }
+
+LABEL_35:
+    if (bufferlen < bufferchars) {
+        buffer[bufferlen] = 0;
+    }
+
+    *string = curstring;
+
+    if (quoted) {
+        *quoted = usedquotes;
+    }
+}
+
 float SStrToFloat(const char* string) {
     STORM_ASSERT(string);
 
