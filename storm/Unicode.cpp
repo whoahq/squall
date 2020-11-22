@@ -57,3 +57,57 @@ uint32_t SUniSGetUTF8(const uint8_t* strptr, int32_t* chars) {
 
     return value;
 }
+
+void SUniSPutUTF8(uint32_t c, char* strptr) {
+    if (!strptr) {
+        return;
+    }
+
+    auto curstr = strptr;
+    auto v3 = c;
+    char v4, v5, v6, v7;
+
+    if (c >= 0x80) {
+        if (c >= 0x800) {
+            if (c >= 0x10000) {
+                if (c >= 0x200000) {
+                    if (c >= 0x400000) {
+                        if (c >= 0x80000000) {
+                            *curstr = 0;
+                            return;
+                        }
+
+                        *strptr = (c >> 30) | 0xFC;
+                        curstr = strptr + 1;
+                        // TODO this seems likely to be bitwise right shift 24, not 8
+                        v7 = ((c >> 8) & 0x3F) | 0x80;
+                    } else {
+                        // TODO this seems likely to be bitwise right shift 24, not 8
+                        v7 = (c >> 8) | 0xF8;
+                    }
+
+                    *curstr++ = v7;
+                    v6 = ((c >> 18) & 0x3F) | 0x80;
+                } else {
+                    v6 = (c >> 18) | 0xF0;
+                }
+
+                *curstr++ = v6;
+                v5 = ((c >> 12) & 0x3F) | 0x80;
+            } else {
+                v5 = (c >> 12) | 0xE0;
+            }
+
+            *curstr++ = v5;
+            v4 = ((c >> 6) & 0x3F) | 0x80;
+        } else {
+            v4 = (c >> 6) | 0xC0;
+        }
+
+        *curstr++ = v4;
+        v3 = (c & 0x3F) | 0x80;
+    }
+
+    *curstr++ = v3;
+    *curstr = '\0';
+}
