@@ -10,6 +10,7 @@ BreakBeforeBraces: Attach
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
 ColumnLimit: 0
+CompactNamespaces: false
 ContinuationIndentWidth: 4
 Cpp11BracedListStyle: false
 DeriveLineEnding: false
@@ -34,9 +35,15 @@ ObjCSpaceAfterProperty: false
 ObjCSpaceBeforeProtocolList: false
 PointerAlignment: Left
 SortIncludes: true
+SpaceAfterCStyleCast: false
+SpaceAfterLogicalNot: false
+SpaceAfterTemplateKeyword: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCpp11BracedList: true
 SpaceBeforeCtorInitializerColon: true
 SpaceBeforeInheritanceColon: true
 SpaceBeforeParens: ControlStatements
+SpaceBeforeSquareBrackets: false
 SpaceInEmptyBlock: false
 SpacesInAngles: false
 SpacesInCStyleCastParentheses: false
