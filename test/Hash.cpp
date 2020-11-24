@@ -1,7 +1,7 @@
 #include "storm/Hash.hpp"
 #include "test/Test.hpp"
 
-struct TestHashObject: TSHashObject<TestHashObject, HASHKEY_STRI> {
+struct TestHashObject : TSHashObject<TestHashObject, HASHKEY_STRI> {
     uint32_t index = 0;
 };
 
