@@ -8,6 +8,11 @@ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     )
 endif()
 
+if(TARGET storm)
+    # Guard for use as transitive dependency
+    return()
+endif()
+
 # Project
 project(storm)
 
