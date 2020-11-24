@@ -1,6 +1,6 @@
 file(GLOB_RECURSE TEST_SOURCES "*.cpp")
 
-if(PLATFORM_MAC)
+if(WHOA_PLATFORM_MAC)
     set_source_files_properties(${TEST_SOURCES}
         PROPERTIES COMPILE_FLAGS "-x objective-c++"
     )
@@ -16,7 +16,7 @@ if(PLATFORM_MAC)
     )
 endif()
 
-if(PLATFORM_LINUX OR PLATFORM_WIN)
+if(WHOA_PLATFORM_LINUX OR WHOA_PLATFORM_WIN)
     add_executable(StormTest ${TEST_SOURCES})
 
     target_link_libraries(StormTest

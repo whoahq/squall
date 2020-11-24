@@ -5,7 +5,7 @@ file(GLOB STORM_SOURCES
     "thread/*.cpp"
 )
 
-if(PLATFORM_MAC)
+if(WHOA_PLATFORM_MAC)
     file(GLOB STORM_MAC_SOURCES
         "mac/*.cpp"
         "mac/*.mm"

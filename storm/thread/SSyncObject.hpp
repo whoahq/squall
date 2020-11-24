@@ -3,18 +3,18 @@
 
 #include <cstdint>
 
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX)
+#if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
 #include <pthread.h>
 #endif
 
 class SSyncObject {
     public:
     // Member variables
-#if defined(PLATFORM_WIN)
+#if defined(WHOA_PLATFORM_WIN)
     HANDLE m_opaqueData = nullptr;
 #endif
 
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX)
+#if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
     int32_t m_int0 = 6;
     int32_t m_value;
     pthread_cond_t m_cond;

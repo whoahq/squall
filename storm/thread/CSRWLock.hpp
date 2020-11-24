@@ -3,18 +3,18 @@
 
 #include <cstdint>
 
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX)
+#if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
 #include <pthread.h>
 #endif
 
 class CSRWLock {
     public:
     // Member variables
-#ifdef PLATFORM_WIN
+#ifdef WHOA_PLATFORM_WIN
     char m_opaqueData[12];
 #endif
 
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX)
+#if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
     pthread_rwlock_t m_lock;
 #endif
 

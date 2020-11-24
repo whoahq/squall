@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX)
+#if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
 #define ERROR_INVALID_PARAMETER 0x57
 #endif
 
