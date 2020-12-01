@@ -3,6 +3,10 @@
 
 #include <cstdint>
 
+#if defined(WHOA_PLATFORM_WIN)
+#include <winerror.h>
+#endif
+
 #if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
 #define ERROR_INVALID_PARAMETER 0x57
 #endif
