@@ -7,7 +7,14 @@
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
+
+#if defined(WHOA_PLATFORM_WIN)
+#include <string.h>
+#endif
+
+#if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
 #include <strings.h>
+#endif
 
 uint8_t bytesFromUTF8[256] = {
     0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -236,7 +243,13 @@ int32_t SStrCmp(const char* string1, const char* string2, size_t maxchars) {
 }
 
 int32_t SStrCmpI(const char* string1, const char* string2, size_t maxchars) {
+#if defined(WHOA_PLATFORM_WIN)
+    return _strnicmp(string1, string2, maxchars);
+#endif
+
+#if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
     return strncasecmp(string1, string2, maxchars);
+#endif
 }
 
 size_t SStrCopy(char* dest, const char* source, size_t destsize) {
