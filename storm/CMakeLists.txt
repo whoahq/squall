@@ -5,6 +5,14 @@ file(GLOB STORM_SOURCES
     "thread/*.cpp"
 )
 
+if(WHOA_PLATFORM_WIN)
+    file(GLOB STORM_WIN_SOURCES
+        "win/*.cpp"
+        "thread/win/*.cpp"
+        )
+    list(APPEND STORM_SOURCES ${STORM_WIN_SOURCES})
+endif()
+
 if(WHOA_PLATFORM_MAC)
     file(GLOB STORM_MAC_SOURCES
         "mac/*.cpp"

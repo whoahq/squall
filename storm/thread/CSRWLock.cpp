@@ -1,8 +1,8 @@
 #include "storm/thread/CSRWLock.hpp"
 
 void CSRWLock::Enter(int32_t forwriting) {
-#ifdef WHOA_PLATFORM_WIN
-    // TODO
+#if defined(WHOA_PLATFORM_WIN)
+    SRWLock::SURWLockEnter(&this->m_opaqueData, forwriting);
 #endif
 
 #if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
@@ -15,8 +15,8 @@ void CSRWLock::Enter(int32_t forwriting) {
 }
 
 void CSRWLock::Leave(int32_t fromwriting) {
-#ifdef WHOA_PLATFORM_WIN
-    // TODO
+#if defined(WHOA_PLATFORM_WIN)
+    SRWLock::SURWLockLeave(&this->m_opaqueData, fromwriting);
 #endif
 
 #if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
