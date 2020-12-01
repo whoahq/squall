@@ -17,14 +17,23 @@ jobs:
           - name: Ubuntu Latest (GCC)
             os: ubuntu-latest
             build_type: Release
+            test_path: StormTest
             cc: gcc
             cxx: g++
 
           - name: macOS Latest (Clang)
             os: macos-latest
             build_type: Release
+            test_path: StormTest
             cc: clang
             cxx: clang++
+
+          - name: Windows Latest (MSVC)
+            os: windows-latest
+            build_type: Release
+            test_path: Release/StormTest
+            cc: cl
+            cxx: cl
 
     steps:
       - uses: actions/checkout@v2
@@ -39,4 +48,4 @@ jobs:
         run: cmake --build build --config ${{ matrix.config.build_type }}
 
       - name: Test
-        run: ./build/test/StormTest
+        run: ./build/test/${{ matrix.config.test_path }}
