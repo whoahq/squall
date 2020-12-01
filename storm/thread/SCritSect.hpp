@@ -1,6 +1,10 @@
 #ifndef STORM_THREAD_S_CRIT_SECT_HPP
 #define STORM_THREAD_S_CRIT_SECT_HPP
 
+#if defined(WHOA_PLATFORM_WIN)
+#include <windows.h>
+#endif
+
 #if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
 #include <pthread.h>
 #endif
