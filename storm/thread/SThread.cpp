@@ -4,6 +4,7 @@
 int32_t SThread::Create(uint32_t (*threadProc)(void*), void* param, SThread& thread, char* threadName, uint32_t a5) {
 #if defined(WHOA_PLATFORM_WIN)
     // TODO implement
+    return 0;
 #endif
 
 #if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
