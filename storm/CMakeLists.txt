@@ -1,3 +1,6 @@
+include(CheckCCompilerFlag)
+check_c_compiler_flag(-Wno-invalid-offsetof HAS_NO_INVALID_OFFSETOF)
+
 file(GLOB STORM_SOURCES
     "*.cpp"
     "hash/*.cpp"
@@ -37,7 +40,9 @@ target_link_libraries(storm
         system
 )
 
-target_compile_options(storm
-    PUBLIC
-        -Wno-invalid-offsetof
-)
+if(HAS_NO_INVALID_OFFSETOF)
+    target_compile_options(storm
+        PUBLIC
+            -Wno-invalid-offsetof
+    )
+endif()
