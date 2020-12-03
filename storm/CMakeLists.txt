@@ -36,3 +36,8 @@ target_link_libraries(storm
     PRIVATE
         system
 )
+
+target_compile_options(storm
+    PUBLIC
+        -Wno-invalid-offsetof
+)
