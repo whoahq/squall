@@ -1,5 +1,5 @@
-include(CheckCCompilerFlag)
-check_c_compiler_flag(-Wno-invalid-offsetof HAS_NO_INVALID_OFFSETOF)
+include(CheckCXXCompilerFlag)
+check_cxx_compiler_flag(-Wno-invalid-offsetof HAS_NO_INVALID_OFFSETOF)
 
 file(GLOB STORM_SOURCES
     "*.cpp"
