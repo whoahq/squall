@@ -1,23 +1,23 @@
 #include "storm/thread/SSyncObject.hpp"
 
-#if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
 #include <cerrno>
 #include <sys/time.h>
 #include <unistd.h>
 #endif
 
 SSyncObject::SSyncObject() {
-#if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
     pthread_mutex_init(&this->m_mutex, 0);
 #endif
 }
 
 uint32_t SSyncObject::Wait(uint32_t timeoutMs) {
-#if defined(WHOA_PLATFORM_WIN)
+#if defined(WHOA_SYSTEM_WIN)
     return WaitForSingleObject(this->m_opaqueData, timeoutMs);
 #endif
 
-#if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
     if (this->m_int0 == 6) {
         // WAIT_FAILED
         return 0xFFFFFFFF;

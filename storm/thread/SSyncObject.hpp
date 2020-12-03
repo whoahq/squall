@@ -3,22 +3,22 @@
 
 #include <cstdint>
 
-#if defined(WHOA_PLATFORM_WIN)
+#if defined(WHOA_SYSTEM_WIN)
 #include <windows.h>
 #endif
 
-#if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
 #include <pthread.h>
 #endif
 
 class SSyncObject {
     public:
     // Member variables
-#if defined(WHOA_PLATFORM_WIN)
+#if defined(WHOA_SYSTEM_WIN)
     HANDLE m_opaqueData = nullptr;
 #endif
 
-#if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
     int32_t m_int0 = 6;
     int32_t m_value;
     pthread_cond_t m_cond;

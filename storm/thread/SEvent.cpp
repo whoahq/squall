@@ -2,11 +2,11 @@
 
 SEvent::SEvent(int32_t manualReset, int32_t initialValue)
     : SSyncObject() {
-#if defined(WHOA_PLATFORM_WIN)
+#if defined(WHOA_SYSTEM_WIN)
     this->m_opaqueData = CreateEventA(nullptr, manualReset, initialValue, nullptr);
 #endif
 
-#if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
     this->m_int0 = 2 - (manualReset >= 1);
     this->m_value = initialValue;
 
@@ -15,11 +15,11 @@ SEvent::SEvent(int32_t manualReset, int32_t initialValue)
 }
 
 int32_t SEvent::Reset() {
-#if defined(WHOA_PLATFORM_WIN)
+#if defined(WHOA_SYSTEM_WIN)
     return ResetEvent(this->m_opaqueData);
 #endif
 
-#if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
     pthread_mutex_lock(&this->m_mutex);
     this->m_value = 0;
     pthread_mutex_unlock(&this->m_mutex);
@@ -29,11 +29,11 @@ int32_t SEvent::Reset() {
 }
 
 int32_t SEvent::Set() {
-#if defined(WHOA_PLATFORM_WIN)
+#if defined(WHOA_SYSTEM_WIN)
     return SetEvent(this->m_opaqueData);
 #endif
 
-#if defined(WHOA_PLATFORM_MAC) || defined(WHOA_PLATFORM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
     pthread_mutex_lock(&this->m_mutex);
 
     this->m_value = 1;

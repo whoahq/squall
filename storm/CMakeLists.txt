@@ -5,7 +5,7 @@ file(GLOB STORM_SOURCES
     "thread/*.cpp"
 )
 
-if(WHOA_PLATFORM_WIN)
+if(WHOA_SYSTEM_WIN)
     file(GLOB STORM_WIN_SOURCES
         "win/*.cpp"
         "thread/win/*.cpp"
@@ -13,7 +13,7 @@ if(WHOA_PLATFORM_WIN)
     list(APPEND STORM_SOURCES ${STORM_WIN_SOURCES})
 endif()
 
-if(WHOA_PLATFORM_MAC)
+if(WHOA_SYSTEM_MAC)
     file(GLOB STORM_MAC_SOURCES
         "mac/*.cpp"
         "mac/*.mm"
@@ -30,4 +30,9 @@ add_library(storm STATIC
 target_include_directories(storm
     PUBLIC
         ${PROJECT_SOURCE_DIR}
+)
+
+target_link_libraries(storm
+    PRIVATE
+        system
 )
