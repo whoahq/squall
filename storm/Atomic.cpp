@@ -4,7 +4,7 @@
 #include <windows.h>
 #endif
 
-int32_t SInterlockedDecrement(int32_t* ptr) {
+ATOMIC32 SInterlockedDecrement(ATOMIC32* ptr) {
 #if defined(WHOA_SYSTEM_WIN)
     return InterlockedDecrement(ptr);
 #endif
@@ -14,7 +14,7 @@ int32_t SInterlockedDecrement(int32_t* ptr) {
 #endif
 }
 
-int32_t SInterlockedIncrement(int32_t* ptr) {
+ATOMIC32 SInterlockedIncrement(ATOMIC32* ptr) {
 #if defined(WHOA_SYSTEM_WIN)
     return InterlockedIncrement(ptr);
 #endif
