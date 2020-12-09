@@ -1,6 +1,7 @@
 #ifndef STORM_ARRAY_TS_BASE_ARRAY_HPP
 #define STORM_ARRAY_TS_BASE_ARRAY_HPP
 
+#include "storm/Error.hpp"
 #include <cstdint>
 #include <typeinfo>
 
@@ -15,13 +16,32 @@ class TSBaseArray {
     virtual int32_t MemLineNo() const;
 
     T& operator[](uint32_t index);
+    void CheckArrayBounds(uint32_t index) const;
     uint32_t Count() const;
     void Clear();
 };
 
 template <class T>
 T& TSBaseArray<T>::operator[](uint32_t index) {
+    this->CheckArrayBounds(index);
     return this->m_data[index];
+}
+
+template <class T>
+void TSBaseArray<T>::CheckArrayBounds(uint32_t index) const {
+    if (index < this->Count()) {
+        return;
+    }
+
+    SErrDisplayErrorFmt(
+        0x85100080,
+        this->MemFileName(),
+        this->MemLineNo(),
+        1,
+        1,
+        "index (0x%08X), array size (0x%08X)",
+        index,
+        this->Count());
 }
 
 template <class T>
