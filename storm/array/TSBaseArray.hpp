@@ -2,6 +2,7 @@
 #define STORM_ARRAY_TS_BASE_ARRAY_HPP
 
 #include <cstdint>
+#include <typeinfo>
 
 template <class T>
 class TSBaseArray {
@@ -9,6 +10,8 @@ class TSBaseArray {
     uint32_t m_alloc = 0;
     uint32_t m_count = 0;
     T* m_data = nullptr;
+
+    virtual const char* MemFileName() const;
 
     T& operator[](uint32_t i);
     uint32_t Count(void);
@@ -29,6 +32,11 @@ template <class T>
 void TSBaseArray<T>::Clear() {
     delete[] this->m_data;
     TSBaseArray<T>();
+}
+
+template <class T>
+const char* TSBaseArray<T>::MemFileName() const {
+    return typeid(T).name();
 }
 
 #endif
