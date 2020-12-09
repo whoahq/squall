@@ -12,6 +12,7 @@ class TSBaseArray {
     T* m_data = nullptr;
 
     virtual const char* MemFileName() const;
+    virtual int32_t MemLineNo() const;
 
     T& operator[](uint32_t i);
     uint32_t Count(void);
@@ -37,6 +38,11 @@ void TSBaseArray<T>::Clear() {
 template <class T>
 const char* TSBaseArray<T>::MemFileName() const {
     return typeid(T).name();
+}
+
+template <class T>
+int32_t TSBaseArray<T>::MemLineNo() const {
+    return -2;
 }
 
 #endif

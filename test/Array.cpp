@@ -16,6 +16,13 @@ TEST_CASE("TSBaseArray::MemFileName", "[array]") {
     }
 }
 
+TEST_CASE("TSBaseArray::MemLineNo", "[array]") {
+    SECTION("returns a negative number") {
+        TSBaseArray<uint32_t> array;
+        REQUIRE(array.MemLineNo() < 0);
+    }
+}
+
 TEST_CASE("TSFixedArray", "[array]") {
     SECTION("constructs correctly") {
         TSFixedArray<uint32_t> array;
