@@ -15,8 +15,8 @@ class TSBaseArray {
     virtual int32_t MemLineNo() const;
 
     T& operator[](uint32_t i);
-    uint32_t Count(void) const;
-    void Clear(void);
+    uint32_t Count() const;
+    void Clear();
 };
 
 template <class T>
