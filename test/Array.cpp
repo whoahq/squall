@@ -2,7 +2,7 @@
 #include "storm/String.hpp"
 #include "test/Test.hpp"
 
-TEST_CASE("TSBaseArray", "[list]") {
+TEST_CASE("TSBaseArray", "[array]") {
     SECTION("constructs correctly") {
         TSBaseArray<uint32_t> array;
         REQUIRE(array.Count() == 0);
@@ -16,14 +16,14 @@ TEST_CASE("TSBaseArray::MemFileName", "[array]") {
     }
 }
 
-TEST_CASE("TSFixedArray", "[list]") {
+TEST_CASE("TSFixedArray", "[array]") {
     SECTION("constructs correctly") {
         TSFixedArray<uint32_t> array;
         REQUIRE(array.Count() == 0);
     }
 }
 
-TEST_CASE("TSGrowableArray", "[list]") {
+TEST_CASE("TSGrowableArray", "[array]") {
     SECTION("constructs correctly") {
         TSGrowableArray<uint32_t> array;
         REQUIRE(array.Count() == 0);
