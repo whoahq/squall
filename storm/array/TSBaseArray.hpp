@@ -15,17 +15,18 @@ class TSBaseArray {
     virtual int32_t MemLineNo() const;
 
     T& operator[](uint32_t i);
-    uint32_t Count(void);
+    uint32_t Count(void) const;
     void Clear(void);
 };
 
 template <class T>
 T& TSBaseArray<T>::operator[](uint32_t i) {
+    this->CheckArrayBounds(i);
     return this->m_data[i];
 }
 
 template <class T>
-uint32_t TSBaseArray<T>::Count() {
+uint32_t TSBaseArray<T>::Count() const {
     return this->m_count;
 }
 
