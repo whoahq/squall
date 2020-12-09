@@ -14,14 +14,14 @@ class TSBaseArray {
     virtual const char* MemFileName() const;
     virtual int32_t MemLineNo() const;
 
-    T& operator[](uint32_t i);
+    T& operator[](uint32_t index);
     uint32_t Count() const;
     void Clear();
 };
 
 template <class T>
-T& TSBaseArray<T>::operator[](uint32_t i) {
-    return this->m_data[i];
+T& TSBaseArray<T>::operator[](uint32_t index) {
+    return this->m_data[index];
 }
 
 template <class T>
