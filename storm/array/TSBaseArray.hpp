@@ -21,7 +21,6 @@ class TSBaseArray {
 
 template <class T>
 T& TSBaseArray<T>::operator[](uint32_t i) {
-    this->CheckArrayBounds(i);
     return this->m_data[i];
 }
 
