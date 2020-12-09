@@ -53,6 +53,18 @@ int32_t SErrDisplayError(uint32_t errorcode, const char* filename, int32_t linen
     }
 }
 
+int32_t SErrDisplayErrorFmt(uint32_t errorcode, const char* filename, int32_t linenumber, int32_t recoverable, uint32_t exitcode, const char* format, ...) {
+    char buffer[2048];
+
+    va_list args;
+    va_start(args, format);
+    vsnprintf(buffer, sizeof(buffer) - 1, format, args);
+    buffer[sizeof(buffer) - 1] = '\0';
+    va_end(args);
+
+    return SErrDisplayError(errorcode, filename, linenumber, buffer, recoverable, exitcode, 1);
+}
+
 void SErrPrepareAppFatal(const char* filename, int32_t linenumber) {
     // TODO
 }
