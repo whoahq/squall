@@ -17,26 +17,26 @@ class TSHashTable {
     // Member functions
     ~TSHashTable();
     void Clear();
-    uint32_t ComputeSlot(uint32_t);
+    uint32_t ComputeSlot(uint32_t hashval);
     void Destroy();
     int32_t GetLinkOffset();
     T* Head();
     void Initialize();
     bool Initialized();
-    void Insert(T*, uint32_t, const TKey&);
+    void Insert(T* ptr, uint32_t hashval, const TKey& key);
     void InternalClear(int32_t warn);
     void InternalDelete(T* ptr);
-    void InternalLinkNode(T*, uint32_t);
-    T* InternalNew(STORM_EXPLICIT_LIST(T, m_linktoslot)*, size_t, size_t);
-    T* InternalNewNode(uint32_t, size_t, size_t);
-    int32_t MonitorFullness(uint32_t);
-    T* New(const char*, size_t, size_t);
-    T* New(uint32_t, const char*, size_t, uint32_t);
-    T* New(uint32_t, const TKey&, size_t, uint32_t);
-    T* Next(const T*);
-    T* Ptr(const char*);
-    T* Ptr(uint32_t, const TKey&);
-    void Unlink(T*);
+    void InternalLinkNode(T* ptr, uint32_t hashval);
+    T* InternalNew(STORM_EXPLICIT_LIST(T, m_linktoslot)* listptr, size_t extrabytes, uint32_t flags);
+    T* InternalNewNode(uint32_t, size_t extrabytes, uint32_t flags);
+    int32_t MonitorFullness(uint32_t slot);
+    T* New(const char* str, size_t extrabytes, uint32_t flags);
+    T* New(uint32_t hashval, const char* str, size_t extrabytes, uint32_t flags);
+    T* New(uint32_t hashval, const TKey& key, size_t extrabytes, uint32_t flags);
+    T* Next(const T* ptr);
+    T* Ptr(const char* str);
+    T* Ptr(uint32_t hashval, const TKey& key);
+    void Unlink(T* ptr);
 };
 
 template <class T, class TKey>
@@ -135,12 +135,12 @@ void TSHashTable<T, TKey>::InternalLinkNode(T* ptr, uint32_t hashval) {
 }
 
 template <class T, class TKey>
-T* TSHashTable<T, TKey>::InternalNew(STORM_EXPLICIT_LIST(T, m_linktoslot)* listptr, size_t extrabytes, size_t flags) {
+T* TSHashTable<T, TKey>::InternalNew(STORM_EXPLICIT_LIST(T, m_linktoslot)* listptr, size_t extrabytes, uint32_t flags) {
     return listptr->NewNode(1, extrabytes, flags);
 }
 
 template <class T, class TKey>
-T* TSHashTable<T, TKey>::InternalNewNode(uint32_t hashval, size_t extrabytes, size_t flags) {
+T* TSHashTable<T, TKey>::InternalNewNode(uint32_t hashval, size_t extrabytes, uint32_t flags) {
     if (!this->Initialized()) {
         this->Initialize();
     }
@@ -166,9 +166,9 @@ int32_t TSHashTable<T, TKey>::MonitorFullness(uint32_t slot) {
 }
 
 template <class T, class TKey>
-T* TSHashTable<T, TKey>::New(const char* str, size_t a2, size_t a3) {
+T* TSHashTable<T, TKey>::New(const char* str, size_t extrabytes, uint32_t flags) {
     uint32_t hashval = SStrHashHT(str);
-    return this->New(hashval, str, a2, a3);
+    return this->New(hashval, str, extrabytes, flags);
 }
 
 template <class T, class TKey>
