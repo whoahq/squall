@@ -11,3 +11,18 @@ TEST_CASE("TSHashTable", "[hash]") {
         REQUIRE(hashTable.Head() == nullptr);
     }
 }
+
+TEST_CASE("TSHashTable::Clear", "[hash]") {
+    SECTION("clears empty hash table correctly") {
+        TSHashTable<TestHashObject, HASHKEY_STRI> hashTable;
+        hashTable.Clear();
+        REQUIRE(hashTable.Head() == nullptr);
+    }
+
+    SECTION("clears hash table with entry correctly") {
+        TSHashTable<TestHashObject, HASHKEY_STRI> hashTable;
+        hashTable.New("testKey", 0, 0x0);
+        hashTable.Clear();
+        REQUIRE(hashTable.Head() == nullptr);
+    }
+}
