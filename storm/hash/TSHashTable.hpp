@@ -9,21 +9,20 @@ template <class T, class TKey>
 class TSHashTable {
     public:
     // Member variables
-    STORM_EXPLICIT_LIST(T, m_linktofull)
-    m_fulllist;
+    STORM_EXPLICIT_LIST(T, m_linktofull) m_fulllist;
     uint32_t m_fullnessIndicator = 0;
     TSGrowableArray<STORM_EXPLICIT_LIST(T, m_linktoslot)> m_slotlistarray;
     uint32_t m_slotmask = -1;
 
     // Member functions
     ~TSHashTable();
-    void Clear(void);
+    void Clear();
     uint32_t ComputeSlot(uint32_t);
-    void Destroy(void);
-    int32_t GetLinkOffset(void);
-    T* Head(void);
-    void Initialize(void);
-    bool Initialized(void);
+    void Destroy();
+    int32_t GetLinkOffset();
+    T* Head();
+    void Initialize();
+    bool Initialized();
     void Insert(T*, uint32_t, const TKey&);
     void InternalClear(int32_t warn);
     void InternalDelete(T* ptr);
