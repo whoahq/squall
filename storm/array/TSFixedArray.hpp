@@ -8,9 +8,22 @@
 template <class T>
 class TSFixedArray : public TSBaseArray<T> {
     public:
+    ~TSFixedArray();
     void ReallocData(uint32_t count);
     void SetCount(uint32_t count);
 };
+
+template <class T>
+TSFixedArray<T>::~TSFixedArray() {
+    for (int32_t i = 0; i < this->Count(); i++) {
+        auto element = &this->operator[](i);
+        element->~T();
+    }
+
+    if (this->Ptr()) {
+        SMemFree(this->Ptr(), this->MemFileName(), this->MemLineNo(), 0x0);
+    }
+}
 
 template <class T>
 void TSFixedArray<T>::ReallocData(uint32_t count) {
