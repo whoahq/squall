@@ -25,4 +25,12 @@ TEST_CASE("TSHashTable::Clear", "[hash]") {
         hashTable.Clear();
         REQUIRE(hashTable.Head() == nullptr);
     }
+
+    SECTION("clears hash table with multiple entries correctly") {
+        TSHashTable<TestHashObject, HASHKEY_STRI> hashTable;
+        hashTable.New("testKey1", 0, 0x0);
+        hashTable.New("testKey2", 0, 0x0);
+        hashTable.Clear();
+        REQUIRE(hashTable.Head() == nullptr);
+    }
 }
