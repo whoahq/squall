@@ -19,6 +19,8 @@ class TSBaseArray {
     void CheckArrayBounds(uint32_t index) const;
     uint32_t Count() const;
     void Clear();
+    T* Ptr();
+    const T* Ptr() const;
 };
 
 template <class T>
@@ -63,6 +65,16 @@ const char* TSBaseArray<T>::MemFileName() const {
 template <class T>
 int32_t TSBaseArray<T>::MemLineNo() const {
     return -2;
+}
+
+template <class T>
+T* TSBaseArray<T>::Ptr() {
+    return this->m_data;
+}
+
+template <class T>
+const T* TSBaseArray<T>::Ptr() const {
+    return this->m_data;
 }
 
 #endif
