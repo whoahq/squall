@@ -101,7 +101,7 @@ void TSHashTable<T, TKey>::InternalClear(int32_t warn) {
     for (int32_t i = 0; i < this->m_slotlistarray.Count(); i++) {
         auto& slotList = this->m_slotlistarray[i];
 
-        for (auto node = slotList.Head(); node; node = slotList.Link(node)->Next()) {
+        for (auto node = slotList.Head(); node; node = slotList.Head()) {
             if (warn) {
                 slotList.UnlinkNode(node);
             } else {
