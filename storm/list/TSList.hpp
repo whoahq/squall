@@ -6,6 +6,7 @@
 #include "storm/list/TSLink.hpp"
 #include <cstddef>
 #include <cstdint>
+#include <typeinfo>
 
 #define STORM_LIST(T) TSList<T, TSGetLink<T>>
 
@@ -29,6 +30,8 @@ class TSList {
     void LinkNode(T* ptr, uint32_t linktype, T* existingptr);
     void LinkToHead(T* ptr);
     void LinkToTail(T* ptr);
+    const char* MemFileName() const;
+    int32_t MemLineNo() const;
     T* NewNode(uint32_t location, size_t extrabytes, uint32_t flags);
     T* Next(const T* ptr);
     T* RawNext(const T* ptr);
@@ -157,8 +160,18 @@ void TSList<T, TGetLink>::LinkToTail(T* ptr) {
 }
 
 template <class T, class TGetLink>
+const char* TSList<T, TGetLink>::MemFileName() const {
+    return typeid(T).name();
+}
+
+template <class T, class TGetLink>
+int32_t TSList<T, TGetLink>::MemLineNo() const {
+    return -2;
+}
+
+template <class T, class TGetLink>
 T* TSList<T, TGetLink>::NewNode(uint32_t location, size_t extrabytes, uint32_t flags) {
-    void* m = SMemAlloc(sizeof(T) + extrabytes, __FILE__, __LINE__, flags);
+    void* m = SMemAlloc(sizeof(T) + extrabytes, this->MemFileName(), this->MemLineNo(), flags);
 
     T* node;
 
