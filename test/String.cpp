@@ -398,3 +398,27 @@ TEST_CASE("SStrToInt", "[string]") {
         REQUIRE(result == 123);
     }
 }
+
+TEST_CASE("SStrUpper", "[string]") {
+    SECTION("rewrites lowercase string to uppercase correctly") {
+        auto lower = "foobar";
+        auto upper = static_cast<char*>(SMemAlloc(SStrLen(lower) + 1, __FILE__, __LINE__, 0x0));
+        SStrCopy(upper, lower, STORM_MAX_STR);
+        SStrUpper(upper);
+        auto compare = SStrCmp(upper, "FOOBAR", SStrLen(upper));
+        SMemFree(upper);
+
+        REQUIRE(!compare);
+    }
+
+    SECTION("rewrites uppercase string to uppercase correctly") {
+        auto upper1 = "FOOBAR";
+        auto upper2 = static_cast<char*>(SMemAlloc(SStrLen(upper1) + 1, __FILE__, __LINE__, 0x0));
+        SStrCopy(upper2, upper1, STORM_MAX_STR);
+        SStrUpper(upper2);
+        auto compare = SStrCmp(upper2, "FOOBAR", SStrLen(upper2));
+        SMemFree(upper2);
+
+        REQUIRE(!compare);
+    }
+}

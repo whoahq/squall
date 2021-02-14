@@ -629,3 +629,10 @@ int32_t SStrToInt(const char* string) {
 
     return result;
 }
+
+void SStrUpper(char* string) {
+    while (*string) {
+        *string = static_cast<char>(toupper(*string));
+        string++;
+    }
+}

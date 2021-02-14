@@ -37,4 +37,6 @@ float SStrToFloat(const char* string);
 
 int32_t SStrToInt(const char* string);
 
+void SStrUpper(char* string);
+
 #endif
