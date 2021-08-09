@@ -4,6 +4,7 @@
 #include "storm/thread/CSRWLock.hpp"
 #include "storm/thread/SCritSect.hpp"
 #include "storm/thread/SEvent.hpp"
+#include "storm/thread/SSemaphore.hpp"
 #include "storm/thread/SSyncObject.hpp"
 #include "storm/thread/SThread.hpp"
 #include <cstdint>
