@@ -8,8 +8,8 @@ int32_t SThread::Create(uint32_t (*threadProc)(void*), void* param, SThread& thr
 #endif
 
 #if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
-    thread.m_int0 = 5;
-    thread.m_value = 0;
+    thread.int0 = 5;
+    thread.m_value1 = 0;
     pthread_cond_init(&thread.m_cond, nullptr);
 
     uint32_t v8;

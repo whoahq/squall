@@ -48,7 +48,7 @@ int32_t SCreateThread(uint32_t (*threadProc)(void*), void* threadParam, void* a3
     params->syncObject = syncObject;
 
     if (syncObject) {
-        syncObject->m_value = 0;
+        syncObject->m_value1 = 0;
         pthread_cond_init(&syncObject->m_cond, nullptr);
         pthread_mutex_init(&syncObject->m_mutex, nullptr);
     }

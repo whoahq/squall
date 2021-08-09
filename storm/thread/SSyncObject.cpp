@@ -18,7 +18,7 @@ uint32_t SSyncObject::Wait(uint32_t timeoutMs) {
 #endif
 
 #if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
-    if (this->m_int0 == 6) {
+    if (this->int0 == 6) {
         // WAIT_FAILED
         return 0xFFFFFFFF;
     }
@@ -70,7 +70,7 @@ uint32_t SSyncObject::Wait(uint32_t timeoutMs) {
             usleep(0);
         }
 
-        if (this->m_int0 == 3) {
+        if (this->int0 == 3) {
             // WAIT_OBJECT_0
             return 0;
         }
@@ -78,7 +78,7 @@ uint32_t SSyncObject::Wait(uint32_t timeoutMs) {
         int32_t v4;
 
         while (true) {
-            v4 = this->m_value;
+            v4 = this->m_value1;
 
             if (v4) {
                 break;
@@ -99,10 +99,10 @@ uint32_t SSyncObject::Wait(uint32_t timeoutMs) {
             }
         }
 
-        if (this->m_int0 == 2) {
-            this->m_value = 0;
-        } else if (this->m_int0 == 4) {
-            this->m_value = v4 - 1;
+        if (this->int0 == 2) {
+            this->m_value1 = 0;
+        } else if (this->int0 == 4) {
+            this->m_value1 = v4 - 1;
         }
 
         pthread_mutex_unlock(&this->m_mutex);
@@ -113,19 +113,19 @@ uint32_t SSyncObject::Wait(uint32_t timeoutMs) {
 
     pthread_mutex_lock(&this->m_mutex);
 
-    if (this->m_int0 == 3) {
+    if (this->int0 == 3) {
         // WAIT_OBJECT_0
         return 0;
     }
 
-    while (!this->m_value) {
+    while (!this->m_value1) {
         pthread_cond_wait(&this->m_cond, &this->m_mutex);
     }
 
-    if (this->m_int0 == 2) {
-        this->m_value = 0;
-    } else if (this->m_int0 == 4) {
-        this->m_value = this->m_value - 1;
+    if (this->int0 == 2) {
+        this->m_value1 = 0;
+    } else if (this->int0 == 4) {
+        this->m_value1 = this->m_value1 - 1;
     }
 
     pthread_mutex_unlock(&this->m_mutex);

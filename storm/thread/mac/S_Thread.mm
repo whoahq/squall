@@ -32,7 +32,7 @@ uint32_t S_Thread::s_SLaunchThread(void* threadParam) {
 
     if (params->syncObject) {
         pthread_mutex_lock(&params->syncObject->m_mutex);
-        params->syncObject->m_value = 1;
+        params->syncObject->m_value1 = 1;
         pthread_mutex_unlock(&params->syncObject->m_mutex);
         pthread_cond_signal(&params->syncObject->m_cond);
     }

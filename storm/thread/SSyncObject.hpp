@@ -19,10 +19,11 @@ class SSyncObject {
 #endif
 
 #if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
-    int32_t m_int0 = 6;
-    int32_t m_value;
-    pthread_cond_t m_cond;
+    int32_t int0 = 6;
+    int32_t m_value1;
+    int32_t m_value2;
     pthread_mutex_t m_mutex;
+    pthread_cond_t m_cond;
 #endif
 
     // Member functions
