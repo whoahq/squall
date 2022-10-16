@@ -12,6 +12,16 @@ SSyncObject::SSyncObject() {
 #endif
 }
 
+bool SSyncObject::Valid() {
+#if defined(WHOA_SYSTEM_WIN)
+    return this->m_opaqueData != nullptr;
+#endif
+
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+    return this->int0 - 1 <= 4;
+#endif
+}
+
 uint32_t SSyncObject::Wait(uint32_t timeoutMs) {
 #if defined(WHOA_SYSTEM_WIN)
     return WaitForSingleObject(this->m_opaqueData, timeoutMs);

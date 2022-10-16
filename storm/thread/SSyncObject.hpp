@@ -29,7 +29,7 @@ class SSyncObject {
     // Member functions
     SSyncObject();
     void Close(void);
-    bool Valid(void);
+    bool Valid();
     uint32_t Wait(uint32_t timeoutMs);
 };
 
