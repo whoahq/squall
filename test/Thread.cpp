@@ -7,3 +7,20 @@ TEST_CASE("SGetCurrentThreadId", "[thread]") {
         CHECK(threadId > 0);
     }
 }
+
+TEST_CASE("SCritSect::Enter", "[thread]") {
+    SECTION("locks critical section") {
+        SCritSect critSect;
+        critSect.Enter();
+        SUCCEED();
+    }
+}
+
+TEST_CASE("SCritSect::Leave", "[thread]") {
+    SECTION("unlocks critical section") {
+        SCritSect critSect;
+        critSect.Enter();
+        critSect.Leave();
+        SUCCEED();
+    }
+}
