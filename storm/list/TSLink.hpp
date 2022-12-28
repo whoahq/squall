@@ -13,12 +13,12 @@ class TSLink {
 
     // Member functions
     ~TSLink();
-    bool IsLinked(void);
-    T* Next(void);
+    bool IsLinked();
+    T* Next();
     TSLink<T>* NextLink(ptrdiff_t linkoffset);
-    T* Prev(void);
-    T* RawNext(void);
-    void Unlink(void);
+    T* Prev();
+    T* RawNext();
+    void Unlink();
 };
 
 template <class T>

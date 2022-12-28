@@ -21,10 +21,10 @@ class TSList {
     TSList();
     ~TSList();
     void ChangeLinkOffset(ptrdiff_t linkoffset);
-    void DeleteAll(void);
+    void DeleteAll();
     T* DeleteNode(T* ptr);
-    T* Head(void);
-    void InitializeTerminator(void);
+    T* Head();
+    void InitializeTerminator();
     bool IsLinked(T* ptr);
     TSLink<T>* Link(const T* ptr);
     void LinkNode(T* ptr, uint32_t linktype, T* existingptr);
@@ -36,8 +36,8 @@ class TSList {
     T* Next(const T* ptr);
     T* RawNext(const T* ptr);
     void SetLinkOffset(ptrdiff_t linkoffset);
-    T* Tail(void);
-    void UnlinkAll(void);
+    T* Tail();
+    void UnlinkAll();
     void UnlinkNode(T* node);
 };
 

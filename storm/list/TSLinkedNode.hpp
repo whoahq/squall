@@ -11,9 +11,9 @@ class TSLinkedNode {
 
     // Member functions
     ~TSLinkedNode();
-    T* Next(void);
-    T* Prev(void);
-    void Unlink(void);
+    T* Next();
+    T* Prev();
+    void Unlink();
 };
 
 template <class T>
