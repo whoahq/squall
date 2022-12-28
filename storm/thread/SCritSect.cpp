@@ -14,6 +14,16 @@ SCritSect::SCritSect() {
 #endif
 }
 
+SCritSect::~SCritSect() {
+#if defined(WHOA_SYSTEM_WIN)
+    DeleteCriticalSection(&this->m_opaqueData);
+#endif
+
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+    pthread_mutex_destroy(&this->m_mutex);
+#endif
+}
+
 void SCritSect::Enter() {
 #if defined(WHOA_SYSTEM_WIN)
     EnterCriticalSection(&this->m_opaqueData);
