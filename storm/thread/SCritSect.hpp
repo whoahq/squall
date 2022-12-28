@@ -21,6 +21,7 @@ class SCritSect {
 #endif
 
     // Member functions
+    SCritSect();
     void Enter(void);
     void Leave(void);
 };
