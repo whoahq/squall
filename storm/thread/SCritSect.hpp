@@ -23,8 +23,8 @@ class SCritSect {
     // Member functions
     SCritSect();
     ~SCritSect();
-    void Enter(void);
-    void Leave(void);
+    void Enter();
+    void Leave();
 };
 
 #endif

@@ -7,9 +7,9 @@
 class SEvent : public SSyncObject {
     public:
     // Member functions
-    SEvent(int32_t manualReset, int32_t);
-    int32_t Reset(void);
-    int32_t Set(void);
+    SEvent(int32_t manualReset, int32_t initialValue);
+    int32_t Reset();
+    int32_t Set();
 };
 
 #endif
