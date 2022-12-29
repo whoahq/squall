@@ -12,6 +12,25 @@ SSyncObject::SSyncObject() {
 #endif
 }
 
+SSyncObject::~SSyncObject() {
+#if defined(WHOA_SYSTEM_WIN)
+    this->Close();
+#endif
+
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+    pthread_mutex_destroy(&this->m_mutex);
+#endif
+}
+
+void SSyncObject::Close() {
+#if defined(WHOA_SYSTEM_WIN)
+    if (this->m_opaqueData) {
+        CloseHandle(this->m_opaqueData);
+        this->m_opaqueData = nullptr;
+    }
+#endif
+}
+
 bool SSyncObject::Valid() {
 #if defined(WHOA_SYSTEM_WIN)
     return this->m_opaqueData != nullptr;
