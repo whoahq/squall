@@ -3,6 +3,9 @@
 
 #include "storm/thread/SThread.hpp"
 #include <cstdint>
+#if defined(WHOA_SYSTEM_WIN)
+#include <windows.h>
+#endif
 
 typedef SThread SyncObjectData;
 
@@ -10,7 +13,12 @@ struct SThreadParmBlock {
     uint32_t (*threadProc)(void*);
     void* threadParam;
     uint32_t threadID;
+#if defined(WHOA_SYSTEM_WIN)
+    HANDLE threadH;
+#endif
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
     SyncObjectData* syncObject;
+#endif
 };
 
 class S_Thread {
@@ -20,6 +28,9 @@ class S_Thread {
         int32_t suspended;
         int32_t live;
         uint32_t threadId;
+#if defined(WHOA_SYSTEM_WIN)
+        HANDLE threadH;
+#endif
         char name[16];
     };
 
@@ -31,7 +42,7 @@ class S_Thread {
 
     // Static functions
 #if defined(WHOA_SYSTEM_WIN)
-    static uint32_t s_SLaunchThread(void* threadParam);
+    static DWORD s_SLaunchThread(void* threadParam);
 #endif
 
 #if defined(WHOA_SYSTEM_MAC)
