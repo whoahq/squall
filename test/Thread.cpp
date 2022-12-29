@@ -1,4 +1,5 @@
 #include "storm/Thread.hpp"
+#include "storm/Memory.hpp"
 #include "test/Test.hpp"
 
 uint32_t threadProc(void* param) {
@@ -32,7 +33,8 @@ TEST_CASE("SCritSect::Leave", "[thread]") {
 TEST_CASE("SThread::Create", "[thread]") {
     SECTION("creates new thread") {
         SThread thread;
-        char* threadName = const_cast<char*>("TestThread");
-        REQUIRE(SThread::Create(threadProc, nullptr, thread, threadName, 0) != 0);
+        auto threadName = const_cast<char*>("TestThread");
+        auto threadParam = SMemAlloc(16, nullptr, 0, 0x0);
+        REQUIRE(SThread::Create(threadProc, threadParam, thread, threadName, 0) != 0);
     }
 }
