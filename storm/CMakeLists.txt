@@ -27,6 +27,14 @@ if(WHOA_SYSTEM_MAC)
     list(APPEND STORM_SOURCES ${STORM_MAC_SOURCES})
 endif()
 
+if(WHOA_SYSTEM_LINUX)
+    file(GLOB STORM_LINUX_SOURCES
+        "linux/*.cpp"
+        "thread/linux/*.cpp"
+    )
+    list(APPEND STORM_SOURCES ${STORM_LINUX_SOURCES})
+endif()
+
 add_library(storm STATIC
     ${STORM_SOURCES}
 )
