@@ -5,7 +5,7 @@
 #include "storm/thread/mac/SThreadRunner.h"
 #include <new>
 
-int32_t SCreateThread(uint32_t (*threadProc)(void*), void* threadParam, void* a3, SThread* syncObject, const char* threadName) {
+void* SCreateThread(uint32_t (*threadProc)(void*), void* threadParam, void* a3, SThread* syncObject, const char* threadName) {
     if (!threadName) {
         threadName = "";
     }
@@ -71,5 +71,5 @@ int32_t SCreateThread(uint32_t (*threadProc)(void*), void* threadParam, void* a3
     // TODO
     // S_Thread::s_threadCrit.Leave();
 
-    return threadId;
+    return reinterpret_cast<void*>(threadId);
 }
