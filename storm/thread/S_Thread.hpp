@@ -30,7 +30,17 @@ class S_Thread {
     static SThreadTrack s_threads[1024];
 
     // Static functions
+#if defined(WHOA_SYSTEM_WIN)
     static uint32_t s_SLaunchThread(void* threadParam);
+#endif
+
+#if defined(WHOA_SYSTEM_MAC)
+    static uint32_t s_SLaunchThread(void* threadParam);
+#endif
+
+#if defined(WHOA_SYSTEM_LINUX)
+    static void* s_SLaunchThread(void* threadParam);
+#endif
 };
 
 #endif
