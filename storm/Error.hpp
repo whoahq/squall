@@ -12,17 +12,7 @@
 #endif
 
 #if defined(NDEBUG)
-#define STORM_ASSERT(x)                            \
-    if (!(x)) {                                    \
-        SErrSetLastError(ERROR_INVALID_PARAMETER); \
-        return 0;                                  \
-    }                                              \
-    (void)0
-#define STORM_ASSERT_VOID(x)                       \
-    if (!(x)) {                                    \
-        SErrSetLastError(ERROR_INVALID_PARAMETER); \
-        return;                                    \
-    }                                              \
+#define STORM_ASSERT(x)                          \
     (void)0
 #else
 #define STORM_ASSERT(x)                          \
@@ -31,13 +21,14 @@
         SErrDisplayAppFatal(#x);                 \
     }                                            \
     (void)0
-#define STORM_ASSERT_VOID(x)                     \
+#endif
+
+#define STORM_VALIDATE(x, y, ...)                \
     if (!(x)) {                                  \
-        SErrPrepareAppFatal(__FILE__, __LINE__); \
-        SErrDisplayAppFatal(#x);                 \
+        SErrSetLastError(y);                     \
+        return __VA_ARGS__;                      \
     }                                            \
     (void)0
-#endif
 
 [[noreturn]] void SErrDisplayAppFatal(const char* format, ...);
 
