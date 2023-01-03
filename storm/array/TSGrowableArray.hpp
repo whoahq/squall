@@ -26,7 +26,7 @@ template <class T>
 uint32_t TSGrowableArray<T>::Add(uint32_t count, const T* data) {
     this->Reserve(count, 1);
 
-    for (int32_t i = 0; i < count; i++) {
+    for (uint32_t i = 0; i < count; i++) {
         T* element = &this->m_data[this->m_count + i];
         *element = data[i];
     }
@@ -41,7 +41,7 @@ uint32_t TSGrowableArray<T>::Add(uint32_t count, uint32_t incr, const T* data) {
 
     const char* dataptr = reinterpret_cast<const char*>(data);
 
-    for (int32_t i = 0; i < count; i++) {
+    for (uint32_t i = 0; i < count; i++) {
         T* element = &this->m_data[this->m_count + i];
         *element = *reinterpret_cast<const T*>(dataptr);
         dataptr += incr;
@@ -129,7 +129,7 @@ void TSGrowableArray<T>::SetCount(uint32_t count) {
 
         T* element;
 
-        for (int32_t i = this->m_count; i < count; ++i) {
+        for (uint32_t i = this->m_count; i < count; ++i) {
             element = &this->m_data[i];
             new (element) T();
         }

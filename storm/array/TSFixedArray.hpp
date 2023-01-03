@@ -15,7 +15,7 @@ class TSFixedArray : public TSBaseArray<T> {
 
 template <class T>
 TSFixedArray<T>::~TSFixedArray() {
-    for (int32_t i = 0; i < this->Count(); i++) {
+    for (uint32_t i = 0; i < this->Count(); i++) {
         auto element = &this->operator[](i);
         element->~T();
     }
@@ -30,7 +30,7 @@ void TSFixedArray<T>::ReallocData(uint32_t count) {
     T* oldData = this->m_data;
 
     if (count < this->m_count) {
-        for (int32_t i = count; i < this->m_count; i++) {
+        for (uint32_t i = count; i < this->m_count; i++) {
             T* element = &this->m_data[i];
             delete element;
         }
@@ -47,7 +47,7 @@ void TSFixedArray<T>::ReallocData(uint32_t count) {
         if (oldData) {
             uint32_t smallestCount = count >= this->m_count ? this->m_count : count;
 
-            for (int32_t i = 0; i < smallestCount; i++) {
+            for (uint32_t i = 0; i < smallestCount; i++) {
                 T* v8 = &this->m_data[i];
 
                 if (v8) {
@@ -66,7 +66,7 @@ void TSFixedArray<T>::SetCount(uint32_t count) {
         if (count) {
             this->ReallocData(count);
 
-            for (int32_t i = this->m_count; i < count; i++) {
+            for (uint32_t i = this->m_count; i < count; i++) {
                 new (&this->m_data[i]) T();
             }
 
