@@ -21,6 +21,7 @@ class TSBaseArray {
     void Clear();
     T* Ptr();
     const T* Ptr() const;
+    T* Top();
 };
 
 template <class T>
@@ -75,6 +76,15 @@ T* TSBaseArray<T>::Ptr() {
 template <class T>
 const T* TSBaseArray<T>::Ptr() const {
     return this->m_data;
+}
+
+template <class T>
+T* TSBaseArray<T>::Top() {
+    if (this->m_count == 0) {
+        return nullptr;
+    }
+
+    return &this->m_data[this->m_count - 1];
 }
 
 #endif
