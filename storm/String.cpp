@@ -412,14 +412,14 @@ uint32_t SStrPack(char* dest, const char* source, uint32_t destsize) {
 
                 if (!*v5) {
                     *i = '\0';
-                    return i - dest;
+                    return static_cast<uint32_t>(i - dest);
                 }
             }
         }
     }
 
     *i = '\0';
-    return i - dest;
+    return static_cast<uint32_t>(i - dest);
 }
 
 size_t SStrPrintf(char* dest, size_t maxchars, const char* format, ...) {
