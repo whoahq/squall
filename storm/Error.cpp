@@ -3,6 +3,8 @@
 #include <cstdio>
 #include <cstdlib>
 
+static uint32_t s_lasterror = ERROR_SUCCESS;
+
 [[noreturn]] void SErrDisplayAppFatal(const char* format, ...) {
     va_list args;
     va_start(args, format);
@@ -70,5 +72,13 @@ void SErrPrepareAppFatal(const char* filename, int32_t linenumber) {
 }
 
 void SErrSetLastError(uint32_t errorcode) {
-    // TODO
+    s_lasterror = errorcode;
+
+    #if defined(WHOA_SYSTEM_WIN)
+        SetLastError(errorcode);
+    #endif
+}
+
+uint32_t SErrGetLastError() {
+    return s_lasterror;
 }
