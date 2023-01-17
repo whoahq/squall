@@ -206,6 +206,25 @@ void SStrInitialize() {
     }
 }
 
+char* SStrChr(char* string, char search) {
+    STORM_ASSERT(string);
+    STORM_VALIDATE(string, ERROR_INVALID_PARAMETER, nullptr);
+
+    if (!*string) {
+        return nullptr;
+    }
+
+    while (*string != search) {
+        string++;
+
+        if (!*string) {
+            return nullptr;
+        }
+    }
+
+    return string;
+}
+
 const char* SStrChr(const char* string, char search) {
     STORM_ASSERT(string);
     STORM_VALIDATE(string, ERROR_INVALID_PARAMETER, nullptr);
@@ -223,6 +242,21 @@ const char* SStrChr(const char* string, char search) {
     }
 
     return string;
+}
+
+char* SStrChrR(char* string, char search) {
+    STORM_ASSERT(string);
+    STORM_VALIDATE(string, ERROR_INVALID_PARAMETER, nullptr);
+
+    char* result;
+
+    for (result = nullptr; *string; string++) {
+        if (*string == search) {
+            result = string;
+        }
+    }
+
+    return result;
 }
 
 const char* SStrChrR(const char* string, char search) {
