@@ -7,7 +7,11 @@
 #define STORM_MAX_PATH 260
 #define STORM_MAX_STR 0x7FFFFFFF
 
+char* SStrChr(char* string, char search);
+
 const char* SStrChr(const char* string, char search);
+
+char* SStrChrR(char* string, char search);
 
 const char* SStrChrR(const char* string, char search);
 

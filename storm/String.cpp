@@ -206,6 +206,25 @@ void SStrInitialize() {
     }
 }
 
+char* SStrChr(char* string, char search) {
+    STORM_ASSERT(string);
+    STORM_VALIDATE(string, ERROR_INVALID_PARAMETER, nullptr);
+
+    if (!*string) {
+        return nullptr;
+    }
+
+    while (*string != search) {
+        string++;
+
+        if (!*string) {
+            return nullptr;
+        }
+    }
+
+    return string;
+}
+
 const char* SStrChr(const char* string, char search) {
     STORM_ASSERT(string);
     STORM_VALIDATE(string, ERROR_INVALID_PARAMETER, nullptr);
@@ -223,6 +242,21 @@ const char* SStrChr(const char* string, char search) {
     }
 
     return string;
+}
+
+char* SStrChrR(char* string, char search) {
+    STORM_ASSERT(string);
+    STORM_VALIDATE(string, ERROR_INVALID_PARAMETER, nullptr);
+
+    char* result;
+
+    for (result = nullptr; *string; string++) {
+        if (*string == search) {
+            result = string;
+        }
+    }
+
+    return result;
 }
 
 const char* SStrChrR(const char* string, char search) {
@@ -378,14 +412,14 @@ uint32_t SStrPack(char* dest, const char* source, uint32_t destsize) {
 
                 if (!*v5) {
                     *i = '\0';
-                    return i - dest;
+                    return static_cast<uint32_t>(i - dest);
                 }
             }
         }
     }
 
     *i = '\0';
-    return i - dest;
+    return static_cast<uint32_t>(i - dest);
 }
 
 size_t SStrPrintf(char* dest, size_t maxchars, const char* format, ...) {
