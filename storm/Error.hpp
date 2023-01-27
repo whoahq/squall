@@ -4,10 +4,11 @@
 #include <cstdint>
 
 #if defined(WHOA_SYSTEM_WIN)
-#include <winerror.h>
+#include <WinError.h>
 #endif
 
 #if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#define ERROR_SUCCESS           0x0
 #define ERROR_INVALID_PARAMETER 0x57
 #endif
 
@@ -39,5 +40,7 @@ int32_t SErrDisplayErrorFmt(uint32_t errorcode, const char* filename, int32_t li
 void SErrPrepareAppFatal(const char* filename, int32_t linenumber);
 
 void SErrSetLastError(uint32_t errorcode);
+
+uint32_t SErrGetLastError();
 
 #endif
