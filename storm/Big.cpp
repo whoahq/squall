@@ -3,6 +3,10 @@
 #include "storm/Memory.hpp"
 #include <cstring>
 
+void SBigDel(BigData* num) {
+    delete num;
+}
+
 void SBigFromUnsigned(BigData* num, uint32_t val) {
     FromUnsigned(num->Primary(), val);
 }
