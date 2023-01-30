@@ -32,3 +32,15 @@ int32_t BigBuffer::IsUsed(uint32_t index) const {
 void BigBuffer::SetCount(uint32_t count) {
     this->m_data.SetCount(this->m_offset + count);
 }
+
+void BigBuffer::Trim() const {
+    while (this->Count()) {
+        auto& data = const_cast<TSGrowableArray<uint32_t>&>(this->m_data);
+
+        if (*data.Top()) {
+            break;
+        }
+
+        data.SetCount(data.Count() - 1);
+    }
+}

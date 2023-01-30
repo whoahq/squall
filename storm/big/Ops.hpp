@@ -2,6 +2,7 @@
 #define STORM_BIG_OPS_HPP
 
 #include "storm/big/BigBuffer.hpp"
+#include "storm/big/BigStack.hpp"
 #include <cstdint>
 
 void Add(BigBuffer& a, const BigBuffer& b, const BigBuffer& c);
@@ -17,6 +18,8 @@ void FromUnsigned(BigBuffer& buffer, uint32_t value);
 uint64_t MakeLarge(uint32_t low, uint32_t high);
 
 void Mul(BigBuffer& a, const BigBuffer& b, uint64_t c);
+
+void Mul(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, BigStack& stack);
 
 void ToBinary(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer);
 

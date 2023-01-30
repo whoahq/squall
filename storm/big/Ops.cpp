@@ -62,6 +62,26 @@ void Mul(BigBuffer& a, const BigBuffer& b, uint64_t c) {
     a.SetCount(i);
 }
 
+void Mul(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, BigStack& stack) {
+    auto& aa = stack.MakeDistinct(a, &a == &b || &a == &c);
+    aa.Clear();
+
+    uint32_t i = 0;
+    for (i = 0; b.IsUsed(i); i++) {
+        uint64_t carry = 0;
+
+        uint32_t j = 0;
+        for (j = 0; c.IsUsed(j); j++) {
+            carry += aa[i + j] + b[i] * static_cast<uint64_t>(c[j]);
+            aa[i + j] = ExtractLowPart(carry);
+        }
+
+        aa[i + j] = ExtractLowPart(carry);
+    }
+
+    stack.UnmakeDistinct(a, aa);
+}
+
 void ToBinaryAppend(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer) {
     for (uint32_t i = 0; i < buffer.Count() * 4; i++) {
         auto byte = buffer[i / 4] >> (8 * (i & 3));
