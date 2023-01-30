@@ -49,6 +49,19 @@ uint64_t MakeLarge(uint32_t low, uint32_t high) {
     return low + (static_cast<uint64_t>(high) << 32);
 }
 
+void Mul(BigBuffer& a, const BigBuffer& b, uint64_t c) {
+    // TODO assertion c <= SMALL_BOUND
+
+    uint64_t carry = 0;
+    uint32_t i = 0;
+    for (i = 0; carry || b.IsUsed(i); i++) {
+        carry += b[i] * c;
+        a[i] = ExtractLowPart(carry);
+    }
+
+    a.SetCount(i);
+}
+
 void ToBinaryAppend(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer) {
     for (uint32_t i = 0; i < buffer.Count() * 4; i++) {
         auto byte = buffer[i / 4] >> (8 * (i & 3));

@@ -54,6 +54,66 @@ TEST_CASE("ExtractLowPartSx", "[big]") {
     }
 }
 
+TEST_CASE("Mul", "[big]") {
+    SECTION("multiplies 0 and 1") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 0);
+
+        uint64_t c = 1;
+
+        Mul(a->Primary(), b->Primary(), c);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 0);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("multiplies 2 and 4") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 2);
+
+        uint64_t c = 4;
+
+        Mul(a->Primary(), b->Primary(), c);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 8);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("multiplies 0xFFFFFFFF and 0x100") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 0xFFFFFFFF);
+
+        uint64_t c = 0x100;
+
+        Mul(a->Primary(), b->Primary(), c);
+
+        CHECK(a->Primary().Count() == 2);
+        CHECK(a->Primary()[0] == 0xFFFFFF00);
+        CHECK(a->Primary()[1] == 0xFF);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+}
+
 TEST_CASE("MakeLarge", "[big]") {
     SECTION("creates uint64_t out of 0xAABBCCDD and 0x11223344") {
         uint64_t value = MakeLarge(0xAABBCCDD, 0x11223344);
