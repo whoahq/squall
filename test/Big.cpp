@@ -67,8 +67,9 @@ TEST_CASE("Mul", "[big]") {
 
         Mul(a->Primary(), b->Primary(), c);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 0);
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 0);
 
         SBigDel(a);
         SBigDel(b);
@@ -85,6 +86,8 @@ TEST_CASE("Mul", "[big]") {
         uint64_t c = 4;
 
         Mul(a->Primary(), b->Primary(), c);
+
+        a->Primary().Trim();
 
         CHECK(a->Primary().Count() == 1);
         CHECK(a->Primary()[0] == 8);
@@ -104,6 +107,8 @@ TEST_CASE("Mul", "[big]") {
         uint64_t c = 0x100;
 
         Mul(a->Primary(), b->Primary(), c);
+
+        a->Primary().Trim();
 
         CHECK(a->Primary().Count() == 2);
         CHECK(a->Primary()[0] == 0xFFFFFF00);
