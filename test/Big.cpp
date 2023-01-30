@@ -68,6 +68,97 @@ TEST_CASE("MakeLarge", "[big]") {
     }
 }
 
+TEST_CASE("SBigAdd", "[big]") {
+    SECTION("adds 0 and 1") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 0);
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 1);
+
+        SBigAdd(a, b, c);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 1);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+    }
+
+    SECTION("adds 1 and 2") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 1);
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 2);
+
+        SBigAdd(a, b, c);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 3);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+    }
+
+    SECTION("adds 0x12345678 and 0x23456789") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 0x12345678);
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 0x23456789);
+
+        SBigAdd(a, b, c);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 0x3579BE01);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+    }
+
+    SECTION("adds 0xFFFFFFFF and 0xF0F0F0F0") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 0xFFFFFFFF);
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 0xF0F0F0F0);
+
+        SBigAdd(a, b, c);
+
+        CHECK(a->Primary().Count() == 2);
+        CHECK(a->Primary()[0] == 0xF0F0F0EF);
+        CHECK(a->Primary()[1] == 0x1);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+    }
+}
+
 TEST_CASE("SBigFromBinary", "[big]") {
     SECTION("creates bigdata from 0") {
         BigData* num;

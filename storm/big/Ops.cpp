@@ -1,5 +1,16 @@
 #include "storm/big/Ops.hpp"
 
+void Add(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
+    uint64_t carry = 0;
+    uint32_t i = 0;
+    for (i = 0; carry || b.IsUsed(i) || c.IsUsed(i); i++) {
+        carry += static_cast<uint64_t>(b[i]) + c[i];
+        a[i] = ExtractLowPart(carry);
+    }
+
+    a.SetCount(i);
+}
+
 uint32_t ExtractLowPart(uint64_t& value) {
     auto low = static_cast<uint32_t>(value);
     value >>= 32;

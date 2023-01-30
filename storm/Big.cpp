@@ -3,6 +3,10 @@
 #include "storm/Memory.hpp"
 #include <cstring>
 
+void SBigAdd(BigData* a, BigData* b, BigData* c) {
+    Add(a->Primary(), b->Primary(), c->Primary());
+}
+
 void SBigDel(BigData* num) {
     delete num;
 }
