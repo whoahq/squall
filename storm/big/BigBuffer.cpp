@@ -13,6 +13,10 @@ uint32_t BigBuffer::operator[](uint32_t index) const {
     return 0;
 }
 
+void BigBuffer::Clear() {
+    this->m_data.SetCount(this->m_offset);
+}
+
 uint32_t BigBuffer::Count() const {
     return this->m_data.Count() - this->m_offset;
 }

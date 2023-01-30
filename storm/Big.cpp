@@ -7,6 +7,10 @@ void SBigDel(BigData* num) {
     delete num;
 }
 
+void SBigFromBinary(BigData* num, const void* data, uint32_t bytes) {
+    FromBinary(num->Primary(), data, bytes);
+}
+
 void SBigFromUnsigned(BigData* num, uint32_t val) {
     FromUnsigned(num->Primary(), val);
 }
