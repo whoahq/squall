@@ -14,6 +14,10 @@ class BigStack {
     uint32_t m_used = 0;
 
     // Member functions
+    BigBuffer& Alloc(uint32_t* count);
+    void Free(uint32_t count);
+    BigBuffer& MakeDistinct(BigBuffer& orig, int32_t required);
+    void UnmakeDistinct(BigBuffer& orig, BigBuffer& distinct);
 };
 
 #endif

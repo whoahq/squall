@@ -15,6 +15,7 @@ class BigData {
     // Member functions
     TSGrowableArray<uint8_t>& Output() const;
     BigBuffer& Primary();
+    BigStack& Stack() const;
 };
 
 #endif

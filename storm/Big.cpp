@@ -24,6 +24,10 @@ void SBigNew(BigData** num) {
     *num = new (m) BigData();
 }
 
+void SBigMul(BigData* a, BigData* b, BigData* c) {
+    Mul(a->Primary(), b->Primary(), c->Primary(), a->Stack());
+}
+
 void SBigToBinaryBuffer(BigData* num, uint8_t* data, uint32_t maxBytes, uint32_t* bytes) {
     auto& output = num->Output();
     ToBinary(output, num->Primary());

@@ -270,6 +270,105 @@ TEST_CASE("SBigFromUnsigned", "[big]") {
     }
 }
 
+TEST_CASE("SBigMul", "[big]") {
+    SECTION("multiplies 0 and 1") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 0);
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 1);
+
+        SBigMul(a, b, c);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 0);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+    }
+
+    SECTION("multiplies 2 and 4") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 2);
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 4);
+
+        SBigMul(a, b, c);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 8);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+    }
+
+    SECTION("multiplies 0xFFFFFFFF and 0x100") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 0xFFFFFFFF);
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 0x100);
+
+        SBigMul(a, b, c);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 2);
+        CHECK(a->Primary()[0] == 0xFFFFFF00);
+        CHECK(a->Primary()[1] == 0xFF);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+    }
+
+    SECTION("multiplies 0xFFFFFF and 0x11223344") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 0xFFFFFF);
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 0x11223344);
+
+        SBigMul(a, b, c);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 2);
+        CHECK(a->Primary()[0] == 0x32DDCCBC);
+        CHECK(a->Primary()[1] == 0x112233);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+    }
+}
+
 TEST_CASE("SBigToBinaryBuffer", "[big]") {
     SECTION("returns expected buffer for bigdata representing 0") {
         BigData* num;
