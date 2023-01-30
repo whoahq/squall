@@ -13,6 +13,7 @@ class BigBuffer {
     // Member functions
     uint32_t& operator[](uint32_t index);
     uint32_t operator[](uint32_t index) const;
+    void Clear();
     uint32_t Count() const;
     void GrowToFit(uint32_t index);
     int32_t IsUsed(uint32_t index) const;

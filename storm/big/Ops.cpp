@@ -19,6 +19,16 @@ uint32_t ExtractLowPartSx(uint64_t& value) {
     return low;
 }
 
+void FromBinary(BigBuffer& buffer, const void* data, uint32_t bytes) {
+    buffer.Clear();
+
+    for (uint32_t i = 0; i < bytes; i++) {
+        auto byte = static_cast<const uint8_t*>(data)[i];
+        auto v7 = (i & 3) ? buffer[i / 4] : 0;
+        buffer[i / 4] = v7 + (byte << (8 * (i & 3)));
+    }
+}
+
 void FromUnsigned(BigBuffer& buffer, uint32_t value) {
     buffer[0] = value;
     buffer.SetCount(1);
