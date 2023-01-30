@@ -16,6 +16,8 @@ void FromUnsigned(BigBuffer& buffer, uint32_t value);
 
 uint64_t MakeLarge(uint32_t low, uint32_t high);
 
+void Mul(BigBuffer& a, const BigBuffer& b, uint64_t c);
+
 void ToBinary(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer);
 
 #endif
