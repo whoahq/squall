@@ -76,6 +76,8 @@ TEST_CASE("SBigFromUnsigned", "[big]") {
 
         CHECK(num->Primary().Count() == 1);
         CHECK(num->Primary()[0] == 0);
+
+        SBigDel(num);
     }
 
     SECTION("creates bigdata from 0x12345678") {
@@ -85,6 +87,8 @@ TEST_CASE("SBigFromUnsigned", "[big]") {
 
         CHECK(num->Primary().Count() == 1);
         CHECK(num->Primary()[0] == 0x12345678);
+
+        SBigDel(num);
     }
 }
 
@@ -99,6 +103,8 @@ TEST_CASE("SBigToBinaryBuffer", "[big]") {
         SBigToBinaryBuffer(num, buffer, sizeof(buffer), &bytes);
 
         REQUIRE(bytes == 0);
+
+        SBigDel(num);
     }
 
     SECTION("returns expected buffer for bigdata representing 0x12345678") {
@@ -112,5 +118,7 @@ TEST_CASE("SBigToBinaryBuffer", "[big]") {
 
         CHECK(bytes == 4);
         CHECK(*reinterpret_cast<uint32_t*>(buffer) == 0x12345678);
+
+        SBigDel(num);
     }
 }

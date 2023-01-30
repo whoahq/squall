@@ -4,6 +4,8 @@
 #include "storm/big/BigData.hpp"
 #include <cstdint>
 
+void SBigDel(BigData* num);
+
 void SBigFromUnsigned(BigData* num, uint32_t val);
 
 void SBigNew(BigData** num);
