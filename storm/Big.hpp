@@ -4,6 +4,8 @@
 #include "storm/big/BigData.hpp"
 #include <cstdint>
 
+void SBigAdd(BigData* a, BigData* b, BigData* c);
+
 void SBigDel(BigData* num);
 
 void SBigFromBinary(BigData* num, const void* data, uint32_t bytes);

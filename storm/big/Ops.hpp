@@ -4,6 +4,8 @@
 #include "storm/big/BigBuffer.hpp"
 #include <cstdint>
 
+void Add(BigBuffer& a, const BigBuffer& b, const BigBuffer& c);
+
 uint32_t ExtractLowPart(uint64_t& value);
 
 uint32_t ExtractLowPartSx(uint64_t& value);
