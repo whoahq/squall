@@ -82,6 +82,10 @@ void Mul(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, BigStack& stack) 
     stack.UnmakeDistinct(a, aa);
 }
 
+void SetZero(BigBuffer& buffer) {
+    buffer.Clear();
+}
+
 void ToBinaryAppend(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer) {
     for (uint32_t i = 0; i < buffer.Count() * 4; i++) {
         auto byte = buffer[i / 4] >> (8 * (i & 3));

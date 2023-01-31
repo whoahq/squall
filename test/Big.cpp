@@ -420,3 +420,19 @@ TEST_CASE("SBigToBinaryBuffer", "[big]") {
         SBigDel(num);
     }
 }
+
+TEST_CASE("SetZero", "[big]") {
+    SECTION("sets buffer to zero") {
+        BigData* num;
+        SBigNew(&num);
+        SBigFromUnsigned(num, 0x12345678);
+
+        CHECK(num->Primary().Count() == 1);
+
+        SetZero(num->Primary());
+
+        CHECK(num->Primary().Count() == 0);
+
+        SBigDel(num);
+    }
+}
