@@ -82,6 +82,11 @@ void Mul(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, BigStack& stack) 
     stack.UnmakeDistinct(a, aa);
 }
 
+void SetOne(BigBuffer& buffer) {
+    buffer.SetCount(1);
+    buffer[0] = 1;
+}
+
 void SetZero(BigBuffer& buffer) {
     buffer.Clear();
 }

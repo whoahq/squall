@@ -21,6 +21,8 @@ void Mul(BigBuffer& a, const BigBuffer& b, uint64_t c);
 
 void Mul(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, BigStack& stack);
 
+void SetOne(BigBuffer& buffer);
+
 void SetZero(BigBuffer& buffer);
 
 void ToBinary(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer);

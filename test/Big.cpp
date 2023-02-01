@@ -421,6 +421,24 @@ TEST_CASE("SBigToBinaryBuffer", "[big]") {
     }
 }
 
+TEST_CASE("SetOne", "[big]") {
+    SECTION("sets buffer to one") {
+        BigData* num;
+        SBigNew(&num);
+        uint64_t data = 0x123456789ABCDEF0;
+        SBigFromBinary(num, reinterpret_cast<uint8_t*>(&data), sizeof(data));
+
+        CHECK(num->Primary().Count() == 2);
+
+        SetOne(num->Primary());
+
+        CHECK(num->Primary().Count() == 1);
+        CHECK(num->Primary()[0] == 1);
+
+        SBigDel(num);
+    }
+}
+
 TEST_CASE("SetZero", "[big]") {
     SECTION("sets buffer to zero") {
         BigData* num;
