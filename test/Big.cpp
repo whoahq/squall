@@ -68,6 +68,86 @@ TEST_CASE("Add", "[big]") {
     }
 }
 
+TEST_CASE("Compare", "[big]") {
+    SECTION("compares 0 and 1") {
+        BigData* a;
+        SBigNew(&a);
+        SBigFromUnsigned(a, 0);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 1);
+
+        CHECK(Compare(a->Primary(), b->Primary()) == -1);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("compares 1 and 1") {
+        BigData* a;
+        SBigNew(&a);
+        SBigFromUnsigned(a, 1);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 1);
+
+        CHECK(Compare(a->Primary(), b->Primary()) == 0);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("compares 10 and 1") {
+        BigData* a;
+        SBigNew(&a);
+        SBigFromUnsigned(a, 10);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 1);
+
+        CHECK(Compare(a->Primary(), b->Primary()) == 1);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("compares 0x1111111111111111 and 0x22222222") {
+        BigData* a;
+        SBigNew(&a);
+        uint64_t data = 0x1111111111111111;
+        SBigFromBinary(a, reinterpret_cast<uint8_t*>(&data), sizeof(data));
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 0x22222222);
+
+        CHECK(Compare(a->Primary(), b->Primary()) == 1);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("compares 0x11111111 and 0x2222222222222222") {
+        BigData* a;
+        SBigNew(&a);
+        SBigFromUnsigned(a, 0x11111111);
+
+        BigData* b;
+        SBigNew(&b);
+        uint64_t data = 0x2222222222222222;
+        SBigFromBinary(b, reinterpret_cast<uint8_t*>(&data), sizeof(data));
+
+        CHECK(Compare(a->Primary(), b->Primary()) == -1);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+}
+
+
 TEST_CASE("ExtractLowPart", "[big]") {
     SECTION("extracts low part of 0") {
         uint64_t value = 0;

@@ -22,6 +22,18 @@ void Add(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
     a.SetCount(i);
 }
 
+int32_t Compare(const BigBuffer& a, const BigBuffer& b) {
+    int32_t result = 0;
+
+    for (int32_t i = 0; a.IsUsed(i) || b.IsUsed(i); i++) {
+        if (a[i] != b[i]) {
+            result = b[i] < a[i] ? 1 : -1;
+        }
+    }
+
+    return result;
+}
+
 uint32_t ExtractLowPart(uint64_t& value) {
     auto low = static_cast<uint32_t>(value);
     value >>= 32;

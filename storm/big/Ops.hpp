@@ -9,6 +9,8 @@ void Add(BigBuffer& a, const BigBuffer& b, uint32_t c);
 
 void Add(BigBuffer& a, const BigBuffer& b, const BigBuffer& c);
 
+int32_t Compare(const BigBuffer& a, const BigBuffer& b);
+
 uint32_t ExtractLowPart(uint64_t& value);
 
 uint32_t ExtractLowPartSx(uint64_t& value);
