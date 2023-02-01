@@ -5,6 +5,8 @@
 #include "storm/big/BigStack.hpp"
 #include <cstdint>
 
+void Add(BigBuffer& a, const BigBuffer& b, uint32_t c);
+
 void Add(BigBuffer& a, const BigBuffer& b, const BigBuffer& c);
 
 uint32_t ExtractLowPart(uint64_t& value);

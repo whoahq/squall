@@ -1,5 +1,16 @@
 #include "storm/big/Ops.hpp"
 
+void Add(BigBuffer& a, const BigBuffer& b, uint32_t c) {
+    uint64_t carry = c;
+    uint32_t i = 0;
+    for (i = 0; carry || b.IsUsed(i); i++) {
+        carry += b[i];
+        a[i] = ExtractLowPart(carry);
+    }
+
+    a.SetCount(i);
+}
+
 void Add(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
     uint64_t carry = 0;
     uint32_t i = 0;

@@ -2,6 +2,72 @@
 #include "storm/big/Ops.hpp"
 #include "test/Test.hpp"
 
+TEST_CASE("Add", "[big]") {
+    SECTION("adds 0 and 1") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 0);
+
+        uint64_t c = 1;
+
+        Add(a->Primary(), b->Primary(), c);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 1);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("adds 2 and 4") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 2);
+
+        uint64_t c = 4;
+
+        Add(a->Primary(), b->Primary(), c);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 6);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("adds 0xFFFFFFFF and 0xCCCCCCCC") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 0xFFFFFFFF);
+
+        uint64_t c = 0xCCCCCCCC;
+
+        Add(a->Primary(), b->Primary(), c);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 2);
+        CHECK(a->Primary()[0] == 0xCCCCCCCB);
+        CHECK(a->Primary()[1] == 0x1);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+}
+
 TEST_CASE("ExtractLowPart", "[big]") {
     SECTION("extracts low part of 0") {
         uint64_t value = 0;
