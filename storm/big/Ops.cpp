@@ -68,6 +68,33 @@ void FromUnsigned(BigBuffer& buffer, uint32_t value) {
     buffer.SetCount(1);
 }
 
+uint32_t HighBitPos(const BigBuffer& buffer) {
+    uint32_t index = buffer.Count();
+    if (index == 0) {
+        return 0;
+    }
+
+    while (buffer[--index] == 0) {
+        if (index == 0) {
+            return 0;
+        }
+    }
+
+    uint32_t mask = 0x80000000;
+    uint32_t bitIndex = 32;
+    while (bitIndex > 0) {
+        bitIndex--;
+
+        if (buffer[index] & mask) {
+            return (index * 32) + bitIndex;
+        }
+
+        mask >>= 1;
+    }
+
+    return 0;
+}
+
 uint64_t MakeLarge(uint32_t low, uint32_t high) {
     return low + (static_cast<uint64_t>(high) << 32);
 }

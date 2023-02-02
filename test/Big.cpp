@@ -200,6 +200,69 @@ TEST_CASE("ExtractLowPartSx", "[big]") {
     }
 }
 
+TEST_CASE("HighBitPos", "[big]") {
+    SECTION("returns position of high bit for 0") {
+        BigData* num;
+        SBigNew(&num);
+        SBigFromUnsigned(num, 0);
+
+        CHECK(HighBitPos(num->Primary()) == 0);
+
+        SBigDel(num);
+    }
+
+    SECTION("returns position of high bit for 0x1000") {
+        BigData* num;
+        SBigNew(&num);
+        SBigFromUnsigned(num, 0x1000);
+
+        CHECK(HighBitPos(num->Primary()) == 12);
+
+        SBigDel(num);
+    }
+
+    SECTION("returns position of high bit for 0x1111") {
+        BigData* num;
+        SBigNew(&num);
+        SBigFromUnsigned(num, 0x1111);
+
+        CHECK(HighBitPos(num->Primary()) == 12);
+
+        SBigDel(num);
+    }
+
+    SECTION("returns position of high bit for 0xFFFF") {
+        BigData* num;
+        SBigNew(&num);
+        SBigFromUnsigned(num, 0xFFFF);
+
+        CHECK(HighBitPos(num->Primary()) == 15);
+
+        SBigDel(num);
+    }
+
+    SECTION("returns position of high bit for 0xFFFFFFFF") {
+        BigData* num;
+        SBigNew(&num);
+        SBigFromUnsigned(num, 0xFFFFFFFF);
+
+        CHECK(HighBitPos(num->Primary()) == 31);
+
+        SBigDel(num);
+    }
+
+    SECTION("returns position of high bit for 0x123456789ABCDEF0") {
+        BigData* num;
+        SBigNew(&num);
+        uint64_t data = 0x123456789ABCDEF0;
+        SBigFromBinary(num, reinterpret_cast<uint8_t*>(&data), sizeof(data));
+
+        CHECK(HighBitPos(num->Primary()) == 60);
+
+        SBigDel(num);
+    }
+}
+
 TEST_CASE("Mul", "[big]") {
     SECTION("multiplies 0 and 1") {
         BigData* a;
