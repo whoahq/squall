@@ -459,6 +459,23 @@ TEST_CASE("SBigAdd", "[big]") {
     }
 }
 
+TEST_CASE("SBigCompare", "[big]") {
+    SECTION("compares 10 and 1") {
+        BigData* a;
+        SBigNew(&a);
+        SBigFromUnsigned(a, 10);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 1);
+
+        CHECK(SBigCompare(a, b) == 1);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+}
+
 TEST_CASE("SBigFromBinary", "[big]") {
     SECTION("creates bigdata from 0") {
         BigData* num;

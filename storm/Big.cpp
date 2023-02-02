@@ -7,6 +7,10 @@ void SBigAdd(BigData* a, BigData* b, BigData* c) {
     Add(a->Primary(), b->Primary(), c->Primary());
 }
 
+int32_t SBigCompare(BigData* a, BigData* b) {
+    return Compare(a->Primary(), b->Primary());
+}
+
 void SBigDel(BigData* num) {
     delete num;
 }

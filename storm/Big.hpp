@@ -6,6 +6,8 @@
 
 void SBigAdd(BigData* a, BigData* b, BigData* c);
 
+int32_t SBigCompare(BigData* a, BigData* b);
+
 void SBigDel(BigData* num);
 
 void SBigFromBinary(BigData* num, const void* data, uint32_t bytes);
