@@ -95,6 +95,10 @@ uint32_t HighBitPos(const BigBuffer& buffer) {
     return 0;
 }
 
+void InsertLowPart(uint64_t& value, uint32_t low) {
+    value = (value << 32) | low;
+}
+
 uint64_t MakeLarge(uint32_t low, uint32_t high) {
     return low + (static_cast<uint64_t>(high) << 32);
 }

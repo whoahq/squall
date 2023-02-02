@@ -263,6 +263,32 @@ TEST_CASE("HighBitPos", "[big]") {
     }
 }
 
+TEST_CASE("InsertLowPart", "[big]") {
+    SECTION("inserts low part 0xABCD1111 into value 0") {
+        uint64_t value = 0;
+        uint32_t low = 0xABCD1111;
+        InsertLowPart(value, low);
+
+        CHECK(value == 0xABCD1111);
+    }
+
+    SECTION("inserts low part 0xABCD1111 into value 0xCCCCCCCC") {
+        uint64_t value = 0xCCCCCCCC;
+        uint32_t low = 0xABCD1111;
+        InsertLowPart(value, low);
+
+        CHECK(value == 0xCCCCCCCCABCD1111);
+    }
+
+    SECTION("inserts low part 0x12345678 into value 0xA0B1C2D3E4F5A6B7") {
+        uint64_t value = 0xA0B1C2D3E4F5A6B7;
+        uint32_t low = 0x12345678;
+        InsertLowPart(value, low);
+
+        CHECK(value == 0xE4F5A6B712345678);
+    }
+}
+
 TEST_CASE("Mul", "[big]") {
     SECTION("multiplies 0 and 1") {
         BigData* a;

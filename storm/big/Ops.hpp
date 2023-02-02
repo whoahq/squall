@@ -21,6 +21,8 @@ void FromUnsigned(BigBuffer& buffer, uint32_t value);
 
 uint32_t HighBitPos(const BigBuffer& a);
 
+void InsertLowPart(uint64_t& value, uint32_t low);
+
 uint64_t MakeLarge(uint32_t low, uint32_t high);
 
 void Mul(BigBuffer& a, const BigBuffer& b, uint64_t c);
