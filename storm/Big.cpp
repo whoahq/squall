@@ -7,6 +7,23 @@ void SBigAdd(BigData* a, BigData* b, BigData* c) {
     Add(a->Primary(), b->Primary(), c->Primary());
 }
 
+void SBigBitLen(BigData* num, uint32_t* len) {
+    auto& buffer = num->Primary();
+    buffer.Trim();
+
+    auto index = buffer.Count() - 1;
+    auto high = buffer[index];
+
+    uint32_t bitIndex;
+    for (bitIndex = 31; bitIndex > 0; bitIndex--) {
+        if (((1 << bitIndex) & high)) {
+            break;
+        }
+    }
+
+    *len = (index * 32) + bitIndex + 1;
+}
+
 int32_t SBigCompare(BigData* a, BigData* b) {
     return Compare(a->Primary(), b->Primary());
 }

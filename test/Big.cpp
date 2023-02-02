@@ -459,6 +459,74 @@ TEST_CASE("SBigAdd", "[big]") {
     }
 }
 
+TEST_CASE("SBigBitLen", "[big]") {
+    SECTION("returns bit length of 1") {
+        BigData* num;
+        SBigNew(&num);
+        SBigFromUnsigned(num, 1);
+
+        uint32_t len;
+        SBigBitLen(num, &len);
+
+        CHECK(len == 1);
+
+        SBigDel(num);
+    }
+
+    SECTION("returns bit length of 5") {
+        BigData* num;
+        SBigNew(&num);
+        SBigFromUnsigned(num, 5);
+
+        uint32_t len;
+        SBigBitLen(num, &len);
+
+        CHECK(len == 3);
+
+        SBigDel(num);
+    }
+
+    SECTION("returns bit length of 0xFFFF") {
+        BigData* num;
+        SBigNew(&num);
+        SBigFromUnsigned(num, 0xFFFF);
+
+        uint32_t len;
+        SBigBitLen(num, &len);
+
+        CHECK(len == 16);
+
+        SBigDel(num);
+    }
+
+    SECTION("returns bit length of 0xFFFFFFFF") {
+        BigData* num;
+        SBigNew(&num);
+        SBigFromUnsigned(num, 0xFFFFFFFF);
+
+        uint32_t len;
+        SBigBitLen(num, &len);
+
+        CHECK(len == 32);
+
+        SBigDel(num);
+    }
+
+    SECTION("returns bit length of 0x22222222AAAAAAAA") {
+        BigData* num;
+        SBigNew(&num);
+        uint64_t num_ = 0x22222222AAAAAAAA;
+        SBigFromBinary(num, reinterpret_cast<uint8_t*>(&num_), sizeof(num_));
+
+        uint32_t len;
+        SBigBitLen(num, &len);
+
+        CHECK(len == 62);
+
+        SBigDel(num);
+    }
+}
+
 TEST_CASE("SBigCompare", "[big]") {
     SECTION("compares 10 and 1") {
         BigData* a;
