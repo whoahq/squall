@@ -19,7 +19,7 @@ void FromBinary(BigBuffer& buffer, const void* value, uint32_t bytes);
 
 void FromUnsigned(BigBuffer& buffer, uint32_t value);
 
-uint32_t HighBitPos(const BigBuffer& a);
+uint32_t HighBitPos(const BigBuffer& buffer);
 
 void InsertLowPart(uint64_t& value, uint32_t low);
 
