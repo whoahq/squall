@@ -147,6 +147,120 @@ TEST_CASE("Compare", "[big]") {
     }
 }
 
+TEST_CASE("Div", "[big]") {
+    SECTION("divides 2 by 1") {
+        BigData* a;
+        SBigNew(&a);
+
+        uint32_t b;
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 2);
+
+        uint64_t d = 1;
+
+        Div(a->Primary(), &b, c->Primary(), d);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 2);
+        CHECK(b == 0);
+
+        SBigDel(a);
+        SBigDel(c);
+    }
+
+    SECTION("divides 5 by 2") {
+        BigData* a;
+        SBigNew(&a);
+
+        uint32_t b;
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 5);
+
+        uint64_t d = 2;
+
+        Div(a->Primary(), &b, c->Primary(), d);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 2);
+        CHECK(b == 1);
+
+        SBigDel(a);
+        SBigDel(c);
+    }
+
+    SECTION("divides 7 by 4") {
+        BigData* a;
+        SBigNew(&a);
+
+        uint32_t b;
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 7);
+
+        uint64_t d = 4;
+
+        Div(a->Primary(), &b, c->Primary(), d);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 1);
+        CHECK(b == 3);
+
+        SBigDel(a);
+        SBigDel(c);
+    }
+
+    SECTION("divides 0x9999444488885555 by 0x2222") {
+        BigData* a;
+        SBigNew(&a);
+
+        uint32_t b;
+
+        BigData* c;
+        SBigNew(&c);
+        uint64_t c_ = 0x9999444488885555;
+        SBigFromBinary(c, reinterpret_cast<uint8_t*>(&c_), sizeof(c_));
+
+        uint64_t d = 0x2222;
+
+        Div(a->Primary(), &b, c->Primary(), d);
+
+        CHECK(a->Primary().Count() == 2);
+        CHECK(a->Primary()[0] == 0x00040002);
+        CHECK(a->Primary()[1] == 0x48002);
+        CHECK(b == 0x1111);
+
+        SBigDel(a);
+        SBigDel(c);
+    }
+
+    SECTION("divides 0x9999444488885555 by 0xFFFFFFFF") {
+        BigData* a;
+        SBigNew(&a);
+
+        uint32_t b;
+
+        BigData* c;
+        SBigNew(&c);
+        uint64_t c_ = 0x9999444488885555;
+        SBigFromBinary(c, reinterpret_cast<uint8_t*>(&c_), sizeof(c_));
+
+        uint64_t d = 0xFFFFFFFF;
+
+        Div(a->Primary(), &b, c->Primary(), d);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 0x99994445);
+        CHECK(b == 0x2221999A);
+
+        SBigDel(a);
+        SBigDel(c);
+    }
+}
 
 TEST_CASE("ExtractLowPart", "[big]") {
     SECTION("extracts low part of 0") {

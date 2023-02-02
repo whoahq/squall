@@ -34,6 +34,23 @@ int32_t Compare(const BigBuffer& a, const BigBuffer& b) {
     return result;
 }
 
+void Div(BigBuffer& a, uint32_t* b, const BigBuffer& c, uint64_t d) {
+    // TODO STORM_ASSERT(d <= SMALL_BOUND);
+
+    auto index = c.Count();
+    a.SetCount(index);
+
+    uint64_t data = 0;
+    while (index > 0) {
+        InsertLowPart(data, c[--index]);
+        a[index] = data / d;
+        data %= d;
+    }
+
+    a.Trim();
+    *b = data;
+}
+
 uint32_t ExtractLowPart(uint64_t& value) {
     auto low = static_cast<uint32_t>(value);
     value >>= 32;
