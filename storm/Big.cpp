@@ -28,6 +28,10 @@ void SBigMul(BigData* a, BigData* b, BigData* c) {
     Mul(a->Primary(), b->Primary(), c->Primary(), a->Stack());
 }
 
+void SBigSub(BigData* a, BigData* b, BigData* c) {
+    Sub(a->Primary(), b->Primary(), c->Primary());
+}
+
 void SBigToBinaryBuffer(BigData* num, uint8_t* data, uint32_t maxBytes, uint32_t* bytes) {
     auto& output = num->Output();
     ToBinary(output, num->Primary());

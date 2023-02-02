@@ -16,6 +16,8 @@ void SBigMul(BigData* a, BigData* b, BigData* c);
 
 void SBigNew(BigData** num);
 
+void SBigSub(BigData* a, BigData* b, BigData* c);
+
 void SBigToBinaryBuffer(BigData* num, uint8_t* data, uint32_t maxBytes, uint32_t* bytes);
 
 #endif

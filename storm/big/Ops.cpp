@@ -141,6 +141,19 @@ void SetZero(BigBuffer& buffer) {
     buffer.Clear();
 }
 
+void Sub(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
+    uint64_t borrow = 0;
+    uint32_t i = 0;
+    for (i = 0; b.IsUsed(i) || c.IsUsed(i); i++) {
+        borrow += b[i] - static_cast<uint64_t>(c[i]);
+        a[i] = ExtractLowPartSx(borrow);
+    }
+
+    a.SetCount(i);
+
+    STORM_ASSERT(!borrow);
+}
+
 void ToBinaryAppend(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer) {
     for (uint32_t i = 0; i < buffer.Count() * 4; i++) {
         auto byte = buffer[i / 4] >> (8 * (i & 3));
