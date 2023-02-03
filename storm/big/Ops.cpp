@@ -51,6 +51,76 @@ void Div(BigBuffer& a, uint32_t* b, const BigBuffer& c, uint64_t d) {
     *b = data;
 }
 
+void Div(BigBuffer& a, BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack) {
+    c.Trim();
+    d.Trim();
+
+    auto cCount = c.Count();
+    auto dCount = d.Count();
+
+    if (dCount > cCount) {
+        SetZero(b = c);
+
+        return;
+    }
+
+    if (dCount <= 1) {
+        Div(a, &b[0], c, d[0]);
+        b.SetCount(1);
+
+        return;
+    }
+
+    uint32_t allocCount = 0;
+    auto& cc = stack.Alloc(&allocCount);
+    auto& dd = stack.Alloc(&allocCount);
+    auto& work = stack.Alloc(&allocCount);
+
+    uint32_t shift = 0x1F - (HighBitPos(work) & 0x1F);
+    Shl(cc, c, shift);
+    Shl(dd, d, shift);
+
+    uint32_t t = dd[dCount - 1] + 1;
+    auto v12 = cCount - dCount + 1;
+    a.SetCount(v12);
+
+    uint32_t index;
+    if (v12) {
+        while (true) {
+            index = v12 - 1;
+            a.SetOffset(v12 - 1);
+            cc.SetOffset(v12 - 1);
+
+            if (t) {
+                a[0] = MakeLarge(cc[dCount - 1], cc[dCount]) / t;
+            } else {
+                a[0] = cc[dCount];
+            }
+
+            if (a[0]) {
+                Mul(work, dd, a[0]);
+                Sub(cc, cc, work);
+            }
+
+            while (cc[dCount] || Compare(cc, dd) >= 0) {
+                a[0]++;
+                Sub(cc, cc, dd);
+            }
+
+            if (index == 0) {
+                break;
+            }
+
+            v12 = index;
+        }
+    }
+
+    Shr(b, cc, shift);
+    b.Trim();
+
+    stack.Free(allocCount);
+}
+
 uint32_t ExtractLowPart(uint64_t& value) {
     auto low = static_cast<uint32_t>(value);
     value >>= 32;

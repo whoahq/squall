@@ -170,6 +170,36 @@ TEST_CASE("Div", "[big]") {
         SBigDel(c);
     }
 
+    SECTION("divides 2 by 1 (buffer divisor)") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 2);
+
+        BigData* d;
+        SBigNew(&d);
+        SBigFromUnsigned(d, 1);
+
+        Div(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());
+
+        a->Primary().Trim();
+        b->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 2);
+        CHECK(b->Primary().Count() == 0);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+        SBigDel(d);
+    }
+
     SECTION("divides 5 by 2") {
         BigData* a;
         SBigNew(&a);
@@ -214,6 +244,37 @@ TEST_CASE("Div", "[big]") {
         SBigDel(c);
     }
 
+    SECTION("divides 7 by 4 (buffer divisor)") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 7);
+
+        BigData* d;
+        SBigNew(&d);
+        SBigFromUnsigned(d, 4);
+
+        Div(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());
+
+        a->Primary().Trim();
+        b->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 1);
+        CHECK(b->Primary().Count() == 1);
+        CHECK(b->Primary()[0] == 3);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+        SBigDel(d);
+    }
+
     SECTION("divides 0x9999444488885555 by 0x2222") {
         BigData* a;
         SBigNew(&a);
@@ -238,6 +299,39 @@ TEST_CASE("Div", "[big]") {
         SBigDel(c);
     }
 
+    SECTION("divides 0x9999444488885555 by 0x2222 (buffer divisor)") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+
+        BigData* c;
+        SBigNew(&c);
+        uint64_t c_ = 0x9999444488885555;
+        SBigFromBinary(c, reinterpret_cast<uint8_t*>(&c_), sizeof(c_));
+
+        BigData* d;
+        SBigNew(&d);
+        SBigFromUnsigned(d, 0x2222);
+
+        Div(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());
+
+        a->Primary().Trim();
+        b->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 2);
+        CHECK(a->Primary()[0] == 0x00040002);
+        CHECK(a->Primary()[1] == 0x48002);
+        CHECK(b->Primary().Count() == 1);
+        CHECK(b->Primary()[0] == 0x1111);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+        SBigDel(d);
+    }
+
     SECTION("divides 0x9999444488885555 by 0xFFFFFFFF") {
         BigData* a;
         SBigNew(&a);
@@ -259,6 +353,38 @@ TEST_CASE("Div", "[big]") {
 
         SBigDel(a);
         SBigDel(c);
+    }
+
+    SECTION("divides 0x9999444488885555 by 0xFFFFFFFF (buffer divisor)") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+
+        BigData* c;
+        SBigNew(&c);
+        uint64_t c_ = 0x9999444488885555;
+        SBigFromBinary(c, reinterpret_cast<uint8_t*>(&c_), sizeof(c_));
+
+        BigData* d;
+        SBigNew(&d);
+        SBigFromUnsigned(d, 0xFFFFFFFF);
+
+        Div(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());
+
+        a->Primary().Trim();
+        b->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 0x99994445);
+        CHECK(b->Primary().Count() == 1);
+        CHECK(b->Primary()[0] == 0x2221999A);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+        SBigDel(d);
     }
 }
 

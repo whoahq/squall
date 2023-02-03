@@ -13,6 +13,8 @@ int32_t Compare(const BigBuffer& a, const BigBuffer& b);
 
 void Div(BigBuffer& a, uint32_t* b, const BigBuffer& c, uint64_t d);
 
+void Div(BigBuffer& a, BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack);
+
 uint32_t ExtractLowPart(uint64_t& value);
 
 uint32_t ExtractLowPartLargeSum(uint64_t& value, uint64_t add);
