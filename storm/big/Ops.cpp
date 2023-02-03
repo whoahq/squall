@@ -170,6 +170,29 @@ void SetZero(BigBuffer& buffer) {
     buffer.Clear();
 }
 
+void Shl(BigBuffer& a, const BigBuffer& b, uint32_t shift) {
+    auto v4 = shift >> 5;
+    auto v14 = shift & 0x1F;
+    auto v5 = b.Count() + v4 + 1;
+
+    for (uint32_t i = v5 - 1, j = v5 - v4 - 1; i + 1 > 0; i--, j--) {
+        uint32_t v9 = 0;
+
+        if (i >= v4) {
+            v9 = b[j] << v14;
+
+            if (i > v4 && v14) {
+                v9 += b[j - 1] >> (32 - v14);
+            }
+        }
+
+        a[i] = v9;
+    }
+
+    a.SetCount(v5);
+    a.Trim();
+}
+
 void Shr(BigBuffer& a, const BigBuffer& b, uint32_t shift) {
     auto v4 = shift >> 5;
     auto v9 = shift & 0x1F;

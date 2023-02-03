@@ -855,6 +855,27 @@ TEST_CASE("SBigMul", "[big]") {
     }
 }
 
+TEST_CASE("SBigShl", "[big]") {
+    SECTION("shifts 256 left 7 bits") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 256);
+
+        SBigShl(a, b, 7);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 32768);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+}
+
 TEST_CASE("SBigShr", "[big]") {
     SECTION("shifts 256 right 7 bits") {
         BigData* a;
@@ -1001,6 +1022,166 @@ TEST_CASE("SetZero", "[big]") {
         CHECK(num->Primary().Count() == 0);
 
         SBigDel(num);
+    }
+}
+
+TEST_CASE("Shl", "[big]") {
+    SECTION("shifts 0 left 1 bit") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 0);
+
+        Shl(a->Primary(), b->Primary(), 1);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 0);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("shifts 1 left 0 bits") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 1);
+
+        Shl(a->Primary(), b->Primary(), 0);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 1);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("shifts 1 left 1 bit") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 1);
+
+        Shl(a->Primary(), b->Primary(), 1);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 2);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("shifts 2 left 1 bit") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 2);
+
+        Shl(a->Primary(), b->Primary(), 1);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 4);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("shifts 256 left 7 bits") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 256);
+
+        Shl(a->Primary(), b->Primary(), 7);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 32768);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("shifts 0xFFFFFFFF left 10 bits") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        uint64_t b_ = 0xFFFFFFFF;
+        SBigFromBinary(b, reinterpret_cast<uint8_t*>(&b_), sizeof(b_));
+
+        Shl(a->Primary(), b->Primary(), 10);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 2);
+        CHECK(a->Primary()[0] == 0xFFFFFC00);
+        CHECK(a->Primary()[1] == 0x3FF);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("shifts 0x1000000000000000 left 1 bit") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        uint64_t b_ = 0x1000000000000000;
+        SBigFromBinary(b, reinterpret_cast<uint8_t*>(&b_), sizeof(b_));
+
+        Shl(a->Primary(), b->Primary(), 1);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 2);
+        CHECK(a->Primary()[0] == 0);
+        CHECK(a->Primary()[1] == 0x20000000);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("shifts 0x1000000000000000 left 16 bits") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        uint64_t b_ = 0x1000000000000000;
+        SBigFromBinary(b, reinterpret_cast<uint8_t*>(&b_), sizeof(b_));
+
+        Shl(a->Primary(), b->Primary(), 16);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 3);
+        CHECK(a->Primary()[0] == 0);
+        CHECK(a->Primary()[1] == 0);
+        CHECK(a->Primary()[2] == 0x1000);
+
+        SBigDel(a);
+        SBigDel(b);
     }
 }
 

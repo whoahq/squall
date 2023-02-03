@@ -20,6 +20,8 @@ void SBigMul(BigData* a, BigData* b, BigData* c);
 
 void SBigNew(BigData** num);
 
+void SBigShl(BigData* a, BigData* b, uint32_t shift);
+
 void SBigShr(BigData* a, BigData* b, uint32_t shift);
 
 void SBigSquare(BigData* a, BigData* b);
