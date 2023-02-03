@@ -170,6 +170,24 @@ void SetZero(BigBuffer& buffer) {
     buffer.Clear();
 }
 
+void Shr(BigBuffer& a, const BigBuffer& b, uint32_t shift) {
+    auto v4 = shift >> 5;
+    auto v9 = shift & 0x1F;
+
+    uint32_t i = 0;
+    for (i = 0; b.IsUsed(i + v4); i++) {
+        auto v6 = b[i + v4] >> v9;
+
+        if (v9) {
+            v6 += b[i + v4 + 1] << (32 - v9);
+        }
+
+        a[i] = v6;
+    }
+
+    a.SetCount(i);
+}
+
 void Square(BigBuffer& a, const BigBuffer& b, BigStack& stack) {
     auto& aa = stack.MakeDistinct(a, &a == &b);
     aa.Clear();

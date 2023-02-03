@@ -37,6 +37,8 @@ void SetOne(BigBuffer& buffer);
 
 void SetZero(BigBuffer& buffer);
 
+void Shr(BigBuffer& a, const BigBuffer& b, uint32_t shift);
+
 void Square(BigBuffer& a, const BigBuffer& b, BigStack& stack);
 
 void Sub(BigBuffer& a, const BigBuffer& b, const BigBuffer& c);
