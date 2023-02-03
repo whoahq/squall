@@ -876,7 +876,7 @@ TEST_CASE("SBigShr", "[big]") {
     }
 }
 
-TEST_CASE("SBigSquare", "[square]") {
+TEST_CASE("SBigSquare", "[big]") {
     SECTION("squares 0xFFFFFFFF") {
         BigData* a;
         SBigNew(&a);
