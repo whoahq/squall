@@ -49,6 +49,10 @@ void SBigMul(BigData* a, BigData* b, BigData* c) {
     Mul(a->Primary(), b->Primary(), c->Primary(), a->Stack());
 }
 
+void SBigSquare(BigData* a, BigData* b) {
+    Square(a->Primary(), b->Primary(), a->Stack());
+}
+
 void SBigSub(BigData* a, BigData* b, BigData* c) {
     Sub(a->Primary(), b->Primary(), c->Primary());
 }

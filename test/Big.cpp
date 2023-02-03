@@ -855,6 +855,28 @@ TEST_CASE("SBigMul", "[big]") {
     }
 }
 
+TEST_CASE("SBigSquare", "[square]") {
+    SECTION("squares 0xFFFFFFFF") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 0xFFFFFFFF);
+
+        SBigSquare(a, b);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 2);
+        CHECK(a->Primary()[0] == 0x1);
+        CHECK(a->Primary()[1] == 0xFFFFFFFE);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+}
+
 TEST_CASE("SBigSub", "[big]") {
     SECTION("subtracts 1 from 2") {
         BigData* a;
@@ -958,6 +980,126 @@ TEST_CASE("SetZero", "[big]") {
         CHECK(num->Primary().Count() == 0);
 
         SBigDel(num);
+    }
+}
+
+TEST_CASE("Square", "[big]") {
+    SECTION("squares 0") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 0);
+
+        Square(a->Primary(), b->Primary(), a->Stack());
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 0);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("squares 1") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 1);
+
+        Square(a->Primary(), b->Primary(), a->Stack());
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 1);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("squares 2") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 2);
+
+        Square(a->Primary(), b->Primary(), a->Stack());
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 4);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("squares 2") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 2);
+
+        Square(a->Primary(), b->Primary(), a->Stack());
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 4);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("squares 0xFFFFFFFF") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 0xFFFFFFFF);
+
+        Square(a->Primary(), b->Primary(), a->Stack());
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 2);
+        CHECK(a->Primary()[0] == 0x1);
+        CHECK(a->Primary()[1] == 0xFFFFFFFE);
+
+        SBigDel(a);
+        SBigDel(b);
+    }
+
+    SECTION("squares 0x1111111111111111") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        uint64_t b_ = 0x1111111111111111;
+        SBigFromBinary(b, reinterpret_cast<uint8_t*>(&b_), sizeof(b_));
+
+        Square(a->Primary(), b->Primary(), a->Stack());
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 4);
+        CHECK(a->Primary()[0] == 0x87654321);
+        CHECK(a->Primary()[1] == 0xfedcba9);
+        CHECK(a->Primary()[2] == 0x89abcdf0);
+        CHECK(a->Primary()[3] == 0x1234567);
+
+        SBigDel(a);
+        SBigDel(b);
     }
 }
 

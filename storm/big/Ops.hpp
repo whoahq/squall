@@ -37,6 +37,8 @@ void SetOne(BigBuffer& buffer);
 
 void SetZero(BigBuffer& buffer);
 
+void Square(BigBuffer& a, const BigBuffer& b, BigStack& stack);
+
 void Sub(BigBuffer& a, const BigBuffer& b, const BigBuffer& c);
 
 void ToBinary(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer);

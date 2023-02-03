@@ -170,6 +170,32 @@ void SetZero(BigBuffer& buffer) {
     buffer.Clear();
 }
 
+void Square(BigBuffer& a, const BigBuffer& b, BigStack& stack) {
+    auto& aa = stack.MakeDistinct(a, &a == &b);
+    aa.Clear();
+
+    uint32_t i = 0;
+    for (i = 0; b.IsUsed(i); i++) {
+        uint64_t carry = 0;
+
+        uint32_t j = 0;
+        for (j = 0; j <= i; j++) {
+            auto mul = b[i] * static_cast<uint64_t>(b[j]);
+            auto add = mul + aa[i + j];
+
+            if (j < i) {
+                carry += mul;
+            }
+
+            aa[i + j] = ExtractLowPartLargeSum(carry, add);
+        }
+
+        aa[i + j] = ExtractLowPart(carry);
+    }
+
+    stack.UnmakeDistinct(a, aa);
+}
+
 void Sub(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
     uint64_t borrow = 0;
     uint32_t i = 0;
