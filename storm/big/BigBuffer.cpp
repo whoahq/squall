@@ -33,6 +33,14 @@ void BigBuffer::SetCount(uint32_t count) {
     this->m_data.SetCount(this->m_offset + count);
 }
 
+void BigBuffer::SetOffset(uint32_t offset) {
+    this->m_offset = offset;
+
+    if (offset) {
+        this->GrowToFit(0xFFFFFFFF);
+    }
+}
+
 void BigBuffer::Trim() const {
     while (this->Count()) {
         auto& data = const_cast<TSGrowableArray<uint32_t>&>(this->m_data);

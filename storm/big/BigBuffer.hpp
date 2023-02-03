@@ -18,6 +18,7 @@ class BigBuffer {
     void GrowToFit(uint32_t index);
     int32_t IsUsed(uint32_t index) const;
     void SetCount(uint32_t count);
+    void SetOffset(uint32_t offset);
     void Trim() const;
 };
 
