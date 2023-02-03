@@ -288,6 +288,53 @@ TEST_CASE("ExtractLowPart", "[big]") {
     }
 }
 
+TEST_CASE("ExtractLowPartLargeSum", "[big]") {
+    SECTION("extracts low part after adding 2 and 4") {
+        uint64_t value = 2;
+        uint64_t add = 4;
+        auto low = ExtractLowPartLargeSum(value, add);
+
+        CHECK(low == 6);
+        CHECK(value == 0);
+    }
+
+    SECTION("extracts low part after adding 0x1111111122222222 and 0x3333333344444444") {
+        uint64_t value = 0x1111111122222222;
+        uint64_t add = 0x3333333344444444;
+        auto low = ExtractLowPartLargeSum(value, add);
+
+        CHECK(low == 0x66666666);
+        CHECK(value == 0x44444444);
+    }
+
+    SECTION("extracts low part after adding 0xCCCCCCCCCCCCCCCC and 0x5555555555555555") {
+        uint64_t value = 0xCCCCCCCCCCCCCCCC;
+        uint64_t add = 0x5555555555555555;
+        auto low = ExtractLowPartLargeSum(value, add);
+
+        CHECK(low == 0x22222221);
+        CHECK(value == 0x122222222);
+    }
+
+    SECTION("extracts low part after adding 0xFFFFFFFFFFFFFFFF and 0") {
+        uint64_t value = 0xFFFFFFFFFFFFFFFF;
+        uint64_t add = 0;
+        auto low = ExtractLowPartLargeSum(value, add);
+
+        CHECK(low == 0xFFFFFFFF);
+        CHECK(value == 0xFFFFFFFF);
+    }
+
+    SECTION("extracts low part after adding 0xFFFFFFFFFFFFFFFF and 0xFFFFFFFFFFFFFFFF") {
+        uint64_t value = 0xFFFFFFFFFFFFFFFF;
+        uint64_t add = 0xFFFFFFFFFFFFFFFF;
+        auto low = ExtractLowPartLargeSum(value, add);
+
+        CHECK(low == 0xFFFFFFFE);
+        CHECK(value == 0x1FFFFFFFF);
+    }
+}
+
 TEST_CASE("ExtractLowPartSx", "[big]") {
     SECTION("extracts low part of 0") {
         uint64_t value = 0;

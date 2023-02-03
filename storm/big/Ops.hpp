@@ -15,6 +15,8 @@ void Div(BigBuffer& a, uint32_t* b, const BigBuffer& c, uint64_t d);
 
 uint32_t ExtractLowPart(uint64_t& value);
 
+uint32_t ExtractLowPartLargeSum(uint64_t& value, uint64_t add);
+
 uint32_t ExtractLowPartSx(uint64_t& value);
 
 void FromBinary(BigBuffer& buffer, const void* value, uint32_t bytes);

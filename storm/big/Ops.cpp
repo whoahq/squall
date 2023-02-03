@@ -58,6 +58,14 @@ uint32_t ExtractLowPart(uint64_t& value) {
     return low;
 }
 
+uint32_t ExtractLowPartLargeSum(uint64_t& value, uint64_t add) {
+    auto carry = (value += add) < add;
+    auto low = ExtractLowPart(value);
+    value += static_cast<uint64_t>(carry) << 32;
+
+    return low;
+}
+
 uint32_t ExtractLowPartSx(uint64_t& value) {
     auto low = static_cast<uint32_t>(value);
     value >>= 32;
