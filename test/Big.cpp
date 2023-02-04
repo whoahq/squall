@@ -882,6 +882,98 @@ TEST_CASE("SBigFromUnsigned", "[big]") {
     }
 }
 
+TEST_CASE("SBigMod", "[big]") {
+    SECTION("mods 7 by 4") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 7);
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 4);
+
+        SBigMod(a, b, c);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 3);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+    }
+
+    SECTION("mods 7 by 4 then mods 9 by 5") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b1;
+        SBigNew(&b1);
+        SBigFromUnsigned(b1, 7);
+
+        BigData* c1;
+        SBigNew(&c1);
+        SBigFromUnsigned(c1, 4);
+
+        BigData* b2;
+        SBigNew(&b2);
+        SBigFromUnsigned(b2, 9);
+
+        BigData* c2;
+        SBigNew(&c2);
+        SBigFromUnsigned(c2, 5);
+
+        SBigMod(a, b1, c1);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 3);
+
+        SBigMod(a, b2, c2);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 4);
+
+        SBigDel(a);
+        SBigDel(b1);
+        SBigDel(c1);
+        SBigDel(b2);
+        SBigDel(c2);
+    }
+
+    SECTION("mods 0x9999444488885555 by 0xFFFFFFFF") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        uint64_t b_ = 0x9999444488885555;
+        SBigFromBinary(b, reinterpret_cast<uint8_t*>(&b_), sizeof(b_));
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 0xFFFFFFFF);
+
+        SBigMod(a, b, c);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 0x2221999A);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+    }
+}
+
 TEST_CASE("SBigMul", "[big]") {
     SECTION("multiplies 0 and 1") {
         BigData* a;

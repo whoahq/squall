@@ -16,6 +16,8 @@ void SBigFromBinary(BigData* num, const void* data, uint32_t bytes);
 
 void SBigFromUnsigned(BigData* num, uint32_t val);
 
+void SBigMod(BigData* a, BigData* b, BigData* c);
+
 void SBigMul(BigData* a, BigData* b, BigData* c);
 
 void SBigNew(BigData** num);

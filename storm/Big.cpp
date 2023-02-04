@@ -40,6 +40,15 @@ void SBigFromUnsigned(BigData* num, uint32_t val) {
     FromUnsigned(num->Primary(), val);
 }
 
+void SBigMod(BigData* a, BigData* b, BigData* c) {
+    uint32_t allocCount = 0;
+    auto& scratch = a->Stack().Alloc(&allocCount);
+
+    Div(scratch, a->Primary(), b->Primary(), c->Primary(), a->Stack());
+
+    a->Stack().Free(allocCount);
+}
+
 void SBigNew(BigData** num) {
     auto m = SMemAlloc(sizeof(BigData), __FILE__, __LINE__, 0x0);
     *num = new (m) BigData();
