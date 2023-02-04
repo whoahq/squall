@@ -641,6 +641,68 @@ TEST_CASE("Mul", "[big]") {
     }
 }
 
+TEST_CASE("MulMod", "[big]") {
+    SECTION("multiplies 0xFFFFFFFF by 0x100 and mods the result by 0xABC") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 0xFFFFFFFF);
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 0x100);
+
+        BigData* d;
+        SBigNew(&d);
+        SBigFromUnsigned(d, 0xABC);
+
+        MulMod(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 0x624);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+        SBigDel(d);
+    }
+
+    SECTION("multiplies 0x123456789ABCDEF0 by 0xFEDCBA9876543210 and mods the result by 0x10000000") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        uint64_t b_ = 0x123456789ABCDEF0;
+        SBigFromBinary(b, reinterpret_cast<uint8_t*>(&b_), sizeof(b_));
+
+        BigData* c;
+        SBigNew(&c);
+        uint64_t c_ = 0xFEDCBA9876543210;
+        SBigFromBinary(c, reinterpret_cast<uint8_t*>(&c_), sizeof(c_));
+
+        BigData* d;
+        SBigNew(&d);
+        SBigFromUnsigned(d, 0x10000000);
+
+        MulMod(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 0x618CF00);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+        SBigDel(d);
+    }
+}
+
 TEST_CASE("MakeLarge", "[big]") {
     SECTION("creates uint64_t out of 0xAABBCCDD and 0x11223344") {
         uint64_t value = MakeLarge(0xAABBCCDD, 0x11223344);

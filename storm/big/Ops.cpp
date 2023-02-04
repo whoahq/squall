@@ -231,6 +231,16 @@ void Mul(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, BigStack& stack) 
     stack.UnmakeDistinct(a, aa);
 }
 
+void MulMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack) {
+    uint32_t allocCount = 0;
+    auto& scratch = stack.Alloc(&allocCount);
+
+    Mul(scratch, b, c, stack);
+    Div(scratch, a, scratch, d, stack);
+
+    stack.Free(allocCount);
+}
+
 void SetOne(BigBuffer& buffer) {
     buffer.SetCount(1);
     buffer[0] = 1;
