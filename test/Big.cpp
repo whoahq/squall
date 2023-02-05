@@ -717,6 +717,154 @@ TEST_CASE("MakeLarge", "[big]") {
     }
 }
 
+TEST_CASE("PowMod", "[big]") {
+    SECTION("takes 0 to the 0th power and mods the result by 1") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 0);
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 0);
+
+        BigData* d;
+        SBigNew(&d);
+        SBigFromUnsigned(d, 1);
+
+        PowMod(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 1);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+        SBigDel(d);
+    }
+
+    SECTION("takes 2 to the 0th power and mods the result by 7") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 2);
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 0);
+
+        BigData* d;
+        SBigNew(&d);
+        SBigFromUnsigned(d, 7);
+
+        PowMod(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 1);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+        SBigDel(d);
+    }
+
+    SECTION("takes 2 to the 4th power and mods the result by 7") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 2);
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 4);
+
+        BigData* d;
+        SBigNew(&d);
+        SBigFromUnsigned(d, 7);
+
+        PowMod(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 2);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+        SBigDel(d);
+    }
+
+    SECTION("takes 256 to the 8th power and mods the result by 999") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 256);
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 8);
+
+        BigData* d;
+        SBigNew(&d);
+        SBigFromUnsigned(d, 999);
+
+        PowMod(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 160);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+        SBigDel(d);
+    }
+
+    SECTION("takes 0x100000000 to the 2nd power and mods the result by 0xAAAAFFFF") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        uint64_t b_ = 0x100000000;
+        SBigFromBinary(b, reinterpret_cast<uint8_t*>(&b_), sizeof(b_));
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 2);
+
+        BigData* d;
+        SBigNew(&d);
+        SBigFromUnsigned(d, 0xAAAAFFFF);
+
+        PowMod(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 0x6AA94002);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+        SBigDel(d);
+    }
+}
+
 TEST_CASE("SBigAdd", "[big]") {
     SECTION("adds 0 and 1") {
         BigData* a;
@@ -1132,6 +1280,37 @@ TEST_CASE("SBigMul", "[big]") {
         SBigDel(a);
         SBigDel(b);
         SBigDel(c);
+    }
+}
+
+TEST_CASE("SBigPowMod", "[big]") {
+    SECTION("takes 256 to the 8th power and mods the result by 999") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        SBigFromUnsigned(b, 256);
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 8);
+
+        BigData* d;
+        SBigNew(&d);
+        SBigFromUnsigned(d, 999);
+
+        SBigPowMod(a, b, c, d);
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 160);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+        SBigDel(d);
     }
 }
 

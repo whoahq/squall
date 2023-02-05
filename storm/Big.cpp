@@ -58,6 +58,10 @@ void SBigMul(BigData* a, BigData* b, BigData* c) {
     Mul(a->Primary(), b->Primary(), c->Primary(), a->Stack());
 }
 
+void SBigPowMod(BigData* a, BigData* b, BigData* c, BigData* d) {
+    PowMod(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());
+}
+
 void SBigShl(BigData* a, BigData* b, uint32_t shift) {
     Shl(a->Primary(), b->Primary(), shift);
 }

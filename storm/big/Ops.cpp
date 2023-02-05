@@ -241,6 +241,63 @@ void MulMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const BigBuffe
     stack.Free(allocCount);
 }
 
+void PowMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack) {
+    c.Trim();
+
+    if (c.Count() == 0) {
+        SetOne(a);
+        return;
+    }
+
+    uint32_t allocCount = 0;
+    auto& temp = stack.Alloc(&allocCount);
+    auto& b2 = stack.Alloc(&allocCount);
+    auto& b3 = stack.Alloc(&allocCount);
+
+    auto& aa = stack.MakeDistinct(a, &a == &b || &a == &c || &a == &d);
+
+    MulMod(b2, b, b, d, stack);
+    MulMod(b3, b2, b, d, stack);
+
+    const BigBuffer* bPower[3];
+    bPower[0] = &b;
+    bPower[1] = &b2;
+    bPower[2] = &b3;
+
+    SetOne(aa);
+
+    for (uint32_t i = c.Count() - 1; i + 1 > 0; i--) {
+        auto v12 = c[i];
+        uint32_t v23 = 32;
+
+        if (i == c.Count() - 1 && !(v12 & 0xC0000000)) {
+            do {
+                v12 *= 4;
+                v23 -= 2;
+            } while (!(v12 & 0xC0000000));
+        }
+
+        if (v23) {
+            for (uint32_t j = ((v23 - 1) >> 1) + 1; j > 0; j--) {
+                Square(aa, aa, stack);
+                Div(temp, aa, aa, d, stack);
+                Square(aa, aa, stack);
+                Div(temp, aa, aa, d, stack);
+
+                if (v12 >> 30) {
+                    auto& power = *bPower[(v12 >> 30) - 1];
+                    MulMod(aa, aa, power, d, stack);
+                }
+
+                v12 *= 4;
+            }
+        }
+    }
+
+    stack.UnmakeDistinct(a, aa);
+    stack.Free(allocCount);
+}
+
 void SetOne(BigBuffer& buffer) {
     buffer.SetCount(1);
     buffer[0] = 1;
