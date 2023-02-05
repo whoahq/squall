@@ -70,7 +70,7 @@ void TSHashTable<T, TKey>::Initialize() {
     this->m_slotlistarray.SetCount(4);
 
     int32_t linkOfs = this->GetLinkOffset();
-    int32_t v3 = 0;
+    uint32_t v3 = 0;
     STORM_EXPLICIT_LIST(T, m_linktoslot)* v4;
 
     do {
@@ -98,7 +98,7 @@ void TSHashTable<T, TKey>::InternalClear(int32_t warn) {
 
     this->m_fulllist.UnlinkAll();
 
-    for (int32_t i = 0; i < this->m_slotlistarray.Count(); i++) {
+    for (uint32_t i = 0; i < this->m_slotlistarray.Count(); i++) {
         auto& slotList = this->m_slotlistarray[i];
 
         for (auto node = slotList.Head(); node; node = slotList.Head()) {
