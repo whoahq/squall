@@ -14,6 +14,8 @@ BigBuffer& BigStack::Alloc(uint32_t* count) {
 }
 
 void BigStack::Free(uint32_t count) {
+    STORM_ASSERT(count <= this->m_used);
+
     this->m_used -= count;
 }
 
