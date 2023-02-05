@@ -9,7 +9,10 @@ template <class T>
 class TSFixedArray : public TSBaseArray<T> {
     public:
     ~TSFixedArray();
+    TSFixedArray<T>& operator=(const TSFixedArray<T>& source);
+    void ReallocAndClearData(uint32_t count);
     void ReallocData(uint32_t count);
+    void Set(uint32_t count, const T* data);
     void SetCount(uint32_t count);
 };
 
@@ -22,6 +25,25 @@ TSFixedArray<T>::~TSFixedArray() {
 
     if (this->Ptr()) {
         SMemFree(this->Ptr(), this->MemFileName(), this->MemLineNo(), 0x0);
+    }
+}
+
+template <class T>
+TSFixedArray<T>& TSFixedArray<T>::operator=(const TSFixedArray<T>& source) {
+    if (this != &source) {
+        this->Set(source.Count(), source.Ptr());
+    }
+
+  return *this;
+}
+
+template <class T>
+void TSFixedArray<T>::ReallocAndClearData(uint32_t count) {
+    this->m_alloc = count;
+
+    if (this->m_data || count) {
+        void* m = SMemReAlloc(this->m_data, sizeof(T) * count, this->MemFileName(), this->MemLineNo(), 0x0);
+        this->m_data = static_cast<T*>(m);
     }
 }
 
@@ -58,6 +80,17 @@ void TSFixedArray<T>::ReallocData(uint32_t count) {
             SMemFree(oldData, nullptr, 0, 0x0);
         }
     }
+}
+
+template <class T>
+void TSFixedArray<T>::Set(uint32_t count, const T* data) {
+    this->ReallocAndClearData(count);
+
+    for (uint32_t i; i < count; i++) {
+        new (&this->m_data[i]) T(data[i]);
+    }
+
+    this->m_count = count;
 }
 
 template <class T>
