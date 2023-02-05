@@ -49,13 +49,13 @@ void SBigMod(BigData* a, BigData* b, BigData* c) {
     a->Stack().Free(allocCount);
 }
 
+void SBigMul(BigData* a, BigData* b, BigData* c) {
+    Mul(a->Primary(), b->Primary(), c->Primary(), a->Stack());
+}
+
 void SBigNew(BigData** num) {
     auto m = SMemAlloc(sizeof(BigData), __FILE__, __LINE__, 0x0);
     *num = new (m) BigData();
-}
-
-void SBigMul(BigData* a, BigData* b, BigData* c) {
-    Mul(a->Primary(), b->Primary(), c->Primary(), a->Stack());
 }
 
 void SBigPowMod(BigData* a, BigData* b, BigData* c, BigData* d) {
