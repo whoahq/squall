@@ -86,7 +86,7 @@ template <class T>
 void TSFixedArray<T>::Set(uint32_t count, const T* data) {
     this->ReallocAndClearData(count);
 
-    for (uint32_t i; i < count; i++) {
+    for (uint32_t i = 0; i < count; i++) {
         new (&this->m_data[i]) T(data[i]);
     }
 
