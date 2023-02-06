@@ -386,6 +386,40 @@ TEST_CASE("Div", "[big]") {
         SBigDel(c);
         SBigDel(d);
     }
+
+    SECTION("divides 0x9999444488885555 by 0x1111222233334444 (buffer divisor)") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+
+        BigData* c;
+        SBigNew(&c);
+        uint64_t c_ = 0x9999444488885555;
+        SBigFromBinary(c, reinterpret_cast<uint8_t*>(&c_), sizeof(c_));
+
+        BigData* d;
+        SBigNew(&d);
+        uint64_t d_ = 0x1111222233334444;
+        SBigFromBinary(d, reinterpret_cast<uint8_t*>(&d_), sizeof(d_));
+
+        Div(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());
+
+        a->Primary().Trim();
+        b->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 8);
+        CHECK(b->Primary().Count() == 2);
+        CHECK(b->Primary()[0] == 0xEEEE3335);
+        CHECK(b->Primary()[1] == 0x11103332);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+        SBigDel(d);
+    }
 }
 
 TEST_CASE("ExtractLowPart", "[big]") {
@@ -478,12 +512,36 @@ TEST_CASE("ExtractLowPartSx", "[big]") {
         REQUIRE(value == 0);
     }
 
+    SECTION("extracts low part of 0x80000000") {
+        uint64_t value = 0x80000000;
+        auto low = ExtractLowPartSx(value);
+
+        REQUIRE(low == 0x80000000);
+        REQUIRE(value == 0);
+    }
+
+    SECTION("extracts low part of 0xFFFFFFFF") {
+        uint64_t value = 0xFFFFFFFF;
+        auto low = ExtractLowPartSx(value);
+
+        REQUIRE(low == 0xFFFFFFFF);
+        REQUIRE(value == 0);
+    }
+
     SECTION("extracts low part of 0xAAAABBBBCCCCDDDD") {
         uint64_t value = 0xAAAABBBBCCCCDDDD;
         auto low = ExtractLowPartSx(value);
 
         REQUIRE(low == 0xCCCCDDDD);
         REQUIRE(value == 0xFFFFFFFFAAAABBBB);
+    }
+
+    SECTION("extracts low part of 0xFFFFFFFF85B10E3A") {
+        uint64_t value = 0xFFFFFFFF85B10E3A;
+        auto low = ExtractLowPartSx(value);
+
+        REQUIRE(low == 0x85B10E3A);
+        REQUIRE(value == 0xFFFFFFFFFFFFFFFF);
     }
 }
 
