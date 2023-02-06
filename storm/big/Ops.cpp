@@ -76,7 +76,7 @@ void Div(BigBuffer& a, BigBuffer& b, const BigBuffer& c, const BigBuffer& d, Big
     auto& dd = stack.Alloc(&allocCount);
     auto& work = stack.Alloc(&allocCount);
 
-    uint32_t shift = 0x1F - (HighBitPos(work) & 0x1F);
+    uint32_t shift = 0x1F - (HighBitPos(d) & 0x1F);
     Shl(cc, c, shift);
     Shl(dd, d, shift);
 
