@@ -53,8 +53,7 @@ void TSFixedArray<T>::ReallocData(uint32_t count) {
 
     if (count < this->m_count) {
         for (uint32_t i = count; i < this->m_count; i++) {
-            T* element = &this->m_data[i];
-            delete element;
+            (&this->m_data[i])->~T();
         }
     }
 
@@ -70,11 +69,8 @@ void TSFixedArray<T>::ReallocData(uint32_t count) {
             uint32_t smallestCount = count >= this->m_count ? this->m_count : count;
 
             for (uint32_t i = 0; i < smallestCount; i++) {
-                T* v8 = &this->m_data[i];
-
-                if (v8) {
-                    *v8 = oldData[i];
-                }
+                new (&this->m_data[i]) T(oldData[i]);
+                (&oldData[i])->~T();
             }
 
             SMemFree(oldData, nullptr, 0, 0x0);

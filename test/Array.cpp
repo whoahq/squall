@@ -2,6 +2,10 @@
 #include "storm/String.hpp"
 #include "test/Test.hpp"
 
+struct TestArrayObject {
+    uint32_t index = 0;
+};
+
 TEST_CASE("TSBaseArray", "[array]") {
     SECTION("constructs correctly") {
         TSBaseArray<uint32_t> array;
@@ -57,5 +61,29 @@ TEST_CASE("TSGrowableArray", "[array]") {
     SECTION("constructs correctly") {
         TSGrowableArray<uint32_t> array;
         REQUIRE(array.Count() == 0);
+    }
+}
+
+TEST_CASE("TSGrowableArray::Reserve", "[array]") {
+    SECTION("reserves slot when array is empty") {
+        TSGrowableArray<uint32_t> array;
+        array.Reserve(1, 1);
+        REQUIRE(array.Count() == 0);
+    }
+
+    SECTION("reserves slot when array has elements") {
+        TSGrowableArray<TestArrayObject> array;
+
+        auto elementA = array.New();
+        elementA->index = 10;
+
+        array.Reserve(1, 1);
+
+        auto elementB = array.New();
+        elementB->index = 20;
+
+        REQUIRE(array.Count() == 2);
+        REQUIRE(array[0].index == 10);
+        REQUIRE(array[1].index == 20);
     }
 }
