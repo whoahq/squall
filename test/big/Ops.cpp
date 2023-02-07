@@ -921,6 +921,38 @@ TEST_CASE("PowMod", "[big]") {
         SBigDel(c);
         SBigDel(d);
     }
+
+    SECTION("takes 0xABCDEF1234567890 to the 16th power and mods the result by 0xEEEE000000000001") {
+        BigData* a;
+        SBigNew(&a);
+
+        BigData* b;
+        SBigNew(&b);
+        uint64_t b_ = 0xABCDEF1234567890;
+        SBigFromBinary(b, reinterpret_cast<uint8_t*>(&b_), sizeof(b_));
+
+        BigData* c;
+        SBigNew(&c);
+        SBigFromUnsigned(c, 16);
+
+        BigData* d;
+        SBigNew(&d);
+        uint64_t d_ = 0xEEEE000000000001;
+        SBigFromBinary(d, reinterpret_cast<uint8_t*>(&d_), sizeof(d_));
+
+        PowMod(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());
+
+        a->Primary().Trim();
+
+        CHECK(a->Primary().Count() == 2);
+        CHECK(a->Primary()[0] == 0x950A5465);
+        CHECK(a->Primary()[1] == 0xA0CB742F);
+
+        SBigDel(a);
+        SBigDel(b);
+        SBigDel(c);
+        SBigDel(d);
+    }
 }
 
 TEST_CASE("SetOne", "[big]") {

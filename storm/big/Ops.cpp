@@ -59,7 +59,8 @@ void Div(BigBuffer& a, BigBuffer& b, const BigBuffer& c, const BigBuffer& d, Big
     auto dCount = d.Count();
 
     if (dCount > cCount) {
-        SetZero(b = c);
+        b = c;
+        SetZero(a);
 
         return;
     }
