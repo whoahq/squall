@@ -8,13 +8,20 @@
 template <class T>
 class TSFixedArray : public TSBaseArray<T> {
     public:
+    TSFixedArray();
     ~TSFixedArray();
     TSFixedArray<T>& operator=(const TSFixedArray<T>& source);
+    void Clear();
     void ReallocAndClearData(uint32_t count);
     void ReallocData(uint32_t count);
     void Set(uint32_t count, const T* data);
     void SetCount(uint32_t count);
 };
+
+template <class T>
+TSFixedArray<T>::TSFixedArray() {
+    this->Constructor();
+}
 
 template <class T>
 TSFixedArray<T>::~TSFixedArray() {
@@ -35,6 +42,12 @@ TSFixedArray<T>& TSFixedArray<T>::operator=(const TSFixedArray<T>& source) {
     }
 
   return *this;
+}
+
+template <class T>
+void TSFixedArray<T>::Clear() {
+  this->~TSFixedArray<T>();
+  this->Constructor();
 }
 
 template <class T>
