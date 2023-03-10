@@ -34,7 +34,7 @@ int32_t SErrDisplayError(uint32_t errorcode, const char* filename, int32_t linen
         if (offset < S_ERR_MAX) { \
             offset += std::snprintf(&buffer[offset], S_ERR_MAX-offset, __VA_ARGS__); \
         }
-#elif
+#else
     #define S_ERR_DISPLAY printf
 
     S_ERR_DISPLAY("\n=========================================================\n");
