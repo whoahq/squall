@@ -45,7 +45,7 @@ void* SCreateThread(uint32_t (*threadProc)(void*), void* threadParam, void* a3, 
 
     DWORD threadId;
     // TODO pass dwStackSize and dwCreationFlags through to CreateThread
-    HANDLE threadH = CreateThread(nullptr, 0, S_Thread::s_SLaunchThread, params, CREATE_SUSPENDED, &threadId);
+    HANDLE threadH = CreateThread(nullptr, 0, S_Thread::s_SLaunchThread, params, 0x0, &threadId);
     params->threadH = threadH;
 
     auto& thread = S_Thread::s_threads[S_Thread::s_numthreads];
