@@ -4,6 +4,7 @@ check_cxx_compiler_flag(-Wno-invalid-offsetof HAS_NO_INVALID_OFFSETOF)
 file(GLOB STORM_SOURCES
     "*.cpp"
     "big/*.cpp"
+    "crypto/*.cpp"
     "hash/*.cpp"
     "queue/*.cpp"
     "string/*.cpp"
