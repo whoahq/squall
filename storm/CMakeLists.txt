@@ -5,19 +5,19 @@ file(GLOB STORM_SOURCES
     "*.cpp"
     "big/*.cpp"
     "crypto/*.cpp"
+    "error/*.cpp"
     "hash/*.cpp"
     "queue/*.cpp"
     "string/*.cpp"
     "thread/*.cpp"
-    "error/*.cpp"
 )
 
 if(WHOA_SYSTEM_WIN)
     file(GLOB STORM_WIN_SOURCES
         "win/*.cpp"
-        "thread/win/*.cpp"
         "error/win/*.cpp"
-        )
+        "thread/win/*.cpp"
+    )
     list(APPEND STORM_SOURCES ${STORM_WIN_SOURCES})
 endif()
 
