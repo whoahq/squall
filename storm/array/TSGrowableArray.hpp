@@ -18,6 +18,7 @@ class TSGrowableArray : public TSFixedArray<T> {
     void GrowToFit(uint32_t index, int32_t zero);
     T* New(void);
     void Reserve(uint32_t count, int32_t round);
+    uint32_t Reserved() const;
     uint32_t RoundToChunk(uint32_t count, uint32_t chunk);
     void SetCount(uint32_t count);
 };
@@ -110,6 +111,11 @@ void TSGrowableArray<T>::Reserve(uint32_t count, int32_t round) {
 
         this->ReallocData(count + this->m_count);
     }
+}
+
+template <class T>
+uint32_t TSGrowableArray<T>::Reserved() const {
+    return this->m_alloc - this->m_count;
 }
 
 template <class T>
