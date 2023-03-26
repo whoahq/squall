@@ -21,7 +21,7 @@ class TSList {
     TSList();
     ~TSList();
     void ChangeLinkOffset(ptrdiff_t linkoffset);
-    void DeleteAll();
+    void Clear();
     T* DeleteNode(T* ptr);
     T* Head();
     void InitializeTerminator();
@@ -60,7 +60,7 @@ void TSList<T, TGetLink>::ChangeLinkOffset(ptrdiff_t linkoffset) {
 }
 
 template <class T, class TGetLink>
-void TSList<T, TGetLink>::DeleteAll() {
+void TSList<T, TGetLink>::Clear() {
     T* node;
 
     while ((node = this->Head())) {
