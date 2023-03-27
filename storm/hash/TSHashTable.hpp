@@ -14,6 +14,7 @@ class TSHashTable {
 
     // Member functions
     void Clear();
+    void Delete(T* ptr);
     T* Head();
     void Insert(T* ptr, uint32_t hashval, const TKey& key);
     T* New(const char* str, size_t extrabytes, uint32_t flags);
@@ -59,6 +60,12 @@ TSHashTable<T, TKey>::~TSHashTable() {
 template <class T, class TKey>
 void TSHashTable<T, TKey>::Clear() {
     this->InternalClear(0);
+}
+
+template <class T, class TKey>
+void TSHashTable<T, TKey>::Delete(T* ptr) {
+    this->Unlink(ptr);
+    this->InternalDelete(ptr);
 }
 
 template <class T, class TKey>
