@@ -1,5 +1,5 @@
-#ifndef STORM_HASH_TS_EXPORT_TABLE_SIMPLE_HPP
-#define STORM_HASH_TS_EXPORT_TABLE_SIMPLE_HPP
+#ifndef STORM_HASH_TS_EXPORT_TABLE_SIMPLE_REUSE_HPP
+#define STORM_HASH_TS_EXPORT_TABLE_SIMPLE_REUSE_HPP
 
 #include "storm/hash/Hashkey.hpp"
 #include "storm/hash/TSHashTableReuse.hpp"
