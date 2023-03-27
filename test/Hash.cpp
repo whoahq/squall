@@ -5,6 +5,12 @@ struct TestHashObject : TSHashObject<TestHashObject, HASHKEY_STRI> {
     uint32_t index = 255;
 };
 
+struct TestExportObject : TSHashObject<TestHashObject, HASHKEY_NONE> {
+    uint32_t index = 255;
+};
+
+typedef void* TestExportObjectHandle;
+
 TEST_CASE("TSHashTable", "[hash]") {
     SECTION("constructs correctly") {
         TSHashTable<TestHashObject, HASHKEY_STRI> hashTable;
@@ -73,5 +79,41 @@ TEST_CASE("TSHashTableReuse::New", "[hash]") {
         REQUIRE(hashTable.Ptr("testKey2") == nullptr);
         REQUIRE(hashTable.Ptr("testKey3") != nullptr);
         REQUIRE(hashTable.Ptr("testKey3")->index == 255);
+    }
+}
+
+TEST_CASE("TSExportTableSimpleReuse", "[hash]") {
+    SECTION("constructs correctly") {
+        TSExportTableSimpleReuse<TestExportObject, TestExportObjectHandle> exportTable;
+        REQUIRE(exportTable.Head() == nullptr);
+    }
+}
+
+TEST_CASE("TSExportTableSimpleReuse::New", "[hash]") {
+    SECTION("returns a new object and handle") {
+        TSExportTableSimpleReuse<TestExportObject, TestExportObjectHandle> exportTable;
+        TestExportObjectHandle handle;
+        auto object = exportTable.New(&handle);
+
+        REQUIRE(handle != nullptr);
+        REQUIRE(object != nullptr);
+        REQUIRE(object != handle);
+        REQUIRE(exportTable.Head() == object);
+        REQUIRE(exportTable.Ptr(handle) == object);
+    }
+}
+
+TEST_CASE("TSExportTableSimpleReuse::Delete", "[hash]") {
+    SECTION("deletes object from export table") {
+        TSExportTableSimpleReuse<TestExportObject, TestExportObjectHandle> exportTable;
+        TestExportObjectHandle handle;
+        auto object = exportTable.New(&handle);
+        exportTable.Delete(object);
+
+        REQUIRE(handle != nullptr);
+        REQUIRE(object != nullptr);
+        REQUIRE(object != handle);
+        REQUIRE(exportTable.Head() == nullptr);
+        REQUIRE(exportTable.Ptr(handle) == nullptr);
     }
 }
