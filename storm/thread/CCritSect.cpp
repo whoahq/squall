@@ -30,6 +30,11 @@ void CCritSect::Enter() {
 #endif
 }
 
+void CCritSect::Enter(int32_t forWriting) {
+    // Overload to provide compatibility with CSRWLock
+    this->Enter();
+}
+
 void CCritSect::Leave() {
 #if defined(WHOA_SYSTEM_WIN)
     LeaveCriticalSection(&this->m_critsect);
@@ -38,4 +43,9 @@ void CCritSect::Leave() {
 #if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
     pthread_mutex_unlock(&this->m_critsect);
 #endif
+}
+
+void CCritSect::Leave(int32_t fromWriting) {
+    // Overload to provide compatibility with CSRWLock
+    this->Leave();
 }
