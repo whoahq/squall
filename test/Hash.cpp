@@ -1,4 +1,5 @@
 #include "storm/Hash.hpp"
+#include "storm/Thread.hpp"
 #include "test/Test.hpp"
 
 struct TestHashObject : TSHashObject<TestHashObject, HASHKEY_STRI> {
@@ -10,6 +11,8 @@ struct TestExportObject : TSHashObject<TestHashObject, HASHKEY_NONE> {
 };
 
 typedef void* TestExportObjectHandle;
+
+typedef void* TestExportLockedHandle;
 
 TEST_CASE("TSHashTable", "[hash]") {
     SECTION("constructs correctly") {
@@ -109,6 +112,47 @@ TEST_CASE("TSExportTableSimpleReuse::Delete", "[hash]") {
         TestExportObjectHandle handle;
         auto object = exportTable.New(&handle);
         exportTable.Delete(object);
+
+        REQUIRE(handle != nullptr);
+        REQUIRE(object != nullptr);
+        REQUIRE(object != handle);
+        REQUIRE(exportTable.Head() == nullptr);
+        REQUIRE(exportTable.Ptr(handle) == nullptr);
+    }
+}
+
+TEST_CASE("TSExportTableSyncReuse", "[hash]") {
+    SECTION("constructs correctly") {
+        TSExportTableSyncReuse<TestExportObject, TestExportObjectHandle, TestExportLockedHandle, CCritSect> exportTable;
+        REQUIRE(exportTable.Head() == nullptr);
+    }
+}
+
+TEST_CASE("TSExportTableSyncReuse::NewLock", "[hash]") {
+    SECTION("returns a new object, handle, and locked handle") {
+        TSExportTableSyncReuse<TestExportObject, TestExportObjectHandle, TestExportLockedHandle, CCritSect> exportTable;
+        TestExportObjectHandle handle;
+        TestExportLockedHandle lockedHandle;
+        auto object = exportTable.NewLock(&handle, &lockedHandle);
+        exportTable.Unlock(lockedHandle);
+
+        REQUIRE(handle != nullptr);
+        REQUIRE(lockedHandle != nullptr);
+        REQUIRE(object != nullptr);
+        REQUIRE(object != handle);
+        REQUIRE(exportTable.Head() == object);
+        REQUIRE(exportTable.Ptr(handle) == object);
+    }
+}
+
+TEST_CASE("TSExportTableSyncReuse::Delete", "[hash]") {
+    SECTION("deletes object from export table") {
+        TSExportTableSyncReuse<TestExportObject, TestExportObjectHandle, TestExportLockedHandle, CCritSect> exportTable;
+        TestExportObjectHandle handle;
+        TestExportLockedHandle lockedHandle;
+        auto object = exportTable.NewLock(&handle, &lockedHandle);
+        exportTable.Unlock(lockedHandle);
+        exportTable.Delete(handle);
 
         REQUIRE(handle != nullptr);
         REQUIRE(object != nullptr);
