@@ -82,16 +82,16 @@ TEST_CASE("TSHashTableReuse::New", "[hash]") {
     }
 }
 
-TEST_CASE("TSExportTableSimple", "[hash]") {
+TEST_CASE("TSExportTableSimpleReuse", "[hash]") {
     SECTION("constructs correctly") {
-        TSExportTableSimple<TestExportObject, TestExportObjectHandle> exportTable;
+        TSExportTableSimpleReuse<TestExportObject, TestExportObjectHandle> exportTable;
         REQUIRE(exportTable.Head() == nullptr);
     }
 }
 
-TEST_CASE("TSExportTableSimple::New", "[hash]") {
+TEST_CASE("TSExportTableSimpleReuse::New", "[hash]") {
     SECTION("returns a new object and handle") {
-        TSExportTableSimple<TestExportObject, TestExportObjectHandle> exportTable;
+        TSExportTableSimpleReuse<TestExportObject, TestExportObjectHandle> exportTable;
         TestExportObjectHandle handle;
         auto object = exportTable.New(&handle);
 
@@ -103,9 +103,9 @@ TEST_CASE("TSExportTableSimple::New", "[hash]") {
     }
 }
 
-TEST_CASE("TSExportTableSimple::Delete", "[hash]") {
+TEST_CASE("TSExportTableSimpleReuse::Delete", "[hash]") {
     SECTION("deletes object from export table") {
-        TSExportTableSimple<TestExportObject, TestExportObjectHandle> exportTable;
+        TSExportTableSimpleReuse<TestExportObject, TestExportObjectHandle> exportTable;
         TestExportObjectHandle handle;
         auto object = exportTable.New(&handle);
         exportTable.Delete(object);

@@ -5,10 +5,10 @@
 #include "storm/hash/TSHashTableReuse.hpp"
 
 template <class T, class THandle>
-class TSExportTableSimple : public TSHashTableReuse<T, HASHKEY_NONE> {
+class TSExportTableSimpleReuse : public TSHashTableReuse<T, HASHKEY_NONE> {
     public:
     // Virtual member functions
-    virtual ~TSExportTableSimple() = default;
+    virtual ~TSExportTableSimpleReuse() = default;
 
     // Member functions
     void Delete(T* ptr);
@@ -26,12 +26,12 @@ class TSExportTableSimple : public TSHashTableReuse<T, HASHKEY_NONE> {
 };
 
 template <class T, class THandle>
-void TSExportTableSimple<T, THandle>::Delete(T* ptr) {
+void TSExportTableSimpleReuse<T, THandle>::Delete(T* ptr) {
     TSHashTable<T, HASHKEY_NONE>::Delete(ptr);
 }
 
 template <class T, class THandle>
-THandle TSExportTableSimple<T, THandle>::GenerateUniqueHandle() {
+THandle TSExportTableSimpleReuse<T, THandle>::GenerateUniqueHandle() {
     while (true) {
         while (true) {
             this->m_sequence += 1;
@@ -52,7 +52,7 @@ THandle TSExportTableSimple<T, THandle>::GenerateUniqueHandle() {
 }
 
 template <class T, class THandle>
-T* TSExportTableSimple<T, THandle>::New(THandle* handlePtr) {
+T* TSExportTableSimpleReuse<T, THandle>::New(THandle* handlePtr) {
     auto handle = this->GenerateUniqueHandle();
     *handlePtr = handle;
 
@@ -61,7 +61,7 @@ T* TSExportTableSimple<T, THandle>::New(THandle* handlePtr) {
 }
 
 template <class T, class THandle>
-T* TSExportTableSimple<T, THandle>::Ptr(THandle handle) {
+T* TSExportTableSimpleReuse<T, THandle>::Ptr(THandle handle) {
     auto hashval = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(handle));
     return this->TSHashTable<T, HASHKEY_NONE>::Ptr(hashval, this->m_key);
 }
