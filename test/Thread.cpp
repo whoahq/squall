@@ -6,6 +6,23 @@ uint32_t threadProc(void* param) {
     return 0;
 };
 
+TEST_CASE("CCritSect::Enter", "[thread]") {
+    SECTION("locks critical section") {
+        CCritSect critSect;
+        critSect.Enter();
+        SUCCEED();
+    }
+}
+
+TEST_CASE("CCritSect::Leave", "[thread]") {
+    SECTION("unlocks critical section") {
+        CCritSect critSect;
+        critSect.Enter();
+        critSect.Leave();
+        SUCCEED();
+    }
+}
+
 TEST_CASE("SGetCurrentThreadId", "[thread]") {
     SECTION("returns thread id") {
         uintptr_t threadId = SGetCurrentThreadId();
