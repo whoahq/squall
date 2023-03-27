@@ -1,6 +1,8 @@
 #ifndef STORM_THREAD_C_CRIT_SECT_HPP
 #define STORM_THREAD_C_CRIT_SECT_HPP
 
+#include <cstdint>
+
 #if defined(WHOA_SYSTEM_WIN)
 #include <windows.h>
 #endif
