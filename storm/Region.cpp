@@ -122,24 +122,32 @@ void ProcessBooleanOperation(TSGrowableArray<SOURCE>* sourceArray, int32_t combi
             if ((~source->flags >> 1) & 0x1) {
                 DeleteSourceRect(sourceArray, i);
             }
+
+            break;
         }
 
         case 3: {
             if (source->flags & 0x2) {
                 DeleteSourceRect(sourceArray, i);
             }
+
+            break;
         }
 
         case 4: {
             if (source->flags & (0x1 | 0x2)) {
                 DeleteSourceRect(sourceArray, i);
             }
+
+            break;
         }
 
         case 5: {
             if (source->flags & 0x1) {
                 DeleteSourceRect(sourceArray, i);
             }
+
+            break;
         }
 
         default:
