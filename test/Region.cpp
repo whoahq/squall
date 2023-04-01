@@ -13,7 +13,7 @@ TEST_CASE("SRgnCreate", "[region]") {
 }
 
 TEST_CASE("SRgnCombineRectf", "[region]") {
-    SECTION("combines the region with the given rect using combine mode 2") {
+    SECTION("combines the region with a single given rect 1") {
         HSRGN region;
         SRgnCreate(&region, 0);
 
@@ -31,7 +31,7 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
         SRgnDelete(region);
     }
 
-    SECTION("combines the region with the given rects using combine modes 2 and 4") {
+    SECTION("combines the region with multiple given rects 1") {
         HSRGN region;
         SRgnCreate(&region, 0);
 
@@ -39,6 +39,48 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
         SRgnCombineRectf(region, &baseRect, nullptr, 2);
 
         RECTF newRect = { 0.0f, 0.0f, 0.0f, 0.0f };
+        SRgnCombineRectf(region, &newRect, nullptr, 4);
+
+        RECTF boundingRect = { 0.0f, 0.0f, 0.0f, 0.0f };
+        SRgnGetBoundingRectf(region, &boundingRect);
+
+        REQUIRE(boundingRect.left == 0.0f);
+        REQUIRE(boundingRect.bottom == 0.0f);
+        REQUIRE(boundingRect.right == 1.0f);
+        REQUIRE(boundingRect.top == 1.0f);
+
+        SRgnDelete(region);
+    }
+
+    SECTION("combines the region with multiple given rects 2") {
+        HSRGN region;
+        SRgnCreate(&region, 0);
+
+        RECTF baseRect = { 0.0f, 0.0f, 1.0f, 1.0f };
+        SRgnCombineRectf(region, &baseRect, nullptr, 2);
+
+        RECTF newRect = { 0.0f, 0.0f, 1.0f, 1.0f };
+        SRgnCombineRectf(region, &newRect, nullptr, 4);
+
+        RECTF boundingRect = { 0.0f, 0.0f, 0.0f, 0.0f };
+        SRgnGetBoundingRectf(region, &boundingRect);
+
+        REQUIRE(boundingRect.left == 0.0f);
+        REQUIRE(boundingRect.bottom == 0.0f);
+        REQUIRE(boundingRect.right == 0.0f);
+        REQUIRE(boundingRect.top == 0.0f);
+
+        SRgnDelete(region);
+    }
+
+    SECTION("combines the region with multiple given rects 3") {
+        HSRGN region;
+        SRgnCreate(&region, 0);
+
+        RECTF baseRect = { 0.0f, 0.0f, 1.0f, 1.0f };
+        SRgnCombineRectf(region, &baseRect, nullptr, 2);
+
+        RECTF newRect = { 0.0f, 1.0f, 1.0f, 1.0f };
         SRgnCombineRectf(region, &newRect, nullptr, 4);
 
         RECTF boundingRect = { 0.0f, 0.0f, 0.0f, 0.0f };
