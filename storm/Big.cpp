@@ -32,6 +32,10 @@ int32_t SBigCompare(BigData* a, BigData* b) {
     return Compare(a->Primary(), b->Primary());
 }
 
+void SBigCopy(BigData* a, BigData* b) {
+    a->m_primary = b->m_primary;
+}
+
 void SBigDel(BigData* num) {
     delete num;
 }

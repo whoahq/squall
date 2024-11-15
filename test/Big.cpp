@@ -213,6 +213,24 @@ TEST_CASE("SBigCompare", "[big]") {
     }
 }
 
+TEST_CASE("SBigCopy", "[big]") {
+    BigDataTest a;
+    BigDataTest b;
+
+    SECTION("copies data") {
+        uint8_t num[] = { 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 };
+        SBigFromBinary(a, num, sizeof(num));
+        SBigFromUnsigned(b, 42);
+
+        CHECK(a->Primary().Count() == 4);
+
+        SBigCopy(a, b);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 42);
+    }
+}
+
 TEST_CASE("SBigFromBinary", "[big]") {
     SECTION("creates bigdata from 0") {
         BigData* num;
