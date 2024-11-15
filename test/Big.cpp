@@ -448,6 +448,28 @@ TEST_CASE("SBigIsEven", "[big]") {
     }
 }
 
+TEST_CASE("SBigIsOdd", "[big]") {
+    BigDataTest a;
+
+    SECTION("unset zero is not odd") {
+        CHECK_FALSE(SBigIsOdd(a));
+    }
+
+    SECTION("numbers are not odd") {
+        auto v = GENERATE(0ULL, 2ULL, 10ULL, 10000ULL, 0xFFFFFFFEULL, 0x9999888877776666ULL);
+
+        SBigFromStr(a, std::to_string(v).c_str());
+        CHECK_FALSE(SBigIsOdd(a));
+    }
+
+    SECTION("numbers are odd") {
+        auto v = GENERATE(1ULL, 3ULL, 37ULL, 999999999ULL, 0xFFFFFFFFFULL, 0x9999888877776667ULL);
+
+        SBigFromStr(a, std::to_string(v).c_str());
+        CHECK(SBigIsOdd(a));
+    }
+}
+
 TEST_CASE("SBigMod", "[big]") {
     SECTION("mods 7 by 4") {
         BigData* a;
