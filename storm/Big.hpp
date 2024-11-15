@@ -24,6 +24,8 @@ void SBigFromStr(BigData* num, const char* str);
 
 void SBigFromUnsigned(BigData* num, uint32_t val);
 
+void SBigInc(BigData* a, BigData* b);
+
 void SBigMod(BigData* a, BigData* b, BigData* c);
 
 void SBigMul(BigData* a, BigData* b, BigData* c);
