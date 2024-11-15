@@ -220,6 +220,11 @@ int32_t IsOdd(const BigBuffer &num) {
     return num.Count() != 0 && (num[0] & 1) != 0;
 }
 
+int32_t IsOne(const BigBuffer &num) {
+    num.Trim();
+    return num.Count() == 1 && num[0] == 1;
+}
+
 uint64_t MakeLarge(uint32_t low, uint32_t high) {
     return low + (static_cast<uint64_t>(high) << 32);
 }
