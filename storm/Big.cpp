@@ -69,6 +69,10 @@ void SBigInc(BigData* a, BigData* b) {
     Add(a->Primary(), b->Primary(), 1);
 }
 
+int32_t SBigIsEven(BigData* a) {
+    return IsEven(a->Primary());
+}
+
 void SBigMod(BigData* a, BigData* b, BigData* c) {
     uint32_t allocCount = 0;
     auto& scratch = a->Stack().Alloc(&allocCount);

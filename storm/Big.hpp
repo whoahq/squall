@@ -28,6 +28,8 @@ void SBigFromUnsigned(BigData* num, uint32_t val);
 
 void SBigInc(BigData* a, BigData* b);
 
+int32_t SBigIsEven(BigData* a);
+
 void SBigMod(BigData* a, BigData* b, BigData* c);
 
 void SBigMul(BigData* a, BigData* b, BigData* c);

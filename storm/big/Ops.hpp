@@ -33,6 +33,8 @@ uint32_t HighBitPos(const BigBuffer& buffer);
 
 void InsertLowPart(uint64_t& value, uint32_t low);
 
+int32_t IsEven(const BigBuffer &num);
+
 uint64_t MakeLarge(uint32_t low, uint32_t high);
 
 void Mul(BigBuffer& a, const BigBuffer& b, uint64_t c);

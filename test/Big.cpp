@@ -426,6 +426,28 @@ TEST_CASE("SBigInc", "[big]") {
     }
 }
 
+TEST_CASE("SBigIsEven", "[big]") {
+    BigDataTest a;
+
+    SECTION("unset zero is even") {
+        CHECK(SBigIsEven(a));
+    }
+
+    SECTION("numbers are even") {
+        auto v = GENERATE(0ULL, 2ULL, 10ULL, 10000ULL, 0xFFFFFFFEULL, 0x9999888877776666ULL);
+
+        SBigFromStr(a, std::to_string(v).c_str());
+        CHECK(SBigIsEven(a));
+    }
+
+    SECTION("numbers are not even") {
+        auto v = GENERATE(1ULL, 3ULL, 37ULL, 999999999ULL, 0xFFFFFFFFFULL, 0x9999888877776667ULL);
+
+        SBigFromStr(a, std::to_string(v).c_str());
+        CHECK_FALSE(SBigIsEven(a));
+    }
+}
+
 TEST_CASE("SBigMod", "[big]") {
     SECTION("mods 7 by 4") {
         BigData* a;
