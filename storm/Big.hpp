@@ -30,6 +30,8 @@ void SBigInc(BigData* a, BigData* b);
 
 int32_t SBigIsEven(BigData* a);
 
+int32_t SBigIsOdd(BigData* a);
+
 void SBigMod(BigData* a, BigData* b, BigData* c);
 
 void SBigMul(BigData* a, BigData* b, BigData* c);
