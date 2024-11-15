@@ -103,6 +103,10 @@ void SBigNew(BigData** num) {
     *num = new (m) BigData();
 }
 
+void SBigNot(BigData* a, BigData* b) {
+    Not(a->Primary(), b->Primary());
+}
+
 void SBigPowMod(BigData* a, BigData* b, BigData* c, BigData* d) {
     PowMod(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());
 }

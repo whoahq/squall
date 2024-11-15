@@ -49,6 +49,8 @@ void Mul(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, BigStack& stack);
 
 void MulMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack);
 
+void Not(BigBuffer& a, const BigBuffer& b);
+
 void PowMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack);
 
 void SetOne(BigBuffer& buffer);

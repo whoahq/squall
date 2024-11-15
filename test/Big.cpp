@@ -728,6 +728,47 @@ TEST_CASE("SBigPowMod", "[big]") {
     }
 }
 
+TEST_CASE("SBigNot", "[big]") {
+    BigDataTest a, b;
+
+    SECTION("bitwise negates small values") {
+        auto v = GENERATE(uint32_t(1), 2, 10, 0xFFFFFFFF);
+
+        SBigFromUnsigned(b, v);
+        SBigNot(a, b);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == ~v);
+    }
+
+    SECTION("bitwise negates large values") {
+        auto v = GENERATE(10000000000000ULL, 0xFF00000000000000ULL);
+
+        SBigFromStr(b, std::to_string(v).c_str());
+        SBigNot(a, b);
+
+        CHECK(a->Primary().Count() == 2);
+        CHECK(a->Primary()[0] == ~uint32_t(v));
+        CHECK(a->Primary()[1] == ~uint32_t(v >> 32));
+    }
+
+    SECTION("bitwise negates huge value") {
+        uint32_t data[] = { 0xF00DFEED, 0xBA1D, 0xBEEBBEEB, 0x12345678, 0x9ABCDEF, 0xDEADCAD, 0xD011A };
+        
+        SBigFromBinary(b, data, sizeof(data));
+        SBigNot(a, b);
+
+        CHECK(a->Primary().Count() == 7);
+        CHECK(a->Primary()[0] == ~data[0]);
+        CHECK(a->Primary()[1] == ~data[1]);
+        CHECK(a->Primary()[2] == ~data[2]);
+        CHECK(a->Primary()[3] == ~data[3]);
+        CHECK(a->Primary()[4] == ~data[4]);
+        CHECK(a->Primary()[5] == ~data[5]);
+        CHECK(a->Primary()[6] == ~data[6]);
+    }
+}
+
 TEST_CASE("SBigShl", "[big]") {
     SECTION("shifts 256 left 7 bits") {
         BigData* a;
