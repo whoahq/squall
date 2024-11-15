@@ -486,6 +486,26 @@ TEST_CASE("SBigIsOne", "[big]") {
     }
 }
 
+TEST_CASE("SBigIsZero", "[big]") {
+    BigDataTest a;
+
+    SECTION("unset is zero") {
+        CHECK(SBigIsZero(a));
+    }
+
+    SECTION("0 is 0") {
+        SBigFromUnsigned(a, 0);
+        CHECK(SBigIsZero(a));
+    }
+
+    SECTION("numbers are not 0") {
+        auto v = GENERATE(1ULL, 2ULL, 10ULL, 0xFFFFFFFFULL, 10000000000000ULL, 0xFF00000000000000ULL);
+
+        SBigFromStr(a, std::to_string(v).c_str());
+        CHECK_FALSE(SBigIsZero(a));
+    }
+}
+
 TEST_CASE("SBigMod", "[big]") {
     SECTION("mods 7 by 4") {
         BigData* a;
