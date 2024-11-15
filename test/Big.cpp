@@ -330,6 +330,37 @@ TEST_CASE("SBigFromUnsigned", "[big]") {
         SBigDel(num);
     }
 }
+TEST_CASE("SBigInc", "[big]") {
+    BigDataTest a, b;
+
+    SECTION("increments from 0") {
+        SBigFromUnsigned(b, 0);
+
+        SBigInc(a, b);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 1);
+    }
+
+    SECTION("increments from max uint") {
+        SBigFromUnsigned(b, UINT32_MAX);
+
+        SBigInc(a, b);
+
+        CHECK(a->Primary().Count() == 2);
+        CHECK(a->Primary()[0] == 0);
+        CHECK(a->Primary()[1] == 1);
+    }
+
+    SECTION("increments from a number") {
+        SBigFromUnsigned(b, 1337);
+
+        SBigInc(a, b);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 1338);
+    }
+}
 
 TEST_CASE("SBigMod", "[big]") {
     SECTION("mods 7 by 4") {
