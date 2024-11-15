@@ -48,6 +48,10 @@ void SBigFromBinary(BigData* num, const void* data, uint32_t bytes) {
     FromBinary(num->Primary(), data, bytes);
 }
 
+void SBigFromStr(BigData* num, const char *str) {
+    FromStr(num->Primary(), str);
+}
+
 void SBigFromUnsigned(BigData* num, uint32_t val) {
     FromUnsigned(num->Primary(), val);
 }

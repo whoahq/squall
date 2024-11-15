@@ -281,6 +281,32 @@ TEST_CASE("SBigFromBinary", "[big]") {
     }
 }
 
+TEST_CASE("SBigFromStr", "[big]") {
+    BigDataTest num;
+
+    SECTION("with empty string") {
+        SBigFromStr(num, "");
+
+        CHECK(num->Primary().Count() == 0);
+    }
+
+    SECTION("with string containing numbers") {
+        SBigFromStr(num, "123456");
+
+        CHECK(num->Primary().Count() == 1);
+        CHECK(num->Primary()[0] == 123456);
+    }
+
+    SECTION("with string containing letters (original bug)") {
+        SBigFromStr(num, "ABC");
+
+        const unsigned int expected_num = ('A' - '0') * 100 + ('B' - '0') * 10 + ('C' - '0');
+
+        CHECK(num->Primary().Count() == 1);
+        CHECK(num->Primary()[0] == expected_num);
+    }
+}
+
 TEST_CASE("SBigFromUnsigned", "[big]") {
     SECTION("creates bigdata from 0") {
         BigData* num;
