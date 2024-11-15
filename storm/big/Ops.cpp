@@ -286,6 +286,15 @@ void Not(BigBuffer& a, const BigBuffer& b) {
     a.SetCount(i);
 }
 
+void Or(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
+    uint32_t i = 0;
+    for (; b.IsUsed(i) || c.IsUsed(i); i++) {
+        a[i] = c[i] | b[i];
+    }
+
+    a.SetCount(i);
+}
+
 void PowMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack) {
     c.Trim();
 

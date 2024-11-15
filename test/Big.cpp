@@ -769,6 +769,56 @@ TEST_CASE("SBigNot", "[big]") {
     }
 }
 
+TEST_CASE("SBigOr", "[big]") {
+    BigDataTest a, b, c;
+
+    SECTION("performs bitwise or on small numbers") {
+        auto v = GENERATE(
+            std::make_pair(0UL, 0UL),
+            std::make_pair(0UL, 123UL),
+            std::make_pair(41689UL, 786740UL)
+        );
+
+        SBigFromUnsigned(b, v.first);
+        SBigFromUnsigned(c, v.second);
+        SBigOr(a, b, c);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == (v.first | v.second));
+    }
+
+    SECTION("performs bitwise or on large numbers") {
+        auto v = GENERATE(
+            std::make_pair(0xFF00FF00FF00FF00ULL, 0xFF00FF00FF00FFULL)
+        );
+
+        SBigFromStr(b, std::to_string(v.first).c_str());
+        SBigFromStr(c, std::to_string(v.second).c_str());
+        SBigOr(a, b, c);
+
+        CHECK(a->Primary().Count() == 2);
+        CHECK(a->Primary()[0] == uint32_t(v.first | v.second));
+        CHECK(a->Primary()[1] == uint32_t((v.first | v.second) >> 32));
+    }
+
+    SECTION("performs bitwise or on huge value") {
+        uint32_t data[] = { 0xF00DFEEDUL, 0xBA1DUL, 0xBEEBBEEBUL, 0x12345678UL, 0x9ABCDEFUL, 0xDEADCADUL, 0xD011AUL };
+
+        SBigFromBinary(b, data, sizeof(data));
+        SBigFromUnsigned(c, 0x11111111UL);
+        SBigOr(a, b, c);
+
+        CHECK(a->Primary().Count() == 7);
+        CHECK(a->Primary()[0] == 0xF11DFFFD);
+        CHECK(a->Primary()[1] == data[1]);
+        CHECK(a->Primary()[2] == data[2]);
+        CHECK(a->Primary()[3] == data[3]);
+        CHECK(a->Primary()[4] == data[4]);
+        CHECK(a->Primary()[5] == data[5]);
+        CHECK(a->Primary()[6] == data[6]);
+    }
+}
+
 TEST_CASE("SBigShl", "[big]") {
     SECTION("shifts 256 left 7 bits") {
         BigData* a;
