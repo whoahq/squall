@@ -42,7 +42,7 @@ class S_Thread {
 
     // Static functions
 #if defined(WHOA_SYSTEM_WIN)
-    static DWORD s_SLaunchThread(void* threadParam);
+    static DWORD WINAPI s_SLaunchThread(void* threadParam);
 #endif
 
 #if defined(WHOA_SYSTEM_MAC)

@@ -1,6 +1,11 @@
 .DS_Store
 .idea
 .vscode
+CMakeSettings.json
 
 /build
 /dist
+/out
+/.vs
+
+
