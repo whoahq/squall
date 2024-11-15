@@ -147,12 +147,11 @@ uint32_t ExtractLowPartLargeSum(uint64_t& value, uint64_t add) {
 }
 
 uint32_t ExtractLowPartSx(uint64_t& value) {
-    auto low = static_cast<uint32_t>(value);
+    uint32_t low = value & 0xFFFFFFFF;
     value >>= 32;
 
     if (value >= 0x80000000) {
-        reinterpret_cast<uint32_t*>(&value)[0] = value;
-        reinterpret_cast<uint32_t*>(&value)[1] = -1;
+        value |= 0xFFFFFFFFULL << 32;
     }
 
     return low;
