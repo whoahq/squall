@@ -277,6 +277,15 @@ void MulMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const BigBuffe
     stack.Free(allocCount);
 }
 
+void Not(BigBuffer& a, const BigBuffer& b) {
+    uint32_t i = 0;
+    for (; b.IsUsed(i); i++) {
+        a[i] = ~b[i];
+    }
+
+    a.SetCount(i);
+}
+
 void PowMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack) {
     c.Trim();
 

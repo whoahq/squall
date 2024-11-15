@@ -42,6 +42,8 @@ void SBigMul(BigData* a, BigData* b, BigData* c);
 
 void SBigNew(BigData** num);
 
+void SBigNot(BigData* a, BigData* b);
+
 void SBigPowMod(BigData* a, BigData* b, BigData* c, BigData* d);
 
 void SBigShl(BigData* a, BigData* b, uint32_t shift);
