@@ -393,7 +393,8 @@ void Sub(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
 
     a.SetCount(i);
 
-    STORM_ASSERT(!borrow);
+    // This assert does not exist in retail WoW or Starcraft.
+    //STORM_ASSERT(!borrow);
 }
 
 void ToBinaryAppend(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer) {
