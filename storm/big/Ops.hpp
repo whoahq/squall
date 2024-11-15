@@ -53,6 +53,8 @@ void Square(BigBuffer& a, const BigBuffer& b, BigStack& stack);
 
 void Sub(BigBuffer& a, const BigBuffer& b, const BigBuffer& c);
 
+void Sub(BigBuffer& a, const BigBuffer& b, uint32_t c);
+
 void ToBinary(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer);
 
 #endif

@@ -14,6 +14,8 @@ int32_t SBigCompare(BigData* a, BigData* b);
 
 void SBigCopy(BigData* a, BigData* b);
 
+void SBigDec(BigData* a, BigData* b);
+
 void SBigDel(BigData* num);
 
 void SBigFromBinary(BigData* num, const void* data, uint32_t bytes);

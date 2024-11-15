@@ -392,7 +392,20 @@ void Sub(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
     }
 
     a.SetCount(i);
+    // This assert does not exist in retail WoW or Starcraft.
+    //STORM_ASSERT(!borrow);
+}
 
+void Sub(BigBuffer& a, const BigBuffer& b, uint32_t c) {
+    uint64_t borrow = 0;
+
+    uint32_t i = 0;
+    for (; b.IsUsed(i); i++) {
+        borrow += b[i] - static_cast<uint64_t>(c);;
+        a[i] = ExtractLowPartSx(borrow);
+    }
+
+    a.SetCount(i);
     // This assert does not exist in retail WoW or Starcraft.
     //STORM_ASSERT(!borrow);
 }

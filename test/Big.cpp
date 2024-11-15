@@ -231,6 +231,29 @@ TEST_CASE("SBigCopy", "[big]") {
     }
 }
 
+TEST_CASE("SBigDec", "[big]") {
+    BigDataTest a;
+    BigDataTest b;
+
+    SECTION("decrements value by 1") {
+        SBigFromUnsigned(b, 5);
+
+        SBigDec(a, b);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 4);
+    }
+
+    SECTION("decrements from 0") {
+        SBigFromUnsigned(b, 0);
+
+        SBigDec(a, b);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 0xFFFFFFFF);
+    }
+}
+
 TEST_CASE("SBigFromBinary", "[big]") {
     SECTION("creates bigdata from 0") {
         BigData* num;
@@ -569,16 +592,10 @@ TEST_CASE("SBigSquare", "[big]") {
 }
 
 TEST_CASE("SBigSub", "[big]") {
+    BigDataTest a, b, c;
+
     SECTION("subtracts 1 from 2") {
-        BigData* a;
-        SBigNew(&a);
-
-        BigData* b;
-        SBigNew(&b);
         SBigFromUnsigned(b, 2);
-
-        BigData* c;
-        SBigNew(&c);
         SBigFromUnsigned(c, 1);
 
         SBigSub(a, b, c);
@@ -587,9 +604,16 @@ TEST_CASE("SBigSub", "[big]") {
 
         CHECK(a->Primary().Count() == 1);
         CHECK(a->Primary()[0] == 1);
+    }
 
-        SBigDel(a);
-        SBigDel(b);
+    SECTION("subtracts 1 from 0") {
+        SBigFromUnsigned(b, 0);
+        SBigFromUnsigned(c, 1);
+
+        SBigSub(a, b, c);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 0xFFFFFFFF);
     }
 }
 

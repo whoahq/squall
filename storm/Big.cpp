@@ -36,6 +36,10 @@ void SBigCopy(BigData* a, BigData* b) {
     a->m_primary = b->m_primary;
 }
 
+void SBigDec(BigData* a, BigData* b) {
+    Sub(a->m_primary, b->m_primary, 1);
+}
+
 void SBigDel(BigData* num) {
     delete num;
 }
