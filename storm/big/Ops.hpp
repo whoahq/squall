@@ -9,6 +9,8 @@ void Add(BigBuffer& a, const BigBuffer& b, uint32_t c);
 
 void Add(BigBuffer& a, const BigBuffer& b, const BigBuffer& c);
 
+void And(BigBuffer& a, const BigBuffer& b, const BigBuffer& c);
+
 int32_t Compare(const BigBuffer& a, const BigBuffer& b);
 
 void Div(BigBuffer& a, uint32_t* b, const BigBuffer& c, uint64_t d);

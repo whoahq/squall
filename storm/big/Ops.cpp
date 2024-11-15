@@ -22,6 +22,15 @@ void Add(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
     a.SetCount(i);
 }
 
+void And(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
+    uint32_t i = 0;
+    for (; b.IsUsed(i) || c.IsUsed(i); i++) {
+        a[i] = c[i] & b[i];
+    }
+
+    a.SetCount(i);
+}
+
 int32_t Compare(const BigBuffer& a, const BigBuffer& b) {
     int32_t result = 0;
 

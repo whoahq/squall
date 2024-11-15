@@ -68,6 +68,42 @@ TEST_CASE("Add", "[big]") {
     }
 }
 
+TEST_CASE("And", "[big]") {
+    BigDataTest a;
+    BigDataTest b;
+    BigDataTest c;
+
+    SECTION("overwrites output") {
+        SBigFromUnsigned(a, 123456);
+        SBigFromUnsigned(b, 0);
+        SBigFromUnsigned(c, 0);
+
+        And(a->Primary(), b->Primary(), c->Primary());
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 0);
+    }
+
+    SECTION("performs bitwise and on large nums") {
+        uint8_t data[] = {
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 31, 12, 13, 14, 15
+        };
+        uint8_t data2[] = {
+            0, 0, 0, 6, 6, 0, 6, 0, 0, 6, 0xFF, 6, 0, 6, 0
+        };
+        SBigFromBinary(b, data, sizeof(data));
+        SBigFromBinary(c, data2, sizeof(data2));
+
+        And(a->Primary(), b->Primary(), c->Primary());
+
+        CHECK(a->Primary().Count() == 4);
+        CHECK(a->Primary()[0] == 0x04000000);
+        CHECK(a->Primary()[1] == 0x00060004);
+        CHECK(a->Primary()[2] == 0x041F0200);
+        CHECK(a->Primary()[3] == 0x00000600);
+    }
+}
+
 TEST_CASE("Compare", "[big]") {
     SECTION("compares 0 and 1") {
         BigData* a;

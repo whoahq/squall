@@ -7,6 +7,10 @@ void SBigAdd(BigData* a, BigData* b, BigData* c) {
     Add(a->Primary(), b->Primary(), c->Primary());
 }
 
+void SBigAnd(BigData* a, BigData* b, BigData* c) {
+    And(a->Primary(), b->Primary(), c->Primary());
+}
+
 void SBigBitLen(BigData* num, uint32_t* len) {
     auto& buffer = num->Primary();
     buffer.Trim();
