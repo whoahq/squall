@@ -409,7 +409,7 @@ void Sub(BigBuffer& a, const BigBuffer& b, uint32_t c) {
 
     uint32_t i = 0;
     for (; b.IsUsed(i); i++) {
-        borrow += b[i] - static_cast<uint64_t>(c);;
+        borrow += b[i] - c;
         a[i] = ExtractLowPartSx(borrow);
     }
 

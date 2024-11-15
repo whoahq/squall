@@ -44,6 +44,15 @@ void SBigDel(BigData* num) {
     delete num;
 }
 
+void SBigDiv(BigData* a, BigData* b, BigData* c) {
+    uint32_t allocCount = 0;
+    BigBuffer &buf = a->Stack().Alloc(&allocCount);
+
+    Div(a->Primary(), buf, b->Primary(), c->Primary(), a->Stack());
+
+    a->Stack().Free(allocCount);
+}
+
 void SBigFromBinary(BigData* num, const void* data, uint32_t bytes) {
     FromBinary(num->Primary(), data, bytes);
 }

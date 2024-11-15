@@ -18,6 +18,8 @@ void SBigDec(BigData* a, BigData* b);
 
 void SBigDel(BigData* num);
 
+void SBigDiv(BigData* a, BigData* b, BigData* c);
+
 void SBigFromBinary(BigData* num, const void* data, uint32_t bytes);
 
 void SBigFromStr(BigData* num, const char* str);
