@@ -1,5 +1,6 @@
 #include "storm/Big.hpp"
 #include "test/Test.hpp"
+#include <string>
 
 TEST_CASE("SBigAdd", "[big]") {
     SECTION("adds 0 and 1") {
@@ -214,8 +215,7 @@ TEST_CASE("SBigCompare", "[big]") {
 }
 
 TEST_CASE("SBigCopy", "[big]") {
-    BigDataTest a;
-    BigDataTest b;
+    BigDataTest a, b;
 
     SECTION("copies data") {
         uint8_t num[] = { 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 };
@@ -232,8 +232,7 @@ TEST_CASE("SBigCopy", "[big]") {
 }
 
 TEST_CASE("SBigDec", "[big]") {
-    BigDataTest a;
-    BigDataTest b;
+    BigDataTest a, b;
 
     SECTION("decrements value by 1") {
         SBigFromUnsigned(b, 5);
@@ -251,6 +250,71 @@ TEST_CASE("SBigDec", "[big]") {
 
         CHECK(a->Primary().Count() == 1);
         CHECK(a->Primary()[0] == 0xFFFFFFFF);
+    }
+}
+
+TEST_CASE("SBigDiv", "[big]") {
+    BigDataTest a, b, c;
+
+    SECTION("divides 2 by 1") {
+        SBigFromUnsigned(b, 2);
+        SBigFromUnsigned(c, 1);
+
+        SBigDiv(a, b, c);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 2);
+    }
+
+    SECTION("divides 5 by 2") {
+        SBigFromUnsigned(b, 5);
+        SBigFromUnsigned(c, 2);
+
+        SBigDiv(a, b, c);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 2);
+    }
+
+    SECTION("divides 7 by 4") {
+        SBigFromUnsigned(b, 7);
+        SBigFromUnsigned(c, 4);
+
+        SBigDiv(a, b, c);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 1);
+    }
+
+    SECTION("divides 0x9999444488885555 by 0x2222") {
+        SBigFromStr(b, std::to_string(0x9999444488885555ULL).c_str());
+        SBigFromUnsigned(c, 0x2222);
+
+        SBigDiv(a, b, c);
+
+        CHECK(a->Primary().Count() == 2);
+        CHECK(a->Primary()[0] == 0x00040002);
+        CHECK(a->Primary()[1] == 0x48002);
+    }
+
+    SECTION("divides 0x9999444488885555 by 0xFFFFFFFF") {
+        SBigFromStr(b, std::to_string(0x9999444488885555ULL).c_str());
+        SBigFromUnsigned(c, 0xFFFFFFFF);
+
+        SBigDiv(a, b, c);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 0x99994445);
+    }
+
+    SECTION("divides 0x9999444488885555 by 0x1111222233334444 (buffer divisor)") {
+        SBigFromStr(b, std::to_string(0x9999444488885555ULL).c_str());
+        SBigFromStr(c, std::to_string(0x1111222233334444ULL).c_str());
+
+        SBigDiv(a, b, c);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == 8);
     }
 }
 
