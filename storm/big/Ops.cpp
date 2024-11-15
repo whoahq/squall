@@ -211,6 +211,10 @@ void InsertLowPart(uint64_t& value, uint32_t low) {
     value = (value << 32) | low;
 }
 
+int32_t IsEven(const BigBuffer &num) {
+    return num.Count() == 0 || (num[0] & 1) == 0;
+}
+
 uint64_t MakeLarge(uint32_t low, uint32_t high) {
     return low + (static_cast<uint64_t>(high) << 32);
 }
