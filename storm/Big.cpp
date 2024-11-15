@@ -77,6 +77,10 @@ int32_t SBigIsOdd(BigData* a) {
     return IsOdd(a->Primary());
 }
 
+int32_t SBigIsOne(BigData* a) {
+    return IsOne(a->Primary());
+}
+
 void SBigMod(BigData* a, BigData* b, BigData* c) {
     uint32_t allocCount = 0;
     auto& scratch = a->Stack().Alloc(&allocCount);

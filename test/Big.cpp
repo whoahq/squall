@@ -470,6 +470,22 @@ TEST_CASE("SBigIsOdd", "[big]") {
     }
 }
 
+TEST_CASE("SBigIsOne", "[big]") {
+    BigDataTest a;
+
+    SECTION("1 is 1") {
+        SBigFromUnsigned(a, 1);
+        CHECK(SBigIsOne(a));
+    }
+
+    SECTION("numbers are not 1") {
+        auto v = GENERATE(0ULL, 2ULL, 10ULL, 11ULL, 10000000000001ULL, 0xFF00000000000001ULL);
+
+        SBigFromStr(a, std::to_string(v).c_str());
+        CHECK_FALSE(SBigIsOne(a));
+    }
+}
+
 TEST_CASE("SBigMod", "[big]") {
     SECTION("mods 7 by 4") {
         BigData* a;
