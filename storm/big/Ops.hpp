@@ -25,6 +25,8 @@ uint32_t ExtractLowPartSx(uint64_t& value);
 
 void FromBinary(BigBuffer& buffer, const void* value, uint32_t bytes);
 
+void FromStr(BigBuffer& buffer, const char* str);
+
 void FromUnsigned(BigBuffer& buffer, uint32_t value);
 
 uint32_t HighBitPos(const BigBuffer& buffer);

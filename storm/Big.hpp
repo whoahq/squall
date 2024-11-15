@@ -20,6 +20,8 @@ void SBigDel(BigData* num);
 
 void SBigFromBinary(BigData* num, const void* data, uint32_t bytes);
 
+void SBigFromStr(BigData* num, const char* str);
+
 void SBigFromUnsigned(BigData* num, uint32_t val);
 
 void SBigMod(BigData* a, BigData* b, BigData* c);

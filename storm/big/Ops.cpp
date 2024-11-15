@@ -167,6 +167,14 @@ void FromBinary(BigBuffer& buffer, const void* data, uint32_t bytes) {
     }
 }
 
+void FromStr(BigBuffer& buffer, const char* str) {
+    SetZero(buffer);
+    for (; *str; str++) {
+        Mul(buffer, buffer, 10);
+        Add(buffer, buffer, *str - '0');
+    }
+}
+
 void FromUnsigned(BigBuffer& buffer, uint32_t value) {
     buffer[0] = value;
     buffer.SetCount(1);
