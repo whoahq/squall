@@ -6,6 +6,8 @@
 
 void SBigAdd(BigData* a, BigData* b, BigData* c);
 
+void SBigAnd(BigData* a, BigData* b, BigData* c);
+
 void SBigBitLen(BigData* num, uint32_t* len);
 
 int32_t SBigCompare(BigData* a, BigData* b);
