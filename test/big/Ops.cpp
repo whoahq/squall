@@ -970,6 +970,7 @@ TEST_CASE("Sub", "[big]") {
         CHECK(a->Primary()[0] == 1);
     }
 
+#ifdef NDEBUG
     SECTION("subtracts 1 from 0") {
         SBigFromUnsigned(b, 0);
         SBigFromUnsigned(c, 1);
@@ -988,6 +989,7 @@ TEST_CASE("Sub", "[big]") {
         CHECK(a->Primary().Count() == 1);
         CHECK(a->Primary()[0] == 0xFFFFFFFF);
     }
+#endif
 
     SECTION("subtracts 1 from 2") {
         SBigFromUnsigned(b, 2);

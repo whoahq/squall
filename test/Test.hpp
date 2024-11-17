@@ -4,14 +4,14 @@ class BigData;
 
 // Fixture for repetitive handling of BigData objects.
 struct BigDataTest {
-    using BigDataPtr=BigData*;
+    using BigDataPtr = BigData*;
 
-    BigData *num;
+    BigData* num;
 
     BigDataTest();
     ~BigDataTest();
 
-    BigData **operator &() { return &num; }
+    BigData** operator &() { return &num; }
     operator BigDataPtr() const { return num; }
-    BigData *operator->() const { return num; }
+    BigData* operator->() const { return num; }
 };

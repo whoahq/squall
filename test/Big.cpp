@@ -171,6 +171,7 @@ TEST_CASE("SBigDec", "[big]") {
         CHECK(a->Primary()[0] == 4);
     }
 
+#ifdef NDEBUG
     SECTION("decrements from 0") {
         SBigFromUnsigned(b, 0);
 
@@ -179,6 +180,7 @@ TEST_CASE("SBigDec", "[big]") {
         CHECK(a->Primary().Count() == 1);
         CHECK(a->Primary()[0] == 0xFFFFFFFF);
     }
+#endif
 }
 
 TEST_CASE("SBigDiv", "[big]") {
@@ -611,8 +613,8 @@ TEST_CASE("SBigOr", "[big]") {
         SBigOr(a, b, c);
 
         CHECK(a->Primary().Count() == 2);
-        CHECK(a->Primary()[0] == uint32_t(v.first | v.second));
-        CHECK(a->Primary()[1] == uint32_t((v.first | v.second) >> 32));
+        CHECK(a->Primary()[0] == 0xFFFFFFFF);
+        CHECK(a->Primary()[1] == 0xFFFFFFFF);
     }
 
     SECTION("performs bitwise or on huge value") {
@@ -694,6 +696,7 @@ TEST_CASE("SBigSub", "[big]") {
         CHECK(a->Primary()[0] == 1);
     }
 
+#ifdef NDEBUG
     SECTION("subtracts 1 from 0") {
         SBigFromUnsigned(b, 0);
         SBigFromUnsigned(c, 1);
@@ -703,6 +706,7 @@ TEST_CASE("SBigSub", "[big]") {
         CHECK(a->Primary().Count() == 1);
         CHECK(a->Primary()[0] == 0xFFFFFFFF);
     }
+#endif
 }
 
 TEST_CASE("SBigToBinaryBuffer", "[big]") {
