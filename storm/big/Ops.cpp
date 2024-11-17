@@ -52,12 +52,12 @@ void Div(BigBuffer& a, uint32_t* b, const BigBuffer& c, uint64_t d) {
     uint64_t data = 0;
     while (index > 0) {
         InsertLowPart(data, c[--index]);
-        a[index] = data / d;
+        a[index] = static_cast<uint32_t>(data / d);
         data %= d;
     }
 
     a.Trim();
-    *b = data;
+    *b = static_cast<uint32_t>(data);
 }
 
 void Div(BigBuffer& a, BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack) {
@@ -102,7 +102,7 @@ void Div(BigBuffer& a, BigBuffer& b, const BigBuffer& c, const BigBuffer& d, Big
             cc.SetOffset(v12 - 1);
 
             if (t) {
-                a[0] = MakeLarge(cc[dCount - 1], cc[dCount]) / t;
+                a[0] = static_cast<uint32_t>(MakeLarge(cc[dCount - 1], cc[dCount]) / t);
             } else {
                 a[0] = cc[dCount];
             }
@@ -211,21 +211,21 @@ void InsertLowPart(uint64_t& value, uint32_t low) {
     value = (value << 32) | low;
 }
 
-int32_t IsEven(const BigBuffer &num) {
+int32_t IsEven(const BigBuffer& num) {
     return num.Count() == 0 || (num[0] & 1) == 0;
 }
 
-int32_t IsOdd(const BigBuffer &num) {
+int32_t IsOdd(const BigBuffer& num) {
     num.Trim();
     return num.Count() != 0 && (num[0] & 1) != 0;
 }
 
-int32_t IsOne(const BigBuffer &num) {
+int32_t IsOne(const BigBuffer& num) {
     num.Trim();
     return num.Count() == 1 && num[0] == 1;
 }
 
-int32_t IsZero(const BigBuffer &num) {
+int32_t IsZero(const BigBuffer& num) {
     num.Trim();
     return num.Count() == 0;
 }
@@ -437,8 +437,7 @@ void Sub(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
     }
 
     a.SetCount(i);
-    // This assert does not exist in retail WoW or Starcraft.
-    //STORM_ASSERT(!borrow);
+    STORM_ASSERT(!borrow);
 }
 
 void Sub(BigBuffer& a, const BigBuffer& b, uint32_t c) {
@@ -451,8 +450,7 @@ void Sub(BigBuffer& a, const BigBuffer& b, uint32_t c) {
     }
 
     a.SetCount(i);
-    // This assert does not exist in retail WoW or Starcraft.
-    //STORM_ASSERT(!borrow);
+    STORM_ASSERT(!borrow);
 }
 
 void ToBinaryAppend(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer) {

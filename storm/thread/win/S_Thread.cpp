@@ -1,10 +1,6 @@
 #include "storm/thread/S_Thread.hpp"
 #include "storm/Memory.hpp"
 
-#ifndef WINAPI
-#define WINAPI
-#endif
-
 DWORD WINAPI S_Thread::s_SLaunchThread(void* threadParam) {
     auto params = static_cast<SThreadParmBlock*>(threadParam);
     auto proc = params->threadProc;
