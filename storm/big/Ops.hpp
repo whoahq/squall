@@ -75,4 +75,6 @@ void ToBinary(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer);
 
 void ToStream(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer);
 
+void Xor(BigBuffer& a, const BigBuffer& b, const BigBuffer& c);
+
 #endif
