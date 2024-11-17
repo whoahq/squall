@@ -746,6 +746,30 @@ TEST_CASE("SBigToBinaryBuffer", "[big]") {
     }
 }
 
+TEST_CASE("SBigToUnsigned", "[big]") {
+    BigDataTest num;
+
+    SECTION("converts bignum values to uint") {
+        auto v = GENERATE(0UL, 1UL, 1000UL, UINT32_MAX);
+
+        SBigFromUnsigned(num, v);
+
+        uint32_t result;
+        SBigToUnsigned(num, &result);
+
+        CHECK(result == v);
+    }
+
+    SECTION("truncates large values") {
+        SBigFromStr(num, std::to_string(0x123456789ABCDEFULL).c_str());
+
+        uint32_t result;
+        SBigToUnsigned(num, &result);
+
+        CHECK(result == 0x89ABCDEF);
+    }
+}
+
 TEST_CASE("SBigXor", "[big]") {
     BigDataTest a, b, c;
 

@@ -60,4 +60,6 @@ void SBigToBinaryBuffer(BigData* num, uint8_t* data, uint32_t maxBytes, uint32_t
 
 void SBigXor(BigData* a, BigData* b, BigData* c);
 
+void SBigToUnsigned(BigData* num, uint32_t* val);
+
 #endif

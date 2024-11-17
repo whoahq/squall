@@ -483,6 +483,11 @@ void ToStream(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer) {
     ToBinaryAppend(output, buffer);
 }
 
+void ToUnsigned(uint32_t* a, const BigBuffer& b) {
+    *a = 0;
+    *a = b[0];
+}
+
 void Xor(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
     uint32_t i = 0;
     for (; b.IsUsed(i) || c.IsUsed(i); i++) {

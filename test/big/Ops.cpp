@@ -1070,7 +1070,6 @@ TEST_CASE("Sub", "[big]") {
     }
 }
 
-
 TEST_CASE("ToStream", "[big]") {
     BigDataTest a;
 
