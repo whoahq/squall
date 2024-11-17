@@ -482,3 +482,12 @@ void ToStream(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer) {
     EncodeDataBytes(output, output.Count());
     ToBinaryAppend(output, buffer);
 }
+
+void Xor(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
+    uint32_t i = 0;
+    for (; b.IsUsed(i) || c.IsUsed(i); i++) {
+        a[i] = c[i] ^ b[i];
+    }
+
+    a.SetCount(i);
+}

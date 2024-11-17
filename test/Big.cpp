@@ -745,3 +745,49 @@ TEST_CASE("SBigToBinaryBuffer", "[big]") {
         CHECK(*reinterpret_cast<uint64_t*>(buffer) == 0x123456789ABCDEF0);
     }
 }
+
+TEST_CASE("SBigXor", "[big]") {
+    BigDataTest a, b, c;
+
+    SECTION("performs bitwise xor on small numbers") {
+        auto v = GENERATE(
+            std::make_pair(0UL, 0UL),
+            std::make_pair(0UL, 123UL),
+            std::make_pair(41689UL, 786740UL)
+        );
+
+        SBigFromUnsigned(b, v.first);
+        SBigFromUnsigned(c, v.second);
+        SBigXor(a, b, c);
+
+        CHECK(a->Primary().Count() == 1);
+        CHECK(a->Primary()[0] == (v.first ^ v.second));
+    }
+
+    SECTION("performs bitwise xor on large number") {
+        SBigFromStr(b, std::to_string(0xFF00FF00FF00FF00ULL).c_str());
+        SBigFromStr(c, std::to_string(0xFF00FF00FF00FULL).c_str());
+        SBigXor(a, b, c);
+
+        CHECK(a->Primary().Count() == 2);
+        CHECK(a->Primary()[0] == 0xF0F0F0F);
+        CHECK(a->Primary()[1] == 0xFF0F0F0F);
+    }
+
+    SECTION("performs bitwise xor on huge value") {
+        uint32_t data[] = { 0xF00DFEEDUL, 0xBA1DUL, 0xBEEBBEEBUL, 0x12345678UL, 0x9ABCDEFUL, 0xDEADCADUL, 0xD011AUL };
+
+        SBigFromBinary(b, data, sizeof(data));
+        SBigFromUnsigned(c, 0x1111111FUL);
+        SBigXor(a, b, c);
+
+        CHECK(a->Primary().Count() == 7);
+        CHECK(a->Primary()[0] == 0xE11CEFF2);
+        CHECK(a->Primary()[1] == data[1]);
+        CHECK(a->Primary()[2] == data[2]);
+        CHECK(a->Primary()[3] == data[3]);
+        CHECK(a->Primary()[4] == data[4]);
+        CHECK(a->Primary()[5] == data[5]);
+        CHECK(a->Primary()[6] == data[6]);
+    }
+}
