@@ -17,6 +17,8 @@ void Div(BigBuffer& a, uint32_t* b, const BigBuffer& c, uint64_t d);
 
 void Div(BigBuffer& a, BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack);
 
+void EncodeDataBytes(TSGrowableArray<uint8_t>& output, uint32_t value);
+
 uint32_t ExtractLowPart(uint64_t& value);
 
 uint32_t ExtractLowPartLargeSum(uint64_t& value, uint64_t add);
@@ -70,5 +72,7 @@ void Sub(BigBuffer& a, const BigBuffer& b, const BigBuffer& c);
 void Sub(BigBuffer& a, const BigBuffer& b, uint32_t c);
 
 void ToBinary(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer);
+
+void ToStream(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer);
 
 #endif

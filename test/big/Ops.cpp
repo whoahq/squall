@@ -1,6 +1,7 @@
 #include "storm/Big.hpp"
 #include "storm/big/Ops.hpp"
 #include "test/Test.hpp"
+#include <vector>
 
 TEST_CASE("Add", "[big]") {
     BigDataTest a, b;
@@ -277,6 +278,28 @@ TEST_CASE("Div", "[big]") {
         CHECK(b->Primary().Count() == 2);
         CHECK(b->Primary()[0] == 0xEEEE3335);
         CHECK(b->Primary()[1] == 0x11103332);
+    }
+}
+
+TEST_CASE("EncodeDataBytes", "[big]") {
+    struct EncodeTestCase {
+        uint32_t input;
+        std::vector<uint8_t> output;
+    };
+
+    SECTION("encodes values to array") {
+        auto v = GENERATE(
+            EncodeTestCase{ 0, { 255 } },
+            EncodeTestCase{ 1, { 1, 255 } },
+            EncodeTestCase{ 255, { 0, 1, 255 } },
+            EncodeTestCase{ UINT32_MAX, { 0, 4, 6, 4, 1, 255 } }
+        );
+
+        TSGrowableArray<uint8_t> arr;
+        EncodeDataBytes(arr, v.input);
+
+        CHECK(arr.Count() == v.output.size());
+        CHECK(std::vector<uint8_t>(arr.m_data, arr.m_data + arr.Count()) == v.output);
     }
 }
 
@@ -1045,5 +1068,30 @@ TEST_CASE("Sub", "[big]") {
         CHECK(a->Primary()[0] == 0xDB975320);
         CHECK(a->Primary()[1] == 0xECA8641F);
     }
+}
 
+
+TEST_CASE("ToStream", "[big]") {
+    BigDataTest a;
+
+    struct ToStreamTestCase {
+        uint64_t input;
+        std::vector<uint8_t> output;
+    };
+
+    SECTION("streams buffers to array") {
+        auto v = GENERATE(
+            ToStreamTestCase{ 0, { 255 } },
+            ToStreamTestCase{ 1, { 1, 1, 255, 1 } },
+            ToStreamTestCase{ 255, { 0xFF, 1, 255, 0xFF } },
+            ToStreamTestCase{ UINT32_MAX, { 0xFF, 0xFF, 0xFF, 0xFF, 4, 255, 0xFF, 0xFF, 0xFF, 0xFF } },
+            ToStreamTestCase{ 0x123456789ABCDEF0, { 0xF0, 0xDE, 0xBC, 0x9A, 0x78, 0x56, 0x34, 0x12, 8, 255, 0xF0, 0xDE, 0xBC, 0x9A, 0x78, 0x56, 0x34, 0x12 } }
+        );
+
+        TSGrowableArray<uint8_t> arr;
+        SBigFromStr(a, std::to_string(v.input).c_str());
+        ToStream(arr, a->Primary());
+
+        CHECK(std::vector<uint8_t>(arr.m_data, arr.m_data + arr.Count()) == v.output);
+    }
 }
