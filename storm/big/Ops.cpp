@@ -131,6 +131,15 @@ void Div(BigBuffer& a, BigBuffer& b, const BigBuffer& c, const BigBuffer& d, Big
     stack.Free(allocCount);
 }
 
+void EncodeDataBytes(TSGrowableArray<uint8_t>& output, uint32_t value) {
+    uint32_t v = value;
+    while (v != 0) {
+        *output.New() = v % 255u;
+        v /= 255u;
+    }
+    *output.New() = 255;
+}
+
 uint32_t ExtractLowPart(uint64_t& value) {
     auto low = static_cast<uint32_t>(value);
     value >>= 32;
@@ -465,5 +474,11 @@ void ToBinaryAppend(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer) {
 
 void ToBinary(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer) {
     output.SetCount(0);
+    ToBinaryAppend(output, buffer);
+}
+
+void ToStream(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer) {
+    ToBinary(output, buffer);
+    EncodeDataBytes(output, output.Count());
     ToBinaryAppend(output, buffer);
 }
