@@ -492,83 +492,61 @@ void SStrTokenize(const char** string, char* buffer, size_t bufferchars, const c
     STORM_VALIDATE(*string);
     STORM_VALIDATE(buffer || bufferchars == 0);
     STORM_VALIDATE(whitespace);
-    STORM_VALIDATE_END;
+    STORM_VALIDATE_END_VOID;
+
+    int32_t checkquotes = SStrChr(whitespace, '"') != nullptr;
 
     int32_t inquotes = 0;
     int32_t usedquotes = 0;
-    auto curstring = *string;
+    const char* currsource = *string;
 
-    auto v17 = false;
-    for (const char* w = whitespace; w && *w; w++) {
-        if (*w == '"') {
-            v17 = true;
-            break;
-        }
-    }
-
-    while (*curstring && SStrChr(whitespace, *curstring)) {
-        if (v17 && *curstring == '"') {
-            inquotes = 1;
+    while (*currsource && SStrChr(whitespace, *currsource)) {
+        if (checkquotes && *currsource == '"') {
             usedquotes = 1;
-            curstring++;
+            inquotes = 1;
+            currsource++;
 
             break;
         }
 
-        curstring++;
+        currsource++;
     }
 
-    uint32_t bufferlen = 0;
+    uint32_t destchars = 0;
 
-    if (*curstring) {
-        auto curbuffer = buffer;
-
-        while (v17 && *curstring == '"') {
-            if (bufferlen && !inquotes) {
-                goto LABEL_35;
+    while(*currsource) {
+        if (checkquotes && *currsource == '"') {
+            if (destchars && !inquotes) {
+                break;
             }
 
-            curstring++;
             usedquotes = 1;
-            inquotes = inquotes == 0;
+            inquotes = !inquotes;
+            currsource++;
 
             if (!inquotes) {
-                goto LABEL_35;
-            }
-LABEL_32:
-            if (!*curstring) {
-                goto LABEL_35;
+                break;
             }
         }
-
-        if (inquotes) {
-LABEL_29:
-            if (curbuffer - buffer < bufferchars) {
-                bufferlen++;
-                *curbuffer = *curstring;
-                curbuffer++;
+        else {
+            if (!inquotes && SStrChr(whitespace, *currsource)) {
+                currsource++;
+                break;
             }
 
-            curstring++;
-
-            goto LABEL_32;
+            if (destchars + 1 < bufferchars) {
+                buffer[destchars] = *currsource;
+                destchars++;
+            }
+            currsource++;
         }
-
-        auto v14 = SStrChr(whitespace, *curstring);
-
-        if (!v14) {
-            goto LABEL_29;
-        }
-
-        curstring++;
     }
 
-LABEL_35:
-    if (bufferlen < bufferchars) {
-        buffer[bufferlen] = 0;
+    if (destchars < bufferchars) {
+        buffer[destchars] = 0;
     }
 
-    *string = curstring;
+    *string = currsource;
 
     if (quoted) {
         *quoted = usedquotes;
@@ -576,7 +554,9 @@ LABEL_35:
 }
 
 float SStrToFloat(const char* string) {
-    STORM_ASSERT(string);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE_END;
 
     SStrInitialize();
 
@@ -673,7 +653,9 @@ float SStrToFloat(const char* string) {
 }
 
 int32_t SStrToInt(const char* string) {
-    STORM_ASSERT(string);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE_END;
 
     int32_t result = 0;
     bool negative = false;

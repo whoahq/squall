@@ -82,10 +82,10 @@
 #define STORM_ERROR_MEMORY_NULL_POINTER      0x85100081
 #define STORM_ERROR_CDKEY_MISMATCH           0x85100082
 #define STORM_ERROR_DATA_FILE_CORRUPT        0x85100083
-#define STORM_ERROR_FATAL                    0x85100084
+#define STORM_ERROR_FATAL_EXCEPTION          0x85100084
 #define STORM_ERROR_GAME_TYPE_UNAVAILABLE    0x85100085
-// Not sure what to call this one
-// internal driver error and SErrDisplayAppFatal       0x85100086
+#define STORM_ERROR_FATAL_CONDITION          0x85100086
+
 
 #define SERR_LINECODE_FUNCTION  -1
 #define SERR_LINECODE_OBJECT    -2
