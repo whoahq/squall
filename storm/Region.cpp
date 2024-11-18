@@ -159,10 +159,12 @@ void ProcessBooleanOperation(TSGrowableArray<SOURCE>* sourceArray, int32_t combi
 }
 
 void SRgnCombineRectf(HSRGN handle, RECTF* rect, void* param, int32_t combineMode) {
-    STORM_ASSERT(handle);
-    STORM_ASSERT(rect);
-    STORM_ASSERT(combineMode >= 1);
-    STORM_ASSERT(combineMode <= 6);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(handle);
+    STORM_VALIDATE(rect);
+    STORM_VALIDATE(combineMode >= 1);
+    STORM_VALIDATE(combineMode <= 6);
+    STORM_VALIDATE_END_VOID;
 
     HLOCKEDRGN lockedHandle;
     auto rgn = s_rgntable.Lock(handle, &lockedHandle, 0);
@@ -190,8 +192,10 @@ void SRgnCombineRectf(HSRGN handle, RECTF* rect, void* param, int32_t combineMod
 }
 
 void SRgnCreate(HSRGN* handlePtr, uint32_t reserved) {
-    STORM_ASSERT(handlePtr);
-    STORM_ASSERT(!reserved);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(handlePtr);
+    STORM_VALIDATE(!reserved);
+    STORM_VALIDATE_END_VOID;
 
     HLOCKEDRGN lockedHandle = nullptr;
     auto rgn = s_rgntable.NewLock(handlePtr, &lockedHandle);
@@ -202,14 +206,18 @@ void SRgnCreate(HSRGN* handlePtr, uint32_t reserved) {
 }
 
 void SRgnDelete(HSRGN handle) {
-    STORM_ASSERT(handle);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(handle);
+    STORM_VALIDATE_END_VOID;
 
     s_rgntable.Delete(handle);
 }
 
 void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect) {
-    STORM_ASSERT(handle);
-    STORM_ASSERT(rect);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(handle);
+    STORM_VALIDATE(rect);
+    STORM_VALIDATE_END_VOID;
 
     rect->left = std::numeric_limits<float>::max();
     rect->bottom = std::numeric_limits<float>::max();

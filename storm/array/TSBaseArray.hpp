@@ -40,7 +40,7 @@ void TSBaseArray<T>::CheckArrayBounds(uint32_t index) const {
     }
 
     SErrDisplayErrorFmt(
-        0x85100080,
+        STORM_ERROR_ACCESS_OUT_OF_BOUNDS,
         this->MemFileName(),
         this->MemLineNo(),
         1,
