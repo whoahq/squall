@@ -3,8 +3,9 @@
 #include <cstring>
 
 void SARC4PrepareKey(const void* data, uint32_t len, SARC4Key* key) {
-    STORM_ASSERT(data);
-    STORM_VALIDATE(data, ERROR_INVALID_PARAMETER);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(data);
+    STORM_VALIDATE_END_VOID;
 
     key->x = 0;
     key->y = 0;
