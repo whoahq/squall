@@ -291,6 +291,48 @@ TEST_CASE("SStrTokenize", "[string]") {
         SStrTokenize(&string, buffer, 1000, " ,", nullptr);
         REQUIRE(!SStrCmp(buffer, "", STORM_MAX_STR));
     }
+
+    SECTION("identifies quoted tokens") {
+        auto string = "foo bar \"baz bazinga\" bodonkers \"donga dongs\"";
+        char buffer[100] = { 0 };
+        std::pair<const char*, int> tokens[] = {
+            std::make_pair("foo", 0),
+            std::make_pair("bar", 0),
+            std::make_pair("baz bazinga", 1),
+            std::make_pair("bodonkers", 0),
+            std::make_pair("donga dongs", 1)
+        };
+
+        for (auto& token : tokens) {
+            int quoted = 0;
+            SStrTokenize(&string, buffer, 1000, " \"", &quoted);
+            std::string result = buffer;
+            REQUIRE(result == token.first);
+            REQUIRE(quoted == token.second);
+        }
+    }
+
+    SECTION("doesn't identify quoted tokens if excluded from whitespace") {
+        auto string = "foo bar \"baz bazinga\" bodonkers \"donga dongs\"";
+        char buffer[100] = { 0 };
+        std::pair<const char*, int> tokens[] = {
+            std::make_pair("foo", 0),
+            std::make_pair("bar", 0),
+            std::make_pair("\"baz", 0),
+            std::make_pair("bazinga\"", 0),
+            std::make_pair("bodonkers", 0),
+            std::make_pair("\"donga", 0),
+            std::make_pair("dongs\"", 0)
+        };
+
+        for (auto& token : tokens) {
+            int quoted = 0;
+            SStrTokenize(&string, buffer, 1000, " ", &quoted);
+            std::string result = buffer;
+            REQUIRE(result == token.first);
+            REQUIRE(quoted == token.second);
+        }
+    }
 }
 
 TEST_CASE("SStrToFloat", "[string]") {
