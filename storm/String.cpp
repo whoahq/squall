@@ -207,8 +207,9 @@ void SStrInitialize() {
 }
 
 char* SStrChr(char* string, char search) {
-    STORM_ASSERT(string);
-    STORM_VALIDATE(string, ERROR_INVALID_PARAMETER, nullptr);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE_END;
 
     if (!*string) {
         return nullptr;
@@ -226,8 +227,9 @@ char* SStrChr(char* string, char search) {
 }
 
 const char* SStrChr(const char* string, char search) {
-    STORM_ASSERT(string);
-    STORM_VALIDATE(string, ERROR_INVALID_PARAMETER, nullptr);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE_END;
 
     if (!*string) {
         return nullptr;
@@ -245,8 +247,9 @@ const char* SStrChr(const char* string, char search) {
 }
 
 char* SStrChrR(char* string, char search) {
-    STORM_ASSERT(string);
-    STORM_VALIDATE(string, ERROR_INVALID_PARAMETER, nullptr);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE_END;
 
     char* result;
 
@@ -260,8 +263,9 @@ char* SStrChrR(char* string, char search) {
 }
 
 const char* SStrChrR(const char* string, char search) {
-    STORM_ASSERT(string);
-    STORM_VALIDATE(string, ERROR_INVALID_PARAMETER, nullptr);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE_END;
 
     const char* result;
 
@@ -275,10 +279,20 @@ const char* SStrChrR(const char* string, char search) {
 }
 
 int32_t SStrCmp(const char* string1, const char* string2, size_t maxchars) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string1);
+    STORM_VALIDATE(string2);
+    STORM_VALIDATE_END;
+
     return strncmp(string1, string2, maxchars);
 }
 
 int32_t SStrCmpI(const char* string1, const char* string2, size_t maxchars) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string1);
+    STORM_VALIDATE(string2);
+    STORM_VALIDATE_END;
+
 #if defined(WHOA_SYSTEM_WIN)
     return _strnicmp(string1, string2, maxchars);
 #endif
@@ -289,9 +303,10 @@ int32_t SStrCmpI(const char* string1, const char* string2, size_t maxchars) {
 }
 
 size_t SStrCopy(char* dest, const char* source, size_t destsize) {
-    STORM_ASSERT(dest);
-    STORM_ASSERT(source);
-    STORM_VALIDATE(dest && source, ERROR_INVALID_PARAMETER, 0);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(dest);
+    STORM_VALIDATE(source);
+    STORM_VALIDATE_END;
 
     char* destbuf = dest;
 
@@ -323,6 +338,10 @@ size_t SStrCopy(char* dest, const char* source, size_t destsize) {
 }
 
 char* SStrDupA(const char* string, const char* filename, uint32_t linenumber) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE_END;
+
     size_t len = SStrLen(string) + 1;
     char* dup = static_cast<char*>(SMemAlloc(len, filename, linenumber, 0x0));
     memcpy(dup, string, len);
@@ -362,7 +381,9 @@ uint32_t SStrHashHT(const char* string) {
 }
 
 size_t SStrLen(const char* string) {
-    STORM_ASSERT(string);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE_END;
 
     auto stringEnd = string;
     while (*stringEnd) {
@@ -380,8 +401,10 @@ void SStrLower(char* string) {
 }
 
 uint32_t SStrPack(char* dest, const char* source, uint32_t destsize) {
-    STORM_ASSERT(dest);
-    STORM_ASSERT(source);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(dest);
+    STORM_VALIDATE(source);
+    STORM_VALIDATE_END;
 
     if (!destsize) {
         return 0;
@@ -426,15 +449,19 @@ size_t SStrPrintf(char* dest, size_t maxchars, const char* format, ...) {
     va_list va;
     va_start(va, format);
 
-    STORM_ASSERT(dest);
-    STORM_ASSERT(format);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(dest);
+    STORM_VALIDATE(format);
+    STORM_VALIDATE_END;
 
     return ISStrVPrintf(format, va, dest, maxchars);
 }
 
 const char* SStrStr(const char* string, const char* search) {
-    STORM_ASSERT(string);
-    STORM_ASSERT(search);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE(search);
+    STORM_VALIDATE_END;
 
     if (!*string) {
         return nullptr;
@@ -460,14 +487,12 @@ const char* SStrStr(const char* string, const char* search) {
 }
 
 void SStrTokenize(const char** string, char* buffer, size_t bufferchars, const char* whitespace, int32_t* quoted) {
-    STORM_ASSERT(string);
-    STORM_VALIDATE(string, ERROR_INVALID_PARAMETER);
-    STORM_ASSERT(*string);
-    STORM_VALIDATE(*string, ERROR_INVALID_PARAMETER);
-    STORM_ASSERT(buffer || !bufferchars);
-    STORM_VALIDATE(buffer || !bufferchars, ERROR_INVALID_PARAMETER);
-    STORM_ASSERT(whitespace);
-    STORM_VALIDATE(whitespace, ERROR_INVALID_PARAMETER);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE(*string);
+    STORM_VALIDATE(buffer || bufferchars == 0);
+    STORM_VALIDATE(whitespace);
+    STORM_VALIDATE_END_VOID;
 
     int32_t checkquotes = SStrChr(whitespace, '"') != nullptr;
 
@@ -529,7 +554,9 @@ void SStrTokenize(const char** string, char* buffer, size_t bufferchars, const c
 }
 
 float SStrToFloat(const char* string) {
-    STORM_ASSERT(string);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE_END;
 
     SStrInitialize();
 
@@ -626,7 +653,9 @@ float SStrToFloat(const char* string) {
 }
 
 int32_t SStrToInt(const char* string) {
-    STORM_ASSERT(string);
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE_END;
 
     int32_t result = 0;
     bool negative = false;

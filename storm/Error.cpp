@@ -24,7 +24,7 @@ int32_t SErrDisplayError(uint32_t errorcode, const char* filename, int32_t linen
 
     printf("\n=========================================================\n");
 
-    if (linenumber == -5) {
+    if (linenumber == SERR_LINECODE_EXCEPTION) {
         printf("Exception Raised!\n\n");
 
         printf(" App:         %s\n", "GenericBlizzardApp");
