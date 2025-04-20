@@ -116,4 +116,6 @@ void SErrSetLastError(uint32_t errorcode);
 
 uint32_t SErrGetLastError();
 
+void SErrSuppressErrors(uint32_t suppress);
+
 #endif
