@@ -18,7 +18,7 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
         SRgnCreate(&region, 0);
 
         RECTF baseRect = { 0.0f, 0.0f, 1.0f, 1.0f };
-        SRgnCombineRectf(region, &baseRect, nullptr, 2);
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
 
         RECTF boundingRect = { 0.0f, 0.0f, 0.0f, 0.0f };
         SRgnGetBoundingRectf(region, &boundingRect);
@@ -36,10 +36,10 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
         SRgnCreate(&region, 0);
 
         RECTF baseRect = { 0.0f, 0.0f, 1.0f, 1.0f };
-        SRgnCombineRectf(region, &baseRect, nullptr, 2);
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
 
         RECTF newRect = { 0.0f, 0.0f, 0.0f, 0.0f };
-        SRgnCombineRectf(region, &newRect, nullptr, 4);
+        SRgnCombineRectf(region, &newRect, nullptr, SRGN_DIFF);
 
         RECTF boundingRect = { 0.0f, 0.0f, 0.0f, 0.0f };
         SRgnGetBoundingRectf(region, &boundingRect);
@@ -57,10 +57,10 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
         SRgnCreate(&region, 0);
 
         RECTF baseRect = { 0.0f, 0.0f, 1.0f, 1.0f };
-        SRgnCombineRectf(region, &baseRect, nullptr, 2);
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
 
         RECTF newRect = { 0.0f, 0.0f, 1.0f, 1.0f };
-        SRgnCombineRectf(region, &newRect, nullptr, 4);
+        SRgnCombineRectf(region, &newRect, nullptr, SRGN_DIFF);
 
         RECTF boundingRect = { 0.0f, 0.0f, 0.0f, 0.0f };
         SRgnGetBoundingRectf(region, &boundingRect);
@@ -78,10 +78,10 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
         SRgnCreate(&region, 0);
 
         RECTF baseRect = { 0.0f, 0.0f, 1.0f, 1.0f };
-        SRgnCombineRectf(region, &baseRect, nullptr, 2);
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
 
         RECTF newRect = { 0.0f, 1.0f, 1.0f, 1.0f };
-        SRgnCombineRectf(region, &newRect, nullptr, 4);
+        SRgnCombineRectf(region, &newRect, nullptr, SRGN_DIFF);
 
         RECTF boundingRect = { 0.0f, 0.0f, 0.0f, 0.0f };
         SRgnGetBoundingRectf(region, &boundingRect);
