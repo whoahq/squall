@@ -290,26 +290,24 @@ void SRgnCombineRectf(HSRGN handle, RECTF* rect, void* param, int32_t combineMod
 
     HLOCKEDRGN lockedHandle;
     auto rgn = s_rgntable.Lock(handle, &lockedHandle, 0);
+    if (!rgn) return;
 
-    if (rgn) {
-        if (combineMode == SRGN_OR || combineMode == SRGN_PARAMONLY) {
-            if (!IsNullRect(rect)) {
-                rgn->sequence++;
-                AddSourceRect(&rgn->source, rect, param, rgn->sequence, combineMode == SRGN_PARAMONLY ? SF_PARAMONLY : SF_NONE);
-            }
-        } else {
-            if (!IsNullRect(rect)) {
-                rgn->sequence++;
-                FragmentSourceRectangles(&rgn->source, 0, rgn->source.Count(), 0, rect, param, rgn->sequence);
-            }
-
-            ProcessBooleanOperation(&rgn->source, combineMode);
-            OptimizeSource(&rgn->source);
+    if (combineMode == SRGN_OR || combineMode == SRGN_PARAMONLY) {
+        if (!IsNullRect(rect)) {
+            rgn->sequence++;
+            AddSourceRect(&rgn->source, rect, param, rgn->sequence, combineMode == SRGN_PARAMONLY ? SF_PARAMONLY : SF_NONE);
+        }
+    } else {
+        if (!IsNullRect(rect)) {
+            rgn->sequence++;
+            FragmentSourceRectangles(&rgn->source, 0, rgn->source.Count(), 0, rect, param, rgn->sequence);
         }
 
-        InvalidateRegion(rgn);
+        ProcessBooleanOperation(&rgn->source, combineMode);
+        OptimizeSource(&rgn->source);
     }
 
+    InvalidateRegion(rgn);
     s_rgntable.Unlock(lockedHandle);
 }
 
@@ -385,11 +383,7 @@ void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect) {
 
     HLOCKEDRGN lockedHandle;
     auto rgn = s_rgntable.Lock(handle, &lockedHandle, 0);
-
-    if (!rgn) {
-        s_rgntable.Unlock(lockedHandle);
-        return;
-    }
+    if (!rgn) return;
 
     for (uint32_t i = 0; i < rgn->source.Count(); i++) {
         auto source = &rgn->source[i];
