@@ -39,7 +39,7 @@ void DeleteRect(RECTF* rect) {
 
 void FragmentSourceRectangles(TSGrowableArray<SOURCE>* sourceArray, uint32_t firstIndex, uint32_t lastIndex, int32_t previousOverlap, const RECTF* rect, void* param, int32_t sequence) {
     if (firstIndex >= lastIndex) {
-        AddSourceRect(sourceArray, rect, param, sequence, 0x1 | (previousOverlap ? 0x2 : 0x0));
+        AddSourceRect(sourceArray, rect, param, sequence, SF_ADDING | (previousOverlap ? SF_OVERLAPS : SF_NONE));
         return;
     }
 
@@ -53,12 +53,12 @@ void FragmentSourceRectangles(TSGrowableArray<SOURCE>* sourceArray, uint32_t fir
                 break;
             }
 
-            source->flags |= 0x2;
+            source->flags |= SF_OVERLAPS;
             overlapsExisting = 1;
         }
 
         if (i + 1 == lastIndex) {
-            AddSourceRect(sourceArray, rect, param, sequence, 0x1 | (previousOverlap  ? 0x2 : 0x0));
+            AddSourceRect(sourceArray, rect, param, sequence, SF_ADDING | (previousOverlap ? SF_OVERLAPS : SF_NONE));
             return;
         }
     }
@@ -92,7 +92,7 @@ void DeleteSourceRect(TSGrowableArray<SOURCE>* sourceArray, uint32_t index) {
     DeleteRect(&source->rect);
     source->param = nullptr;
     source->sequence = -1;
-    source->flags = 0x0;
+    source->flags = SF_NONE;
 }
 
 void OptimizeSource(TSGrowableArray<SOURCE>* sourceArray) {
@@ -117,44 +117,27 @@ void ProcessBooleanOperation(TSGrowableArray<SOURCE>* sourceArray, int32_t combi
     for (uint32_t i = 0; i < sourceArray->Count(); i++) {
         auto source = &(*sourceArray)[i];
 
+        int32_t remove = 0;
         switch (combineMode) {
-        case 1: {
-            if ((~source->flags >> 1) & 0x1) {
-                DeleteSourceRect(sourceArray, i);
-            }
-
+        case SRGN_AND:
+            remove = !(source->flags & SF_OVERLAPS);
+            break;
+        case SRGN_XOR:
+            remove = source->flags & SF_OVERLAPS;
+            break;
+        case SRGN_DIFF:
+            remove = source->flags & (SF_ADDING | SF_OVERLAPS);
+            break;
+        case SRGN_COPY:
+            remove = source->flags & SF_ADDING;
             break;
         }
 
-        case 3: {
-            if (source->flags & 0x2) {
-                DeleteSourceRect(sourceArray, i);
-            }
-
-            break;
+        if (remove) {
+            DeleteSourceRect(sourceArray, i);
         }
 
-        case 4: {
-            if (source->flags & (0x1 | 0x2)) {
-                DeleteSourceRect(sourceArray, i);
-            }
-
-            break;
-        }
-
-        case 5: {
-            if (source->flags & 0x1) {
-                DeleteSourceRect(sourceArray, i);
-            }
-
-            break;
-        }
-
-        default:
-            break;
-        }
-
-        source->flags = 0x0;
+        source->flags = SF_NONE;
     }
 }
 
@@ -170,10 +153,10 @@ void SRgnCombineRectf(HSRGN handle, RECTF* rect, void* param, int32_t combineMod
     auto rgn = s_rgntable.Lock(handle, &lockedHandle, 0);
 
     if (rgn) {
-        if (combineMode == 2 || combineMode == 6) {
+        if (combineMode == SRGN_OR || combineMode == SRGN_PARAMONLY) {
             if (!IsNullRect(rect)) {
                 rgn->sequence++;
-                AddSourceRect(&rgn->source, rect, param, rgn->sequence, combineMode == 6 ? 0x10000 : 0x0);
+                AddSourceRect(&rgn->source, rect, param, rgn->sequence, combineMode == SRGN_PARAMONLY ? SF_PARAMONLY : SF_NONE);
             }
         } else {
             if (!IsNullRect(rect)) {
@@ -235,7 +218,7 @@ void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect) {
     for (uint32_t i = 0; i < rgn->source.Count(); i++) {
         auto source = &rgn->source[i];
 
-        if (!(source->flags & 0x10000)) {
+        if (!(source->flags & SF_PARAMONLY)) {
             rect->left = std::min(source->rect.left, rect->left);
             rect->bottom = std::min(source->rect.bottom, rect->bottom);
             rect->right = std::max(source->rect.right, rect->right);
