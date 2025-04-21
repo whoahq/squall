@@ -106,6 +106,45 @@ void DeleteRect(RECTF* rect) {
     rect->top = std::numeric_limits<float>::max();
 }
 
+int SortFoundParamsCallback(const void* elem1, const void* elem2) {
+    const FOUNDPARAM* param1 = static_cast<const FOUNDPARAM*>(elem1);
+    const FOUNDPARAM* param2 = static_cast<const FOUNDPARAM*>(elem2);
+
+    return param1->sequence - param2->sequence;
+}
+
+void FindSourceParams(RGN* rgnptr, const RECTF* rect) {
+    if (CompareRects(rect, &rgnptr->foundparamsrect)) return;
+
+    rgnptr->foundparams.SetCount(0);
+    uint32_t sourceRects = rgnptr->source.Count();
+    uint32_t params = 0;
+
+    for (uint32_t i = 0; i < sourceRects; i++) {
+        if (!CheckForIntersection(rect, &rgnptr->source[i].rect)) continue;
+
+        int32_t sequence = rgnptr->source[i].sequence;
+        int32_t found = 0;
+
+        for (uint32_t j = 0; j < params; j++) {
+            if (rgnptr->foundparams[j].sequence == sequence) {
+                found = 1;
+                break;
+            }
+        }
+
+        if (!found) {
+            FOUNDPARAM* newParam = rgnptr->foundparams.New();
+            newParam->param = rgnptr->source[i].param;
+            newParam->sequence = sequence;
+            params++;
+        }
+    }
+
+    std::qsort(rgnptr->foundparams.Ptr(), rgnptr->foundparams.Count(), sizeof(FOUNDPARAM), SortFoundParamsCallback);
+    rgnptr->foundparamsrect = *rect;
+}
+
 void FragmentCombinedRectangles(TSGrowableArray<RECTF>* combinedArray, uint32_t firstIndex, uint32_t lastIndex, const RECTF* rect) {
     uint32_t index;
     RECTF* checkRect;
@@ -249,8 +288,8 @@ void ProcessBooleanOperation(TSGrowableArray<SOURCE>* sourceArray, int32_t combi
 }
 
 int SortRectCallback(const void* elem1, const void* elem2) {
-    RECTF* rct1 = (RECTF*)elem1;
-    RECTF* rct2 = (RECTF*)elem2;
+    const RECTF* rct1 = static_cast<const RECTF*>(elem1);
+    const RECTF* rct2 = static_cast<const RECTF*>(elem2);
 
     double result = rct1->top == rct2->top ? rct1->left - rct2->left : rct1->top - rct2->top;
 
@@ -272,7 +311,7 @@ void ProduceCombinedRectangles(RGN* rgn) {
 
     CombineRectangles(&rgn->combined);
 
-    std::qsort(rgn->combined.Ptr(), rgn->combined.Count(), sizeof(rgn->combined.Ptr()[0]), SortRectCallback);
+    std::qsort(rgn->combined.Ptr(), rgn->combined.Count(), sizeof(RECTF), SortRectCallback);
 
     for (uint32_t i = rgn->combined.Count(); i > 0; i = rgn->combined.Count()) {
         if (!IsNullRect(&rgn->combined[i-1])) break;
@@ -347,17 +386,17 @@ void SRgnDelete(HSRGN handle) {
     s_rgntable.Delete(handle);
 }
 
-void SRgnDuplicate(HSRGN orighandle, HSRGN *handle, uint32_t reserved) {
+void SRgnDuplicate(HSRGN origHandle, HSRGN* handle, uint32_t reserved) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
     *handle = nullptr;
 
-    STORM_VALIDATE(orighandle);
+    STORM_VALIDATE(origHandle);
     STORM_VALIDATE(reserved == 0);
     STORM_VALIDATE_END_VOID;
 
     HLOCKEDRGN origlockedhandle;
-    auto rgn = s_rgntable.Lock(orighandle, &origlockedhandle, 0);
+    auto rgn = s_rgntable.Lock(origHandle, &origlockedhandle, 0);
 
     if (rgn) {
         HLOCKEDRGN newlockedhandle;
@@ -406,16 +445,57 @@ void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect) {
     }
 }
 
-void SRgnGetRectsf(HSRGN handle, uint32_t* numrects, RECTF* buffer) {
+void SRgnGetRectParamsf(HSRGN handle, RECTF* rect, uint32_t* numParams, void** buffer) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
-    STORM_VALIDATE(numrects);
+    STORM_VALIDATE(rect);
+    STORM_VALIDATE(numParams);
+    STORM_VALIDATE_END_VOID;
+
+    if (IsNullRect(rect)) {
+        *numParams = 0;
+        return;
+    }
+
+    HLOCKEDRGN lockedHandle;
+    auto rgn = s_rgntable.Lock(handle, &lockedHandle, 0);
+    if (!rgn) {
+        *numParams = 0;
+        return;
+    }
+
+    if (rgn->dirty) {
+        ProduceCombinedRectangles(rgn);
+        rgn->dirty = 0;
+    }
+
+    FindSourceParams(rgn, rect);
+
+    if (buffer) {
+        *numParams = std::min(*numParams, rgn->foundparams.Count());
+        FOUNDPARAM* foundArray = rgn->foundparams.Ptr();
+
+        for (uint32_t i = 0; i < *numParams; i++) {
+            buffer[i] = foundArray[i].param;
+        }
+    }
+    else {
+        *numParams = rgn->foundparams.Count();
+    }
+
+    s_rgntable.Unlock(lockedHandle);
+}
+
+void SRgnGetRectsf(HSRGN handle, uint32_t* numRects, RECTF* buffer) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(handle);
+    STORM_VALIDATE(numRects);
     STORM_VALIDATE_END_VOID;
 
     HLOCKEDRGN lockedHandle;
     auto rgn = s_rgntable.Lock(handle, &lockedHandle, 0);
     if (!rgn) {
-        *numrects = 0;
+        *numRects = 0;
         return;
     }
 
@@ -425,11 +505,11 @@ void SRgnGetRectsf(HSRGN handle, uint32_t* numrects, RECTF* buffer) {
     }
 
     if (buffer) {
-        *numrects = std::min(*numrects, rgn->combined.Count());
-        memcpy(buffer, rgn->combined.Ptr(), sizeof(rgn->combined.Ptr()[0]) * *numrects);
+        *numRects = std::min(*numRects, rgn->combined.Count());
+        memcpy(buffer, rgn->combined.Ptr(), sizeof(rgn->combined.Ptr()[0]) * *numRects);
     }
     else {
-        *numrects = rgn->combined.Count();
+        *numRects = rgn->combined.Count();
     }
 
     s_rgntable.Unlock(lockedHandle);
