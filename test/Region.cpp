@@ -143,6 +143,54 @@ TEST_CASE("SRgnDuplicate", "[region]") {
     }
 }
 
+TEST_CASE("SRgnGetRectParamsf", "[region]") {
+    RgnDataTest region;
+
+    SECTION("retrieves empty list if nothing put in") {
+        uint32_t numParams = 1;
+        void* buffer[1];
+
+        RECTF rect = { 0, 0, 1, 1 };
+        SRgnGetRectParamsf(region, &rect, &numParams, buffer);
+
+        CHECK(numParams == 0);
+    }
+
+    SECTION("retrieves 0 when using an invalid region object") {
+        HSRGN inval = reinterpret_cast<HSRGN>(1234);
+
+        uint32_t numParams = 1;
+        RECTF rect = { 0, 0, 1, 1 };
+        SRgnGetRectParamsf(inval, &rect, &numParams, nullptr);
+
+        CHECK(numParams == 0);
+    }
+
+    SECTION("retrieves only overlapping params") {
+        RECTF rect1 = { 0, 0, 1, 1 };
+        RECTF rect2 = { 2, 2, 4, 4 };
+        RECTF rect3 = { 2.5, 2.5, 5, 5 };
+        RECTF queryRect = { 3, 3, 5, 5 };
+        int param1 = 5;
+        int param2 = 10;
+        int param3 = 11;
+
+        SRgnCombineRectf(region, &rect1, &param1, SRGN_PARAMONLY);
+        SRgnCombineRectf(region, &rect2, &param2, SRGN_PARAMONLY);
+        SRgnCombineRectf(region, &rect3, &param3, SRGN_PARAMONLY);
+
+        uint32_t numParams = 0;
+        SRgnGetRectParamsf(region, &queryRect, &numParams, nullptr);
+        REQUIRE(numParams == 2);
+
+        void* buffer[2];
+        SRgnGetRectParamsf(region, &queryRect, &numParams, buffer);
+        CHECK(numParams == 2);
+        CHECK(buffer[0] == &param2);
+        CHECK(buffer[1] == &param3);
+    }
+}
+
 TEST_CASE("SRgnGetRectsf", "[region]") {
     RgnDataTest region;
 
@@ -151,6 +199,15 @@ TEST_CASE("SRgnGetRectsf", "[region]") {
         RECTF buffer[1];
 
         SRgnGetRectsf(region, &numrects, buffer);
+
+        CHECK(numrects == 0);
+    }
+
+    SECTION("retrieves 0 when using an invalid region object") {
+        HSRGN inval = reinterpret_cast<HSRGN>(1234);
+
+        uint32_t numrects = 1;
+        SRgnGetRectsf(inval, &numrects, nullptr);
 
         CHECK(numrects == 0);
     }
