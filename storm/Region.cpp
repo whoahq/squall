@@ -349,6 +349,29 @@ void SRgnDelete(HSRGN handle) {
     s_rgntable.Delete(handle);
 }
 
+void SRgnDuplicate(HSRGN orighandle, HSRGN *handle, uint32_t reserved) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(handle);
+    *handle = nullptr;
+
+    STORM_VALIDATE(orighandle);
+    STORM_VALIDATE(reserved == 0);
+    STORM_VALIDATE_END_VOID;
+
+    HLOCKEDRGN origlockedhandle;
+    auto rgn = s_rgntable.Lock(orighandle, &origlockedhandle, 0);
+
+    if (rgn) {
+        HLOCKEDRGN newlockedhandle;
+        auto newrgn = s_rgntable.NewLock(handle, &newlockedhandle);
+
+        *newrgn = *rgn;
+
+        s_rgntable.Unlock(newlockedhandle);
+        s_rgntable.Unlock(origlockedhandle);
+    }
+}
+
 void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);

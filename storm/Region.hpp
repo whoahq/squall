@@ -8,9 +8,11 @@ void SRgnClear(HSRGN handle);
 
 void SRgnCombineRectf(HSRGN handle, RECTF* rect, void* param, int32_t combineMode);
 
-void SRgnCreate(HSRGN* handlePtr, uint32_t reserved);
+void SRgnCreate(HSRGN* handlePtr, uint32_t reserved = 0);
 
 void SRgnDelete(HSRGN handle);
+
+void SRgnDuplicate(HSRGN orighandle, HSRGN *handle, uint32_t reserved = 0);
 
 void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect);
 
