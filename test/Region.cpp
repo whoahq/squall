@@ -1,5 +1,33 @@
 #include "RegionTest.hpp"
 
+TEST_CASE("SRgnClear", "[region]") {
+    RgnDataTest region;
+
+    SECTION("operates on an empty object") {
+        uint32_t numrects = 0;
+
+        SRgnClear(region);
+
+        SRgnGetRectsf(region, &numrects, nullptr);
+        CHECK(numrects == 0);
+    }
+
+    SECTION("clears rects out of a region object") {
+        uint32_t numrects = 0;
+
+        RECTF baseRect = { 0.0f, 0.0f, 1.0f, 1.0f };
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
+
+        SRgnGetRectsf(region, &numrects, nullptr);
+        CHECK(numrects == 1);
+
+        SRgnClear(region);
+
+        SRgnGetRectsf(region, &numrects, nullptr);
+        CHECK(numrects == 0);
+    }
+}
+
 TEST_CASE("SRgnCreate", "[region]") {
     SECTION("sets handle pointer to new region handle") {
         HSRGN region = nullptr;
