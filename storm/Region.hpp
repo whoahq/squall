@@ -12,10 +12,12 @@ void SRgnCreate(HSRGN* handlePtr, uint32_t reserved = 0);
 
 void SRgnDelete(HSRGN handle);
 
-void SRgnDuplicate(HSRGN orighandle, HSRGN *handle, uint32_t reserved = 0);
+void SRgnDuplicate(HSRGN origHandle, HSRGN* handle, uint32_t reserved = 0);
 
 void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect);
 
-void SRgnGetRectsf(HSRGN handle, uint32_t* numrects, RECTF* buffer);
+void SRgnGetRectParamsf(HSRGN handle, RECTF* rect, uint32_t* numParams, void** buffer);
+
+void SRgnGetRectsf(HSRGN handle, uint32_t* numRects, RECTF* buffer);
 
 #endif
