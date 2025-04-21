@@ -62,30 +62,17 @@ void CombineRectangles(TSGrowableArray<RECTF>* combinedArray) {
                 if (rctA->bottom < rctB->top && rctB->bottom < rctA->top) {
                     RECTF newrect[5];
 
-                    newrect[0].left = rctA->left;
-                    newrect[0].bottom = rctA->bottom;
-                    newrect[0].right = rctA->right;
-                    newrect[0].top = rctB->bottom;
+                    newrect[0] = { rctA->left, rctA->bottom, rctA->right, rctB->bottom };
+                    newrect[1] = { rctB->left, rctB->bottom, rctB->right, rctA->bottom };
+                    newrect[2] = { rctA->left, rctB->top, rctA->right, rctA->top };
+                    newrect[3] = { rctB->left, rctA->top, rctB->right, rctB->top };
 
-                    newrect[1].left = rctB->left;
-                    newrect[1].bottom = rctB->bottom;
-                    newrect[1].right = rctB->right;
-                    newrect[1].top = rctA->bottom;
-
-                    newrect[2].left = rctA->left;
-                    newrect[2].bottom = rctB->top;
-                    newrect[2].right = rctA->right;
-                    newrect[2].top = rctA->top;
-
-                    newrect[3].left = rctB->left;
-                    newrect[3].bottom = rctA->top;
-                    newrect[3].right = rctB->right;
-                    newrect[3].top = rctB->top;
-
-                    newrect[4].left = std::min(rctB->left, rctA->left);
-                    newrect[4].bottom = std::max(rctB->bottom, rctA->bottom);
-                    newrect[4].right = std::max(rctB->right, rctA->right);
-                    newrect[4].top = std::min(rctB->top, rctA->top);
+                    newrect[4] = {
+                        std::min(rctB->left, rctA->left),
+                        std::max(rctB->bottom, rctA->bottom),
+                        std::max(rctB->right, rctA->right),
+                        std::min(rctB->top, rctA->top)
+                    };
 
                     for (uint32_t k = 0; k < 5; k++) {
                         if (!IsNullRect(&newrect[k])) {
@@ -135,25 +122,20 @@ void FragmentCombinedRectangles(TSGrowableArray<RECTF>* combinedArray, uint32_t 
     }
 
     RECTF newrect[4];
-    newrect[0].left = rect->left;
-    newrect[0].bottom = rect->bottom;
-    newrect[0].right = rect->right;
-    newrect[0].top = checkRect->bottom;
-
-    newrect[1].left = rect->left;
-    newrect[1].bottom = checkRect->top;
-    newrect[1].right = rect->right;
-    newrect[1].top = rect->top;
-
-    newrect[2].left = rect->left;
-    newrect[2].bottom = std::max(checkRect->bottom, rect->bottom);
-    newrect[2].right = checkRect->left;
-    newrect[2].top = std::min(checkRect->top, rect->top);
-
-    newrect[3].left = checkRect->right;
-    newrect[3].bottom = std::max(checkRect->bottom, rect->bottom);
-    newrect[3].right = rect->right;
-    newrect[3].top = std::min(checkRect->top, rect->top);
+    newrect[0] = { rect->left, rect->bottom, rect->right, checkRect->bottom };
+    newrect[1] = { rect->left, checkRect->top, rect->right, rect->top };
+    newrect[2] = {
+        rect->left,
+        std::max(checkRect->bottom, rect->bottom),
+        checkRect->left,
+        std::min(checkRect->top, rect->top)
+    };
+    newrect[3] = {
+        checkRect->right,
+        std::max(checkRect->bottom, rect->bottom),
+        rect->right,
+        std::min(checkRect->top, rect->top)
+    };
 
     for (uint32_t i = 0; i < 4; i++) {
         if (!IsNullRect(&newrect[i])) {
@@ -329,6 +311,20 @@ void SRgnCombineRectf(HSRGN handle, RECTF* rect, void* param, int32_t combineMod
     }
 
     s_rgntable.Unlock(lockedHandle);
+}
+
+void SRgnClear(HSRGN handle) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(handle);
+    STORM_VALIDATE_END_VOID;
+
+    HLOCKEDRGN lockedHandle;
+    auto rgn = s_rgntable.Lock(handle, &lockedHandle, 0);
+
+    if (rgn) {
+        ClearRegion(rgn);
+        s_rgntable.Unlock(lockedHandle);
+    }
 }
 
 void SRgnCreate(HSRGN* handlePtr, uint32_t reserved) {
