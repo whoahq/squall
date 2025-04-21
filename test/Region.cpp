@@ -92,6 +92,37 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
     }
 }
 
+TEST_CASE("SRgnDuplicate", "[region]") {
+    RgnDataTest region;
+
+    SECTION("creates an independent copy of a region") {
+        RECTF baseRect = { -1.0f, 1.0f, 1.0f, 2.0f };
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
+
+        HSRGN newrgn = nullptr;
+        SRgnDuplicate(region, &newrgn);
+
+        REQUIRE(newrgn != nullptr);
+        SRgnClear(region);
+
+        uint32_t numrects = 1;
+        RECTF buffer[1];
+        SRgnGetRectsf(newrgn, &numrects, buffer);
+
+        REQUIRE(numrects == 1);
+        CHECK_THAT(buffer[0], MatchesRect(baseRect));
+    }
+
+    SECTION("sets handle to null when using an invalid region object") {
+        HSRGN inval = reinterpret_cast<HSRGN>(1234);
+
+        HSRGN newrgn = reinterpret_cast<HSRGN>(12345);
+        SRgnDuplicate(inval, &newrgn);
+
+        CHECK(newrgn == nullptr);
+    }
+}
+
 TEST_CASE("SRgnGetRectsf", "[region]") {
     RgnDataTest region;
 

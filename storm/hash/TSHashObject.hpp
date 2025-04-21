@@ -12,6 +12,10 @@ class TSHashObject {
     TSLink<T> m_linktoslot;
     TSLink<T> m_linktofull;
     TKey m_key;
+
+    TSHashObject & operator=(const TSHashObject &source) {
+        return *this;
+    }
 };
 
 #endif
