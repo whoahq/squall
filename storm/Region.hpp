@@ -12,4 +12,6 @@ void SRgnDelete(HSRGN handle);
 
 void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect);
 
+void SRgnGetRectsf(HSRGN handle, uint32_t* numrects, RECTF* buffer);
+
 #endif

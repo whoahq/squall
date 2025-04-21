@@ -5,7 +5,19 @@
 #include "storm/Thread.hpp"
 #include <limits>
 
+
 static TSExportTableSyncReuse<RGN, HSRGN, HLOCKEDRGN, CCritSect> s_rgntable;
+
+
+void DeleteCombinedRect(TSGrowableArray<RECTF>* combinedArray, uint32_t index);
+void DeleteRect(RECTF* rect);
+int32_t IsNullRect(RECTF* rect);
+
+
+void AddCombinedRect(TSGrowableArray<RECTF>* combinedArray, const RECTF* rect) {
+    RECTF* newRect = combinedArray->New();
+    *newRect = *rect;
+}
 
 void AddSourceRect(TSGrowableArray<SOURCE>* sourceArray, const RECTF* rect, void* param, int32_t sequence, uint32_t flags) {
     auto source = sourceArray->New();
@@ -23,6 +35,72 @@ int32_t CheckForIntersection(const RECTF* sourceRect, const RECTF* targetRect) {
         && sourceRect->top > targetRect->bottom;
 }
 
+void CombineRectangles(TSGrowableArray<RECTF>* combinedArray) {
+    for (uint32_t i = 1; i < combinedArray->Count(); i++) {
+        for (uint32_t j = 0; j < i; j++) {
+            RECTF* rctA = &(*combinedArray)[i];
+            RECTF* rctB = &(*combinedArray)[j];
+
+            if (rctA->left == rctB->left && rctA->right == rctB->right) {
+                if (rctA->bottom == rctB->top || rctB->bottom == rctA->top) {
+                    rctA->bottom = std::min(rctB->bottom, rctA->bottom);
+                    rctA->top = std::max(rctB->top, rctA->top);
+                    DeleteRect(rctB);
+                    break;
+                }
+            }
+            if (rctA->left == rctB->right || rctB->left == rctA->right) {
+                if (rctA->bottom == rctB->bottom && rctA->top == rctB->top) {
+                    rctA->left = std::min(rctB->left, rctA->left);
+                    rctA->right = std::max(rctB->right, rctA->right);
+                    DeleteRect(rctB);
+                    break;
+                }
+            }
+
+            if (rctA->left == rctB->right || rctB->left == rctA->right) {
+                if (rctA->bottom < rctB->top && rctB->bottom < rctA->top) {
+                    RECTF newrect[5];
+
+                    newrect[0].left = rctA->left;
+                    newrect[0].bottom = rctA->bottom;
+                    newrect[0].right = rctA->right;
+                    newrect[0].top = rctB->bottom;
+
+                    newrect[1].left = rctB->left;
+                    newrect[1].bottom = rctB->bottom;
+                    newrect[1].right = rctB->right;
+                    newrect[1].top = rctA->bottom;
+
+                    newrect[2].left = rctA->left;
+                    newrect[2].bottom = rctB->top;
+                    newrect[2].right = rctA->right;
+                    newrect[2].top = rctA->top;
+
+                    newrect[3].left = rctB->left;
+                    newrect[3].bottom = rctA->top;
+                    newrect[3].right = rctB->right;
+                    newrect[3].top = rctB->top;
+
+                    newrect[4].left = std::min(rctB->left, rctA->left);
+                    newrect[4].bottom = std::max(rctB->bottom, rctA->bottom);
+                    newrect[4].right = std::max(rctB->right, rctA->right);
+                    newrect[4].top = std::min(rctB->top, rctA->top);
+
+                    for (uint32_t k = 0; k < 5; k++) {
+                        if (!IsNullRect(&newrect[k])) {
+                            AddCombinedRect(combinedArray, &newrect[k]);
+                        }
+                    }
+                    DeleteCombinedRect(combinedArray, i);
+                    DeleteCombinedRect(combinedArray, j);
+                    break;
+                }
+            }
+        }
+    }
+}
+
 int32_t CompareRects(const RECTF* rect1, const RECTF* rect2) {
     return rect1->left == rect2->left
         && rect1->bottom == rect2->bottom
@@ -30,11 +108,58 @@ int32_t CompareRects(const RECTF* rect1, const RECTF* rect2) {
         && rect1->top == rect2->top;
 }
 
+void DeleteCombinedRect(TSGrowableArray<RECTF>* combinedArray, uint32_t index) {
+    DeleteRect(&(*combinedArray)[index]);
+}
+
 void DeleteRect(RECTF* rect) {
     rect->left = std::numeric_limits<float>::max();
     rect->bottom = std::numeric_limits<float>::max();
     rect->right = std::numeric_limits<float>::max();
     rect->top = std::numeric_limits<float>::max();
+}
+
+void FragmentCombinedRectangles(TSGrowableArray<RECTF>* combinedArray, uint32_t firstIndex, uint32_t lastIndex, const RECTF* rect) {
+    uint32_t index;
+    RECTF* checkRect;
+
+    for (index = firstIndex; index < lastIndex; index++) {
+        checkRect = &(*combinedArray)[index];
+        if (CheckForIntersection(rect, checkRect)) {
+            break;
+        }
+    }
+    if (index >= lastIndex) {
+        AddCombinedRect(combinedArray, rect);
+        return;
+    }
+
+    RECTF newrect[4];
+    newrect[0].left = rect->left;
+    newrect[0].bottom = rect->bottom;
+    newrect[0].right = rect->right;
+    newrect[0].top = checkRect->bottom;
+
+    newrect[1].left = rect->left;
+    newrect[1].bottom = checkRect->top;
+    newrect[1].right = rect->right;
+    newrect[1].top = rect->top;
+
+    newrect[2].left = rect->left;
+    newrect[2].bottom = std::max(checkRect->bottom, rect->bottom);
+    newrect[2].right = checkRect->left;
+    newrect[2].top = std::min(checkRect->top, rect->top);
+
+    newrect[3].left = checkRect->right;
+    newrect[3].bottom = std::max(checkRect->bottom, rect->bottom);
+    newrect[3].right = rect->right;
+    newrect[3].top = std::min(checkRect->top, rect->top);
+
+    for (uint32_t i = 0; i < 4; i++) {
+        if (!IsNullRect(&newrect[i])) {
+            FragmentCombinedRectangles(combinedArray, index + 1, lastIndex, &newrect[i]);
+        }
+    }
 }
 
 void FragmentSourceRectangles(TSGrowableArray<SOURCE>* sourceArray, uint32_t firstIndex, uint32_t lastIndex, int32_t previousOverlap, const RECTF* rect, void* param, int32_t sequence) {
@@ -141,6 +266,38 @@ void ProcessBooleanOperation(TSGrowableArray<SOURCE>* sourceArray, int32_t combi
     }
 }
 
+int SortRectCallback(const void* elem1, const void* elem2) {
+    RECTF* rct1 = (RECTF*)elem1;
+    RECTF* rct2 = (RECTF*)elem2;
+
+    double result = rct1->top == rct2->top ? rct1->left - rct2->left : rct1->top - rct2->top;
+
+    if (result > 0.0) return 1;
+    if (result < 0.0) return -1;
+    return 0;
+}
+
+void ProduceCombinedRectangles(RGN* rgn) {
+    rgn->combined.SetCount(0);
+
+    uint32_t sourcerects = rgn->source.Count();
+    SOURCE* sourcearray = rgn->source.Ptr();
+    for (uint32_t i = 0; i < sourcerects; i++) {
+        if (!(sourcearray[i].flags & SF_PARAMONLY)) {
+            FragmentCombinedRectangles(&rgn->combined, 0, rgn->combined.Count(), &sourcearray[i].rect);
+        }
+    }
+
+    CombineRectangles(&rgn->combined);
+
+    std::qsort(rgn->combined.Ptr(), rgn->combined.Count(), sizeof(rgn->combined.Ptr()[0]), SortRectCallback);
+
+    for (uint32_t i = rgn->combined.Count(); i > 0; i = rgn->combined.Count()) {
+        if (!IsNullRect(&rgn->combined[i-1])) break;
+        rgn->combined.SetCount(i - 1);
+    }
+}
+
 void SRgnCombineRectf(HSRGN handle, RECTF* rect, void* param, int32_t combineMode) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
@@ -234,4 +391,33 @@ void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect) {
         rect->right = 0.0f;
         rect->top = 0.0f;
     }
+}
+
+void SRgnGetRectsf(HSRGN handle, uint32_t* numrects, RECTF* buffer) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(handle);
+    STORM_VALIDATE(numrects);
+    STORM_VALIDATE_END_VOID;
+
+    HLOCKEDRGN lockedHandle;
+    auto rgn = s_rgntable.Lock(handle, &lockedHandle, 0);
+    if (!rgn) {
+        *numrects = 0;
+        return;
+    }
+
+    if (rgn->dirty) {
+        ProduceCombinedRectangles(rgn);
+        rgn->dirty = 0;
+    }
+
+    if (buffer) {
+        *numrects = std::min(*numrects, rgn->combined.Count());
+        memcpy(buffer, rgn->combined.Ptr(), sizeof(rgn->combined.Ptr()[0]) * *numrects);
+    }
+    else {
+        *numrects = rgn->combined.Count();
+    }
+
+    s_rgntable.Unlock(lockedHandle);
 }
