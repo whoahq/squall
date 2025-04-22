@@ -245,3 +245,55 @@ TEST_CASE("SRgnGetRectsf", "[region]") {
         CHECK_THAT(buffer[0], MatchesRect(rct1));
     }
 }
+
+TEST_CASE("SRgnIsPointInRegionf", "[region]") {
+    RgnDataTest region;
+
+    SECTION("false if region has no rects") {
+        auto x = GENERATE(0.0f, 1.0f, INFINITY);
+        auto y = GENERATE(0.0f, -1.0f, -INFINITY);
+
+        CHECK_FALSE(SRgnIsPointInRegionf(region, x, y));
+    }
+
+    SECTION("false if using an invalid region object") {
+        HSRGN inval = reinterpret_cast<HSRGN>(1234);
+
+        CHECK_FALSE(SRgnIsPointInRegionf(inval, 0.0f, 0.0f));
+    }
+
+    SECTION("reports if points are inside a region") {
+        RECTF rct1 = { -10, -10, -1, -1 };
+        RECTF rct2 = { 1, 1, 5, 5 };
+        SRgnCombineRectf(region, &rct1, nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &rct2, nullptr, SRGN_OR);
+
+        CHECK_FALSE(SRgnIsPointInRegionf(region, 0.0f, 0.0f));
+        CHECK_FALSE(SRgnIsPointInRegionf(region, -11.0f, -5.0f));
+        CHECK_FALSE(SRgnIsPointInRegionf(region, 4.0f, 6.0f));
+        CHECK_FALSE(SRgnIsPointInRegionf(region, 1.0f, 0.0f));
+        CHECK_FALSE(SRgnIsPointInRegionf(region, 0.0f, -1.0f));
+        CHECK(SRgnIsPointInRegionf(region, -10.0f, -10.0f));
+        CHECK(SRgnIsPointInRegionf(region, -1.1f, -1.1f));
+        CHECK(SRgnIsPointInRegionf(region, 3.0f, 2.0f));
+    }
+
+    SECTION("ignores param only rects") {
+        RECTF rect = { -1, -1, 1, 1 };
+        SRgnCombineRectf(region, &rect, &rect, SRGN_PARAMONLY);
+
+        CHECK_FALSE(SRgnIsPointInRegionf(region, 0.0f, 0.0f));
+    }
+
+    SECTION("excludes upper bounds of rect") {
+        RECTF rect = { 1, 1, 5, 5 };
+        SRgnCombineRectf(region, &rect, nullptr, SRGN_OR);
+
+        CHECK_FALSE(SRgnIsPointInRegionf(region, 5.0f, 5.0f));
+        CHECK_FALSE(SRgnIsPointInRegionf(region, 5.0f, 4.0f));
+        CHECK_FALSE(SRgnIsPointInRegionf(region, 4.0f, 5.0f));
+        CHECK(SRgnIsPointInRegionf(region, 4.9999f, 4.9999f));
+        CHECK(SRgnIsPointInRegionf(region, 1.0f, 1.0f));
+        CHECK_FALSE(SRgnIsPointInRegionf(region, 0.9999f, 1.0f));
+    }
+}

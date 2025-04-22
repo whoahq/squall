@@ -20,4 +20,7 @@ void SRgnGetRectParamsf(HSRGN handle, RECTF* rect, uint32_t* numParams, void** b
 
 void SRgnGetRectsf(HSRGN handle, uint32_t* numRects, RECTF* buffer);
 
+int32_t SRgnIsPointInRegionf(HSRGN handle, float x, float y);
+
+
 #endif
