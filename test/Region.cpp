@@ -297,3 +297,79 @@ TEST_CASE("SRgnIsPointInRegionf", "[region]") {
         CHECK_FALSE(SRgnIsPointInRegionf(region, 0.9999f, 1.0f));
     }
 }
+
+TEST_CASE("SRgnIsRectInRegionf", "[region]") {
+    RgnDataTest region;
+    RECTF rect = { 0.0f, 0.0f, 1.0f, 1.0f };
+
+    SECTION("false if region has no rects") {
+        CHECK_FALSE(SRgnIsRectInRegionf(region, &rect));
+    }
+
+    SECTION("false if using an invalid region object") {
+        HSRGN inval = reinterpret_cast<HSRGN>(1234);
+        CHECK_FALSE(SRgnIsRectInRegionf(inval, &rect));
+    }
+
+    SECTION("reports if rects overlap a region") {
+        RECTF checkRects[] = {
+            { 0.5f, 0.5f, 0.5f, 0.5f },
+            { 0.00001f, 0.00001f, 0.999999f, 0.999999f },
+            { 11.0f, 11.0f, 12.0f, 19.0f },
+            { 14.0f, 14.0f, 20.0f, 20.0f },
+            { -100.0f, -100.0f, 0.000001f, 0.0000001f },
+        };
+
+        RECTF secondRect = { 10.0f, 10.0f, 15.0f, 20.0f };
+        SRgnCombineRectf(region, &rect, nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &secondRect, nullptr, SRGN_OR);
+
+        CHECK(SRgnIsRectInRegionf(region, &checkRects[0]));
+        CHECK(SRgnIsRectInRegionf(region, &checkRects[1]));
+        CHECK(SRgnIsRectInRegionf(region, &checkRects[2]));
+        CHECK(SRgnIsRectInRegionf(region, &checkRects[3]));
+        CHECK(SRgnIsRectInRegionf(region, &checkRects[4]));
+    }
+
+    SECTION("reports if rects are outside a region") {
+        RECTF checkRects[] = {
+            { 2.0f, 2.0f, 2.0f, 2.0f },
+            { 1.0f, 1.0f, 2.0f, 2.0f },
+            { -1.0f, -1.0f, 0.0f, 0.0f },
+            { 9.0f, 9.0f, 10.0f, 10.0f }
+        };
+
+        RECTF secondRect = { 10.0f, 10.0f, 15.0f, 20.0f };
+        SRgnCombineRectf(region, &rect, nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &secondRect, nullptr, SRGN_OR);
+
+        CHECK_FALSE(SRgnIsRectInRegionf(region, &checkRects[0]));
+        CHECK_FALSE(SRgnIsRectInRegionf(region, &checkRects[1]));
+        CHECK_FALSE(SRgnIsRectInRegionf(region, &checkRects[2]));
+        CHECK_FALSE(SRgnIsRectInRegionf(region, &checkRects[3]));
+    }
+
+    SECTION("ignores param only rects") {
+        SRgnCombineRectf(region, &rect, &rect, SRGN_PARAMONLY);
+        CHECK_FALSE(SRgnIsRectInRegionf(region, &rect));
+    }
+
+    SECTION("excludes matching on rect bounds") {
+        RECTF checkRects[] = {
+            { -0.1f, -0.1f, 0.0f, 1.0f },
+            { -0.1f, -0.1f, 1.0f, 0.0f },
+            { 1.0f, 1.0f, 1.0f, 1.0f },
+            { 0.0f, 0.0f, 0.0f, 0.0f },
+            { 0.5f, 0.0f, 0.5f, 0.0f },
+            { 0.0f, 0.5f, 0.0f, 0.5f },
+        };
+        SRgnCombineRectf(region, &rect, nullptr, SRGN_OR);
+
+        CHECK_FALSE(SRgnIsRectInRegionf(region, &checkRects[0]));
+        CHECK_FALSE(SRgnIsRectInRegionf(region, &checkRects[1]));
+        CHECK_FALSE(SRgnIsRectInRegionf(region, &checkRects[2]));
+        CHECK_FALSE(SRgnIsRectInRegionf(region, &checkRects[3]));
+        CHECK_FALSE(SRgnIsRectInRegionf(region, &checkRects[4]));
+        CHECK_FALSE(SRgnIsRectInRegionf(region, &checkRects[5]));
+    }
+}
