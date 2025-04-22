@@ -11,7 +11,7 @@ static TSExportTableSyncReuse<RGN, HSRGN, HLOCKEDRGN, CCritSect> s_rgntable;
 
 void DeleteCombinedRect(TSGrowableArray<RECTF>* combinedArray, uint32_t index);
 void DeleteRect(RECTF* rect);
-int32_t IsNullRect(RECTF* rect);
+int32_t IsNullRect(const RECTF* rect);
 
 
 void AddCombinedRect(TSGrowableArray<RECTF>* combinedArray, const RECTF* rect) {
@@ -212,7 +212,7 @@ void FragmentSourceRectangles(TSGrowableArray<SOURCE>* sourceArray, uint32_t fir
     // TODO
 }
 
-int32_t IsNullRect(RECTF* rect) {
+int32_t IsNullRect(const RECTF* rect) {
     return rect->left >= rect->right || rect->bottom >= rect->top;
 }
 
@@ -319,7 +319,7 @@ void ProduceCombinedRectangles(RGN* rgn) {
     }
 }
 
-void SRgnCombineRectf(HSRGN handle, RECTF* rect, void* param, int32_t combineMode) {
+void SRgnCombineRectf(HSRGN handle, const RECTF* rect, void* param, int32_t combineMode) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
     STORM_VALIDATE(rect);
@@ -445,7 +445,7 @@ void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect) {
     }
 }
 
-void SRgnGetRectParamsf(HSRGN handle, RECTF* rect, uint32_t* numParams, void** buffer) {
+void SRgnGetRectParamsf(HSRGN handle, const RECTF* rect, uint32_t* numParams, void** buffer) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
     STORM_VALIDATE(rect);
