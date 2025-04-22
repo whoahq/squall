@@ -24,5 +24,6 @@ int32_t SRgnIsPointInRegionf(HSRGN handle, float x, float y);
 
 int32_t SRgnIsRectInRegionf(HSRGN handle, const RECTF* rect);
 
+void SRgnOffsetf(HSRGN handle, float xoffset, float yoffset);
 
 #endif

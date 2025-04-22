@@ -373,3 +373,66 @@ TEST_CASE("SRgnIsRectInRegionf", "[region]") {
         CHECK_FALSE(SRgnIsRectInRegionf(region, &checkRects[5]));
     }
 }
+
+TEST_CASE("SRgnOffsetf", "[region]") {
+    RgnDataTest region;
+
+    SECTION("shifts rects by given amount") {
+        RECTF rects[] = {
+            { 0.0f, 0.0f, 100.0f, 100.0f },
+            { -200.0f, -200.0f, -100.0f, -100.0f }
+        };
+
+        SRgnCombineRectf(region, &rects[0], nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &rects[1], nullptr, SRGN_OR);
+
+        SRgnOffsetf(region, 100.0f, 50.0f);
+
+        uint32_t numRects = 2;
+        RECTF buffer[2];
+        SRgnGetRectsf(region, &numRects, buffer);
+
+        CHECK_THAT(buffer[0], MatchesRect({ -100.0f, -150.0f, 0.0f, -50.0f }));
+        CHECK_THAT(buffer[1], MatchesRect({ 100.0f, 50.0f, 200.0f, 150.0f }));
+    }
+
+    SECTION("shifts rects back to their original positions with opposite amounts") {
+        RECTF rects[] = {
+            { 0.0f, 0.0f, 100.0f, 100.0f },
+            { -200.0f, -200.0f, -100.0f, -100.0f }
+        };
+
+        SRgnCombineRectf(region, &rects[0], nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &rects[1], nullptr, SRGN_OR);
+
+        SRgnOffsetf(region, 100.0f, 50.0f);
+        SRgnOffsetf(region, 5.0f, 10.0f);
+        SRgnOffsetf(region, -105.0f, -60.0f);
+
+        uint32_t numRects = 2;
+        RECTF buffer[2];
+        SRgnGetRectsf(region, &numRects, buffer);
+
+        CHECK_THAT(buffer[0], MatchesRect(rects[1]));
+        CHECK_THAT(buffer[1], MatchesRect(rects[0]));
+    }
+
+    SECTION("doesn't shift anything with 0") {
+        RECTF rects[] = {
+            { 0.0f, 0.0f, 100.0f, 100.0f },
+            { -200.0f, -200.0f, -100.0f, -100.0f }
+        };
+
+        SRgnCombineRectf(region, &rects[0], nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &rects[1], nullptr, SRGN_OR);
+
+        SRgnOffsetf(region, 0.0f, 0.0f);
+
+        uint32_t numRects = 2;
+        RECTF buffer[2];
+        SRgnGetRectsf(region, &numRects, buffer);
+
+        CHECK_THAT(buffer[0], MatchesRect(rects[1]));
+        CHECK_THAT(buffer[1], MatchesRect(rects[0]));
+    }
+}
