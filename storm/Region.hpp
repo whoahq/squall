@@ -6,7 +6,7 @@
 
 void SRgnClear(HSRGN handle);
 
-void SRgnCombineRectf(HSRGN handle, RECTF* rect, void* param, int32_t combineMode);
+void SRgnCombineRectf(HSRGN handle, const RECTF* rect, void* param, int32_t combineMode);
 
 void SRgnCreate(HSRGN* handlePtr, uint32_t reserved = 0);
 
@@ -16,7 +16,7 @@ void SRgnDuplicate(HSRGN origHandle, HSRGN* handle, uint32_t reserved = 0);
 
 void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect);
 
-void SRgnGetRectParamsf(HSRGN handle, RECTF* rect, uint32_t* numParams, void** buffer);
+void SRgnGetRectParamsf(HSRGN handle, const RECTF* rect, uint32_t* numParams, void** buffer);
 
 void SRgnGetRectsf(HSRGN handle, uint32_t* numRects, RECTF* buffer);
 
