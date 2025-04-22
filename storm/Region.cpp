@@ -568,3 +568,25 @@ int32_t SRgnIsRectInRegionf(HSRGN handle, const RECTF* rect) {
     s_rgntable.Unlock(lockedHandle);
     return result;
 }
+
+void SRgnOffsetf(HSRGN handle, float xoffset, float yoffset) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(handle);
+    STORM_VALIDATE_END_VOID;
+
+    HLOCKEDRGN lockedHandle;
+    auto rgn = s_rgntable.Lock(handle, &lockedHandle, 0);
+    if (!rgn) return;
+
+    SOURCE* sourceArray = rgn->source.Ptr();
+    uint32_t sourceRects = rgn->source.Count();
+    for (uint32_t i = 0; i < sourceRects; i++) {
+        sourceArray[i].rect.left += xoffset;
+        sourceArray[i].rect.bottom += yoffset;
+        sourceArray[i].rect.right += xoffset;
+        sourceArray[i].rect.top += yoffset;
+    }
+    InvalidateRegion(rgn);
+
+    s_rgntable.Unlock(lockedHandle);
+}
