@@ -514,3 +514,30 @@ void SRgnGetRectsf(HSRGN handle, uint32_t* numRects, RECTF* buffer) {
 
     s_rgntable.Unlock(lockedHandle);
 }
+
+int32_t SRgnIsPointInRegionf(HSRGN handle, float x, float y) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(handle);
+    STORM_VALIDATE_END;
+
+    HLOCKEDRGN lockedHandle;
+    auto rgn = s_rgntable.Lock(handle, &lockedHandle, 0);
+    if (!rgn) return 0;
+
+    int32_t result = 0;
+
+    SOURCE* sourceArray = rgn->source.Ptr();
+    uint32_t sourceRects = rgn->source.Count();
+    for (uint32_t i = 0; i < sourceRects; i++) {
+        if (!(sourceArray[i].flags & SF_PARAMONLY)) {
+            if (x >= sourceArray[i].rect.left && y >= sourceArray[i].rect.bottom &&
+                x < sourceArray[i].rect.right && y < sourceArray[i].rect.top) {
+                result = 1;
+                break;
+            }
+        }
+    }
+
+    s_rgntable.Unlock(lockedHandle);
+    return result;
+}
