@@ -541,3 +541,30 @@ int32_t SRgnIsPointInRegionf(HSRGN handle, float x, float y) {
     s_rgntable.Unlock(lockedHandle);
     return result;
 }
+
+int32_t SRgnIsRectInRegionf(HSRGN handle, const RECTF* rect) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(handle);
+    STORM_VALIDATE(rect);
+    STORM_VALIDATE_END;
+
+    HLOCKEDRGN lockedHandle;
+    auto rgn = s_rgntable.Lock(handle, &lockedHandle, 0);
+    if (!rgn) return 0;
+
+    int32_t result = 0;
+
+    SOURCE* sourceArray = rgn->source.Ptr();
+    uint32_t sourceRects = rgn->source.Count();
+    for (uint32_t i = 0; i < sourceRects; i++) {
+        if (!(sourceArray[i].flags & SF_PARAMONLY)) {
+            if (CheckForIntersection(rect, &sourceArray[i].rect)) {
+                result = 1;
+                break;
+            }
+        }
+    }
+
+    s_rgntable.Unlock(lockedHandle);
+    return result;
+}
