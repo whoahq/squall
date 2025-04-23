@@ -11,6 +11,7 @@ static TSExportTableSyncReuse<RGN, HSRGN, HLOCKEDRGN, CCritSect> s_rgntable;
 
 void DeleteCombinedRect(TSGrowableArray<RECTF>* combinedArray, uint32_t index);
 void DeleteRect(RECTF* rect);
+void DeleteSourceRect(TSGrowableArray<SOURCE>* sourceArray, uint32_t index);
 int32_t IsNullRect(const RECTF* rect);
 
 
@@ -184,32 +185,104 @@ void FragmentCombinedRectangles(TSGrowableArray<RECTF>* combinedArray, uint32_t 
 }
 
 void FragmentSourceRectangles(TSGrowableArray<SOURCE>* sourceArray, uint32_t firstIndex, uint32_t lastIndex, int32_t previousOverlap, const RECTF* rect, void* param, int32_t sequence) {
-    if (firstIndex >= lastIndex) {
-        AddSourceRect(sourceArray, rect, param, sequence, SF_ADDING | (previousOverlap ? SF_OVERLAPS : SF_NONE));
-        return;
-    }
-
     auto overlapsExisting = previousOverlap;
 
-    for (uint32_t i = firstIndex; i < lastIndex; i++) {
-        auto source = &(*sourceArray)[i];
+    for (uint32_t index = firstIndex; index < lastIndex; index++) {
+        RECTF* checkRect = &(*sourceArray)[index].rect;
 
-        if (CheckForIntersection(rect, &source->rect)) {
-            if (!CompareRects(rect, &source->rect)) {
-                break;
+        if (CheckForIntersection(rect, checkRect)) {
+            if (CompareRects(rect, checkRect)) {
+                (*sourceArray)[index].flags |= SF_OVERLAPS;
+                overlapsExisting = 1;
+                continue;
             }
 
-            source->flags |= SF_OVERLAPS;
-            overlapsExisting = 1;
-        }
+            const RECTF* overlapRect[2] = { rect, checkRect };
 
-        if (i + 1 == lastIndex) {
-            AddSourceRect(sourceArray, rect, param, sequence, SF_ADDING | (previousOverlap ? SF_OVERLAPS : SF_NONE));
+            uint32_t minLeft = rect->left > checkRect->left ? 1 : 0;
+            uint32_t maxLeft = checkRect->left > rect->left ? 1 : 0;
+            uint32_t minBottom = rect->bottom > checkRect->bottom ? 1 : 0;
+            uint32_t maxBottom = checkRect->bottom > rect->bottom ? 1 : 0;
+            uint32_t minRight = rect->right > checkRect->right ? 1 : 0;
+            uint32_t maxRight = checkRect->right > rect->right ? 1 : 0;
+            uint32_t minTop = rect->top > checkRect->top ? 1 : 0;
+            uint32_t maxTop = checkRect->top > rect->top ? 1 : 0;
+
+            RECTF newRect[5];
+
+            newRect[0] = {
+                overlapRect[minBottom]->left,
+                overlapRect[minBottom]->bottom,
+                overlapRect[minBottom]->right,
+                overlapRect[maxBottom]->bottom,
+            };
+
+            newRect[1] = {
+                overlapRect[maxTop]->left,
+                overlapRect[minTop]->top,
+                overlapRect[maxTop]->right,
+                overlapRect[maxTop]->top,
+            };
+
+            newRect[2] = {
+                overlapRect[minLeft]->left,
+                overlapRect[maxBottom]->bottom,
+                overlapRect[maxLeft]->left,
+                overlapRect[minTop]->top,
+            };
+
+            newRect[3] = {
+                overlapRect[minRight]->right,
+                overlapRect[maxBottom]->bottom,
+                overlapRect[maxRight]->right,
+                overlapRect[minTop]->top,
+            };
+
+            newRect[4] = {
+                overlapRect[maxLeft]->left,
+                overlapRect[maxBottom]->bottom,
+                overlapRect[minRight]->right,
+                overlapRect[minTop]->top,
+            };
+
+            int32_t overlaps[5][2];
+            for (uint32_t j = 0; j < 5; j++) {
+                if (IsNullRect(&newRect[j])) {
+                    overlaps[j][1] = 0;
+                    overlaps[j][0] = 0;
+                }
+                else {
+                    for (uint32_t k = 0; k < 2; k++) {
+                        overlaps[j][k] = CheckForIntersection(&newRect[j], overlapRect[k]);
+                    }
+                }
+            }
+
+            for (uint32_t j = 0; j < 5; j++) {
+                if (overlaps[j][0]) {
+                    FragmentSourceRectangles(
+                        sourceArray,
+                        index + 1,
+                        lastIndex,
+                        overlapsExisting || overlaps[j][1],
+                        &newRect[j],
+                        param,
+                        sequence);
+                }
+
+                if (overlaps[j][1]) {
+                    uint32_t newFlags = (*sourceArray)[index].flags & ~SF_TEMPMASK;
+                    newFlags |= overlaps[j][0] ? SF_OVERLAPS : SF_NONE;
+
+                    AddSourceRect(sourceArray, &newRect[j], (*sourceArray)[index].param, (*sourceArray)[index].sequence, newFlags);
+                }
+            }
+            DeleteSourceRect(sourceArray, index);
             return;
         }
     }
 
-    // TODO
+    AddSourceRect(sourceArray, rect, param, sequence, SF_ADDING | (overlapsExisting ? SF_OVERLAPS : SF_NONE));
 }
 
 int32_t IsNullRect(const RECTF* rect) {
@@ -242,19 +315,19 @@ void DeleteSourceRect(TSGrowableArray<SOURCE>* sourceArray, uint32_t index) {
 }
 
 void OptimizeSource(TSGrowableArray<SOURCE>* sourceArray) {
-    for (uint32_t i = 0; i < sourceArray->Count(); i++) {
-        auto source = &(*sourceArray)[i];
+    for (uint32_t index = 0; index < sourceArray->Count(); ) {
+        auto source = &(*sourceArray)[index];
 
         if (IsNullRect(&source->rect)) {
             // Set current (null) element to last element
             auto last = &(*sourceArray)[sourceArray->Count() - 1];
-            (*sourceArray)[i] = *last;
-
-            // Decrement index by 1 to force null check on copied last element on next tick
-            i--;
+            (*sourceArray)[index] = *last;
 
             // Shrink by 1 (to account for the removal of the null element)
             sourceArray->SetCount(sourceArray->Count() - 1);
+        }
+        else {
+            index++;
         }
     }
 }
