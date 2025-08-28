@@ -6,7 +6,11 @@ CCritSect::CCritSect() {
 #endif
 
 #if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
-    pthread_mutex_init(&this->m_critsect, nullptr);
+    pthread_mutexattr_t mutex_attr;
+    pthread_mutexattr_init(&mutex_attr);
+    pthread_mutexattr_settype(&mutex_attr, PTHREAD_MUTEX_RECURSIVE);
+
+    pthread_mutex_init(&this->m_critsect, &mutex_attr);
 #endif
 }
 
