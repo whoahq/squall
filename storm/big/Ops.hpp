@@ -9,11 +9,15 @@ void Add(BigBuffer& a, const BigBuffer& b, uint32_t c);
 
 void Add(BigBuffer& a, const BigBuffer& b, const BigBuffer& c);
 
+void And(BigBuffer& a, const BigBuffer& b, const BigBuffer& c);
+
 int32_t Compare(const BigBuffer& a, const BigBuffer& b);
 
 void Div(BigBuffer& a, uint32_t* b, const BigBuffer& c, uint64_t d);
 
 void Div(BigBuffer& a, BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack);
+
+void EncodeDataBytes(TSGrowableArray<uint8_t>& output, uint32_t value);
 
 uint32_t ExtractLowPart(uint64_t& value);
 
@@ -23,11 +27,21 @@ uint32_t ExtractLowPartSx(uint64_t& value);
 
 void FromBinary(BigBuffer& buffer, const void* value, uint32_t bytes);
 
+void FromStr(BigBuffer& buffer, const char* str);
+
 void FromUnsigned(BigBuffer& buffer, uint32_t value);
 
 uint32_t HighBitPos(const BigBuffer& buffer);
 
 void InsertLowPart(uint64_t& value, uint32_t low);
+
+int32_t IsEven(const BigBuffer& num);
+
+int32_t IsOdd(const BigBuffer& num);
+
+int32_t IsOne(const BigBuffer& num);
+
+int32_t IsZero(const BigBuffer& num);
 
 uint64_t MakeLarge(uint32_t low, uint32_t high);
 
@@ -36,6 +50,10 @@ void Mul(BigBuffer& a, const BigBuffer& b, uint64_t c);
 void Mul(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, BigStack& stack);
 
 void MulMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack);
+
+void Not(BigBuffer& a, const BigBuffer& b);
+
+void Or(BigBuffer& a, const BigBuffer& b, const BigBuffer& c);
 
 void PowMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack);
 
@@ -51,6 +69,14 @@ void Square(BigBuffer& a, const BigBuffer& b, BigStack& stack);
 
 void Sub(BigBuffer& a, const BigBuffer& b, const BigBuffer& c);
 
+void Sub(BigBuffer& a, const BigBuffer& b, uint32_t c);
+
 void ToBinary(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer);
+
+void ToStream(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer);
+
+void ToUnsigned(uint32_t* a, const BigBuffer& b);
+
+void Xor(BigBuffer& a, const BigBuffer& b, const BigBuffer& c);
 
 #endif

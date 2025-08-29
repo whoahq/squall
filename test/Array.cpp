@@ -9,7 +9,7 @@ struct TestArrayObject {
 TEST_CASE("TSBaseArray", "[array]") {
     SECTION("constructs correctly") {
         TSBaseArray<uint32_t> array;
-        REQUIRE(array.Count() == 0);
+        SUCCEED();
     }
 }
 
@@ -31,6 +31,52 @@ TEST_CASE("TSFixedArray", "[array]") {
     SECTION("constructs correctly") {
         TSFixedArray<uint32_t> array;
         REQUIRE(array.Count() == 0);
+        REQUIRE(array.Ptr() == nullptr);
+    }
+}
+
+TEST_CASE("TSFixedArray::Clear", "[array]") {
+    SECTION("clears already empty array") {
+        TSFixedArray<uint32_t> array;
+        array.Clear();
+
+        CHECK(array.Count() == 0);
+        CHECK(array.Ptr() == nullptr);
+    }
+
+    SECTION("clears non-empty array") {
+        TSFixedArray<uint32_t> array;
+        array.SetCount(10);
+
+        CHECK(array.Count() == 10);
+        CHECK(array.Ptr() != nullptr);
+
+        array.Clear();
+
+        CHECK(array.Count() == 0);
+        CHECK(array.Ptr() == nullptr);
+    }
+
+    SECTION("permits setting entry after clearing and resizing") {
+        TSFixedArray<uint32_t> array;
+        array.SetCount(1);
+        array[0] = 1234;
+
+        CHECK(array.Count() == 1);
+        CHECK(array.Ptr() != nullptr);
+        CHECK(array[0] == 1234);
+
+        array.Clear();
+
+        CHECK(array.Count() == 0);
+        CHECK(array.Ptr() == nullptr);
+
+        array.SetCount(1);
+        array[0] = 4567;
+
+        CHECK(array.Count() == 1);
+        CHECK(array.Ptr() != nullptr);
+        CHECK(array[0] == 4567);
     }
 }
 

@@ -25,7 +25,7 @@ int32_t SErrDisplayError(uint32_t errorcode, const char* filename, int32_t linen
 
     printf("\n=========================================================\n");
 
-    if (linenumber == -5) {
+    if (linenumber == SERR_LINECODE_EXCEPTION) {
         printf("Exception Raised!\n\n");
 
         printf(" App:         %s\n", "GenericBlizzardApp");
@@ -78,9 +78,8 @@ void SErrPrepareAppFatal(const char* filename, int32_t linenumber) {
 
 void SErrSetLastError(uint32_t errorcode) {
     s_lasterror = errorcode;
-
     #if defined(WHOA_SYSTEM_WIN)
-        SetLastError(errorcode);
+    SetLastError(errorcode);
     #endif
 }
 

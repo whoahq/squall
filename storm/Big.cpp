@@ -7,6 +7,10 @@ void SBigAdd(BigData* a, BigData* b, BigData* c) {
     Add(a->Primary(), b->Primary(), c->Primary());
 }
 
+void SBigAnd(BigData* a, BigData* b, BigData* c) {
+    And(a->Primary(), b->Primary(), c->Primary());
+}
+
 void SBigBitLen(BigData* num, uint32_t* len) {
     auto& buffer = num->Primary();
     buffer.Trim();
@@ -28,16 +32,57 @@ int32_t SBigCompare(BigData* a, BigData* b) {
     return Compare(a->Primary(), b->Primary());
 }
 
+void SBigCopy(BigData* a, BigData* b) {
+    a->m_primary = b->m_primary;
+}
+
+void SBigDec(BigData* a, BigData* b) {
+    Sub(a->m_primary, b->m_primary, 1);
+}
+
 void SBigDel(BigData* num) {
     delete num;
+}
+
+void SBigDiv(BigData* a, BigData* b, BigData* c) {
+    uint32_t allocCount = 0;
+    BigBuffer& buf = a->Stack().Alloc(&allocCount);
+
+    Div(a->Primary(), buf, b->Primary(), c->Primary(), a->Stack());
+
+    a->Stack().Free(allocCount);
 }
 
 void SBigFromBinary(BigData* num, const void* data, uint32_t bytes) {
     FromBinary(num->Primary(), data, bytes);
 }
 
+void SBigFromStr(BigData* num, const char *str) {
+    FromStr(num->Primary(), str);
+}
+
 void SBigFromUnsigned(BigData* num, uint32_t val) {
     FromUnsigned(num->Primary(), val);
+}
+
+void SBigInc(BigData* a, BigData* b) {
+    Add(a->Primary(), b->Primary(), 1);
+}
+
+int32_t SBigIsEven(BigData* a) {
+    return IsEven(a->Primary());
+}
+
+int32_t SBigIsOdd(BigData* a) {
+    return IsOdd(a->Primary());
+}
+
+int32_t SBigIsOne(BigData* a) {
+    return IsOne(a->Primary());
+}
+
+int32_t SBigIsZero(BigData* a) {
+    return IsZero(a->Primary());
 }
 
 void SBigMod(BigData* a, BigData* b, BigData* c) {
@@ -56,6 +101,14 @@ void SBigMul(BigData* a, BigData* b, BigData* c) {
 void SBigNew(BigData** num) {
     auto m = SMemAlloc(sizeof(BigData), __FILE__, __LINE__, 0x0);
     *num = new (m) BigData();
+}
+
+void SBigNot(BigData* a, BigData* b) {
+    Not(a->Primary(), b->Primary());
+}
+
+void SBigOr(BigData* a, BigData* b, BigData* c) {
+    Or(a->Primary(), b->Primary(), c->Primary());
 }
 
 void SBigPowMod(BigData* a, BigData* b, BigData* c, BigData* d) {
@@ -88,4 +141,12 @@ void SBigToBinaryBuffer(BigData* num, uint8_t* data, uint32_t maxBytes, uint32_t
     if (bytes) {
         *bytes = n;
     }
+}
+
+void SBigToUnsigned(BigData* num, uint32_t* val) {
+    ToUnsigned(val, num->Primary());
+}
+
+void SBigXor(BigData* a, BigData* b, BigData* c) {
+    Xor(a->Primary(), b->Primary(), c->Primary());
 }

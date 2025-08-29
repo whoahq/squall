@@ -8,28 +8,15 @@
 template <class T, class TKey>
 class TSHashTable {
     public:
-    // Member variables
-    STORM_EXPLICIT_LIST(T, m_linktofull) m_fulllist;
-    uint32_t m_fullnessIndicator = 0;
-    TSGrowableArray<STORM_EXPLICIT_LIST(T, m_linktoslot)> m_slotlistarray;
-    uint32_t m_slotmask = -1;
+    // Virtual member functions
+    virtual ~TSHashTable();
+    virtual void Destroy();
 
     // Member functions
-    ~TSHashTable();
     void Clear();
-    uint32_t ComputeSlot(uint32_t hashval);
-    void Destroy();
-    int32_t GetLinkOffset();
+    void Delete(T* ptr);
     T* Head();
-    void Initialize();
-    bool Initialized();
     void Insert(T* ptr, uint32_t hashval, const TKey& key);
-    void InternalClear(int32_t warn);
-    void InternalDelete(T* ptr);
-    void InternalLinkNode(T* ptr, uint32_t hashval);
-    T* InternalNew(STORM_EXPLICIT_LIST(T, m_linktoslot)* listptr, size_t extrabytes, uint32_t flags);
-    T* InternalNewNode(uint32_t, size_t extrabytes, uint32_t flags);
-    int32_t MonitorFullness(uint32_t slot);
     T* New(const char* str, size_t extrabytes, uint32_t flags);
     T* New(uint32_t hashval, const char* str, size_t extrabytes, uint32_t flags);
     T* New(uint32_t hashval, const TKey& key, size_t extrabytes, uint32_t flags);
@@ -37,6 +24,32 @@ class TSHashTable {
     T* Ptr(const char* str);
     T* Ptr(uint32_t hashval, const TKey& key);
     void Unlink(T* ptr);
+
+    protected:
+    // Member variables
+    STORM_EXPLICIT_LIST(T, m_linktofull) m_fulllist;
+
+    // Member functions
+    int32_t GetLinkOffset();
+
+    private:
+    // Member variables
+    uint32_t m_fullnessIndicator = 0;
+    TSGrowableArray<STORM_EXPLICIT_LIST(T, m_linktoslot)> m_slotlistarray;
+    uint32_t m_slotmask = -1;
+
+    // Virtual member functions
+    virtual void InternalDelete(T* ptr);
+    virtual T* InternalNew(STORM_EXPLICIT_LIST(T, m_linktoslot)* listptr, size_t extrabytes, uint32_t flags);
+
+    // Member functions
+    uint32_t ComputeSlot(uint32_t hashval);
+    void Initialize();
+    bool Initialized();
+    void InternalClear(int32_t warn);
+    void InternalLinkNode(T* ptr, uint32_t hashval);
+    T* InternalNewNode(uint32_t, size_t extrabytes, uint32_t flags);
+    int32_t MonitorFullness(uint32_t slot);
 };
 
 template <class T, class TKey>
@@ -47,6 +60,20 @@ TSHashTable<T, TKey>::~TSHashTable() {
 template <class T, class TKey>
 void TSHashTable<T, TKey>::Clear() {
     this->InternalClear(0);
+}
+
+template <class T, class TKey>
+void TSHashTable<T, TKey>::Delete(T* ptr) {
+    this->Unlink(ptr);
+    this->InternalDelete(ptr);
+}
+
+template <class T, class TKey>
+void TSHashTable<T, TKey>::Destroy() {
+    this->InternalClear(1);
+    this->m_fullnessIndicator = 0;
+    this->m_slotmask = -1;
+    this->m_slotlistarray.Clear();
 }
 
 template <class T, class TKey>

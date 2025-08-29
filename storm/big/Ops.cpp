@@ -22,6 +22,15 @@ void Add(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
     a.SetCount(i);
 }
 
+void And(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
+    uint32_t i = 0;
+    for (; b.IsUsed(i) || c.IsUsed(i); i++) {
+        a[i] = c[i] & b[i];
+    }
+
+    a.SetCount(i);
+}
+
 int32_t Compare(const BigBuffer& a, const BigBuffer& b) {
     int32_t result = 0;
 
@@ -43,12 +52,12 @@ void Div(BigBuffer& a, uint32_t* b, const BigBuffer& c, uint64_t d) {
     uint64_t data = 0;
     while (index > 0) {
         InsertLowPart(data, c[--index]);
-        a[index] = data / d;
+        a[index] = static_cast<uint32_t>(data / d);
         data %= d;
     }
 
     a.Trim();
-    *b = data;
+    *b = static_cast<uint32_t>(data);
 }
 
 void Div(BigBuffer& a, BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack) {
@@ -93,7 +102,7 @@ void Div(BigBuffer& a, BigBuffer& b, const BigBuffer& c, const BigBuffer& d, Big
             cc.SetOffset(v12 - 1);
 
             if (t) {
-                a[0] = MakeLarge(cc[dCount - 1], cc[dCount]) / t;
+                a[0] = static_cast<uint32_t>(MakeLarge(cc[dCount - 1], cc[dCount]) / t);
             } else {
                 a[0] = cc[dCount];
             }
@@ -122,6 +131,15 @@ void Div(BigBuffer& a, BigBuffer& b, const BigBuffer& c, const BigBuffer& d, Big
     stack.Free(allocCount);
 }
 
+void EncodeDataBytes(TSGrowableArray<uint8_t>& output, uint32_t value) {
+    uint32_t v = value;
+    while (v != 0) {
+        *output.New() = v % 255u;
+        v /= 255u;
+    }
+    *output.New() = 255;
+}
+
 uint32_t ExtractLowPart(uint64_t& value) {
     auto low = static_cast<uint32_t>(value);
     value >>= 32;
@@ -138,12 +156,11 @@ uint32_t ExtractLowPartLargeSum(uint64_t& value, uint64_t add) {
 }
 
 uint32_t ExtractLowPartSx(uint64_t& value) {
-    auto low = static_cast<uint32_t>(value);
+    uint32_t low = value & 0xFFFFFFFF;
     value >>= 32;
 
     if (value >= 0x80000000) {
-        reinterpret_cast<uint32_t*>(&value)[0] = value;
-        reinterpret_cast<uint32_t*>(&value)[1] = -1;
+        value |= 0xFFFFFFFFULL << 32;
     }
 
     return low;
@@ -156,6 +173,14 @@ void FromBinary(BigBuffer& buffer, const void* data, uint32_t bytes) {
         auto byte = static_cast<const uint8_t*>(data)[i];
         auto v7 = (i & 3) ? buffer[i / 4] : 0;
         buffer[i / 4] = v7 + (byte << (8 * (i & 3)));
+    }
+}
+
+void FromStr(BigBuffer& buffer, const char* str) {
+    SetZero(buffer);
+    for (; *str; str++) {
+        Mul(buffer, buffer, 10);
+        Add(buffer, buffer, *str - '0');
     }
 }
 
@@ -193,6 +218,25 @@ uint32_t HighBitPos(const BigBuffer& buffer) {
 
 void InsertLowPart(uint64_t& value, uint32_t low) {
     value = (value << 32) | low;
+}
+
+int32_t IsEven(const BigBuffer& num) {
+    return num.Count() == 0 || (num[0] & 1) == 0;
+}
+
+int32_t IsOdd(const BigBuffer& num) {
+    num.Trim();
+    return num.Count() != 0 && (num[0] & 1) != 0;
+}
+
+int32_t IsOne(const BigBuffer& num) {
+    num.Trim();
+    return num.Count() == 1 && num[0] == 1;
+}
+
+int32_t IsZero(const BigBuffer& num) {
+    num.Trim();
+    return num.Count() == 0;
 }
 
 uint64_t MakeLarge(uint32_t low, uint32_t high) {
@@ -240,6 +284,24 @@ void MulMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const BigBuffe
     Div(scratch, a, scratch, d, stack);
 
     stack.Free(allocCount);
+}
+
+void Not(BigBuffer& a, const BigBuffer& b) {
+    uint32_t i = 0;
+    for (; b.IsUsed(i); i++) {
+        a[i] = ~b[i];
+    }
+
+    a.SetCount(i);
+}
+
+void Or(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
+    uint32_t i = 0;
+    for (; b.IsUsed(i) || c.IsUsed(i); i++) {
+        a[i] = c[i] | b[i];
+    }
+
+    a.SetCount(i);
 }
 
 void PowMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack) {
@@ -384,7 +446,19 @@ void Sub(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
     }
 
     a.SetCount(i);
+    STORM_ASSERT(!borrow);
+}
 
+void Sub(BigBuffer& a, const BigBuffer& b, uint32_t c) {
+    uint64_t borrow = 0;
+
+    uint32_t i = 0;
+    for (; b.IsUsed(i); i++) {
+        borrow += b[i] - c;
+        a[i] = ExtractLowPartSx(borrow);
+    }
+
+    a.SetCount(i);
     STORM_ASSERT(!borrow);
 }
 
@@ -401,4 +475,24 @@ void ToBinaryAppend(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer) {
 void ToBinary(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer) {
     output.SetCount(0);
     ToBinaryAppend(output, buffer);
+}
+
+void ToStream(TSGrowableArray<uint8_t>& output, const BigBuffer& buffer) {
+    ToBinary(output, buffer);
+    EncodeDataBytes(output, output.Count());
+    ToBinaryAppend(output, buffer);
+}
+
+void ToUnsigned(uint32_t* a, const BigBuffer& b) {
+    *a = 0;
+    *a = b[0];
+}
+
+void Xor(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
+    uint32_t i = 0;
+    for (; b.IsUsed(i) || c.IsUsed(i); i++) {
+        a[i] = c[i] ^ b[i];
+    }
+
+    a.SetCount(i);
 }

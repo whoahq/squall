@@ -1,7 +1,7 @@
 #include "storm/thread/S_Thread.hpp"
 #include "storm/Memory.hpp"
 
-DWORD S_Thread::s_SLaunchThread(void* threadParam) {
+DWORD WINAPI S_Thread::s_SLaunchThread(void* threadParam) {
     auto params = static_cast<SThreadParmBlock*>(threadParam);
     auto proc = params->threadProc;
     auto param = params->threadParam;

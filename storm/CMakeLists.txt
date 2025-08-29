@@ -4,6 +4,8 @@ check_cxx_compiler_flag(-Wno-invalid-offsetof HAS_NO_INVALID_OFFSETOF)
 file(GLOB STORM_SOURCES
     "*.cpp"
     "big/*.cpp"
+    "crypto/*.cpp"
+    "error/*.cpp"
     "hash/*.cpp"
     "queue/*.cpp"
     "string/*.cpp"
@@ -13,8 +15,9 @@ file(GLOB STORM_SOURCES
 if(WHOA_SYSTEM_WIN)
     file(GLOB STORM_WIN_SOURCES
         "win/*.cpp"
+        "error/win/*.cpp"
         "thread/win/*.cpp"
-        )
+    )
     list(APPEND STORM_SOURCES ${STORM_WIN_SOURCES})
 endif()
 
@@ -55,4 +58,9 @@ if(HAS_NO_INVALID_OFFSETOF)
         PUBLIC
             -Wno-invalid-offsetof
     )
+endif()
+
+if(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+    include(CodeCoverage)
+    target_compile_options(${PROJECT_NAME} PRIVATE -g -fprofile-arcs -ftest-coverage -O0)
 endif()

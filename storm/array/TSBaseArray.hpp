@@ -8,17 +8,20 @@
 template <class T>
 class TSBaseArray {
     public:
-    uint32_t m_alloc = 0;
-    uint32_t m_count = 0;
-    T* m_data = nullptr;
+    // Member variables
+    uint32_t m_alloc;
+    uint32_t m_count;
+    T* m_data;
 
+    // Virtual member functions
     virtual const char* MemFileName() const;
     virtual int32_t MemLineNo() const;
 
+    // Member functions
     T& operator[](uint32_t index);
     void CheckArrayBounds(uint32_t index) const;
+    void Constructor();
     uint32_t Count() const;
-    void Clear();
     T* Ptr();
     const T* Ptr() const;
     T* Top();
@@ -37,7 +40,7 @@ void TSBaseArray<T>::CheckArrayBounds(uint32_t index) const {
     }
 
     SErrDisplayErrorFmt(
-        0x85100080,
+        STORM_ERROR_ACCESS_OUT_OF_BOUNDS,
         this->MemFileName(),
         this->MemLineNo(),
         1,
@@ -48,14 +51,15 @@ void TSBaseArray<T>::CheckArrayBounds(uint32_t index) const {
 }
 
 template <class T>
-uint32_t TSBaseArray<T>::Count() const {
-    return this->m_count;
+void TSBaseArray<T>::Constructor() {
+    this->m_alloc = 0;
+    this->m_count = 0;
+    this->m_data = nullptr;
 }
 
 template <class T>
-void TSBaseArray<T>::Clear() {
-    delete[] this->m_data;
-    TSBaseArray<T>();
+uint32_t TSBaseArray<T>::Count() const {
+    return this->m_count;
 }
 
 template <class T>
