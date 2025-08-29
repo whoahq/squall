@@ -8,6 +8,7 @@
 #endif
 
 static uint32_t s_lasterror = ERROR_SUCCESS;
+static uint32_t s_suppress;
 
 [[noreturn]] void SErrDisplayAppFatal(const char* format, ...) {
     va_list args;
@@ -84,4 +85,8 @@ void SErrSetLastError(uint32_t errorcode) {
 
 uint32_t SErrGetLastError() {
     return s_lasterror;
+}
+
+void SErrSuppressErrors(uint32_t suppress) {
+    s_suppress = suppress;
 }
