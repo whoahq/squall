@@ -1,7 +1,5 @@
 #include "RegionTest.hpp"
 
-// Note: diagrams are y inverted when building for WoW,
-// still conveys understanding.
 
 TEST_CASE("SRgnClear", "[region]") {
     RgnDataTest region;
@@ -122,13 +120,13 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
         RECTF buffer[4];
         SRgnGetRectsf(region, &numRects, buffer);
 
-        // ┌─────────┐
-        // │  0      │
-        // │┈┈┈┈┌────┼──────┐
-        // │      1         │
-        // └────┼────┘┈┈┈┈┈┈│
-        //      │    2      │
-        //      └───────────┘
+        //       ┌────────────┐
+        //       |     2      |
+        // ┌─────┼───┐┈┈┈┈┈┈┈┈│
+        // |       1          │
+        // |┈┈┈┈┈└───┼────────┘
+        // │    0    │
+        // └─────────┘
         CHECK(numRects == 3);
         CHECK_THAT(buffer[0], MatchesRect({ 0.0f, 0.0f, 1.0f, 0.6f }));
         CHECK_THAT(buffer[1], MatchesRect({ 0.0f, 0.6f, 1.8f, 1.0f }));
@@ -143,13 +141,13 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
         RECTF buffer[2];
         SRgnGetRectsf(region, &numRects, buffer);
 
-        // ┌─────────┐
+        //       ┌────────────┐
+        //       |╳╳╳╳╳╳╳╳╳╳╳╳|
+        // ┌─────┼───┐╳╳╳╳╳╳╳╳│
+        // |╳╳╳╳╳| 0 |╳╳╳╳╳╳╳╳│
+        // |╳╳╳╳╳└───┼────────┘
         // │╳╳╳╳╳╳╳╳╳│
-        // │╳╳╳╳┌────┼──────┐
-        // │╳╳╳╳│ 0  │╳╳╳╳╳╳│
-        // └────┼────┘╳╳╳╳╳╳│
-        //      │╳╳╳╳╳╳╳╳╳╳╳│
-        //      └───────────┘
+        // └─────────┘
         CHECK(numRects == 1);
         CHECK_THAT(buffer[0], MatchesRect({ 0.5f, 0.6f, 1.0f, 1.0f }));
     }
@@ -162,13 +160,13 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
         RECTF buffer[5];
         SRgnGetRectsf(region, &numRects, buffer);
 
-        // ┌─────────┐
-        // │   0     │
-        // │┈┈┈┈┌────┼──────┐
-        // │ 1  │╳╳╳╳│  2   │
-        // └────┼────┘┈┈┈┈┈┈│
-        //      │    3      │
-        //      └───────────┘
+        //       ┌────────────┐
+        //       |      3     |
+        // ┌─────┼───┐┈┈┈┈┈┈┈┈│
+        // |  1  |╳╳╳|   2    │
+        // |┈┈┈┈┈└───┼────────┘
+        // │    0    │
+        // └─────────┘
         CHECK(numRects == 4);
         CHECK_THAT(buffer[0], MatchesRect({ 0.0f, 0.0f, 1.0f, 0.6f }));
         CHECK_THAT(buffer[1], MatchesRect({ 0.0f, 0.6f, 0.5f, 1.0f }));
@@ -184,13 +182,13 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
         RECTF buffer[5];
         SRgnGetRectsf(region, &numRects, buffer);
 
-        // ┌─────────┐
-        // │   0     │
-        // │┈┈┈┈┌────┼──────┐
-        // │ 1  │╳╳╳╳│╳╳╳╳╳╳│
-        // └────┼────┘╳╳╳╳╳╳│
-        //      │╳╳╳╳╳╳╳╳╳╳╳│
-        //      └───────────┘
+        //       ┌────────────┐
+        //       |╳╳╳╳╳╳╳╳╳╳╳╳|
+        // ┌─────┼╳╳╳╳╳╳╳╳╳╳╳╳│
+        // |  1  |╳╳╳╳╳╳╳╳╳╳╳╳│
+        // |┈┈┈┈┈└───┼────────┘
+        // │    0    │
+        // └─────────┘
         CHECK(numRects == 2);
         CHECK_THAT(buffer[0], MatchesRect({ 0.0f, 0.0f, 1.0f, 0.6f }));
         CHECK_THAT(buffer[1], MatchesRect({ 0.0f, 0.6f, 0.5f, 1.0f }));
@@ -204,13 +202,13 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
         RECTF buffer[5];
         SRgnGetRectsf(region, &numRects, buffer);
 
-        // ┌─────────┐
-        // │   0     │
-        // │┈┈┈┈┌────┼──────┐
-        // │   1     │╳╳╳╳╳╳│
-        // └────┼────┘╳╳╳╳╳╳│
-        //      │╳╳╳╳╳╳╳╳╳╳╳│
-        //      └───────────┘
+        //       ┌────────────┐
+        //       |╳╳╳╳╳╳╳╳╳╳╳╳|
+        // ┌─────┼───┐╳╳╳╳╳╳╳╳│
+        // |    1    │╳╳╳╳╳╳╳╳│
+        // |┈┈┈┈┈└───┼────────┘
+        // │    0    │
+        // └─────────┘
         CHECK(numRects == 2);
         CHECK_THAT(buffer[0], MatchesRect({ 0.0f, 0.0f, 1.0f, 0.6f }));
         CHECK_THAT(buffer[1], MatchesRect({ 0.0f, 0.6f, 1.0f, 1.0f }));
@@ -225,12 +223,12 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
         RECTF buffer[5];
         SRgnGetRectsf(region, &numRects, buffer);
 
-        // ┌─────────┐
-        // │   0     │
-        // │┈┈┈┌┈┐┈┈┈│
-        // │┈┈┈└┈┘┈1┈│
-        // │   2     │
-        // └─────────┘
+        // ┌───────────┐
+        // │     2     │
+        // │┈┈┈┈┌┈┐┈┈┈┈│
+        // │┈┈┈┈└┈┘┈┈1┈│
+        // │     0     │
+        // └───────────┘
         CHECK(numRects == 3);
         CHECK_THAT(buffer[0], MatchesRect({ 0.0f, 0.0f, 1.0f, 0.4f }));
         CHECK_THAT(buffer[1], MatchesRect({ 0.0f, 0.4f, 1.0f, 0.6f }));
