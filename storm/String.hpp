@@ -15,11 +15,11 @@ char* SStrChrR(char* string, char search);
 
 const char* SStrChrR(const char* string, char search);
 
-int32_t SStrCmp(const char* string1, const char* string2, size_t maxchars);
+int32_t SStrCmp(const char* string1, const char* string2, size_t maxchars = STORM_MAX_STR);
 
-int32_t SStrCmpI(const char* string1, const char* string2, size_t maxchars);
+int32_t SStrCmpI(const char* string1, const char* string2, size_t maxchars = STORM_MAX_STR);
 
-size_t SStrCopy(char* dest, const char* source, size_t destsize);
+size_t SStrCopy(char* dest, const char* source, size_t destsize = STORM_MAX_STR);
 
 char* SStrDupA(const char* string, const char* filename, uint32_t linenumber);
 
