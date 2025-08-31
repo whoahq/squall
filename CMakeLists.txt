@@ -25,6 +25,17 @@ list(APPEND CMAKE_MODULE_PATH
 
 include(system)
 
+# Storm flavors
+if(WHOA_STORM_FLAVOR STREQUAL "SC1")
+    message(STATUS "Building Storm with StarCraft flavoring")
+
+    add_definitions(-DWHOA_STORM_C_CRIT_SECT_RECURSIVE)
+elseif(WHOA_STORM_FLAVOR STREQUAL "WOW")
+    message(STATUS "Building Storm with World of Warcraft flavoring")
+else()
+    message(STATUS "Building Storm with default flavoring")
+endif()
+
 # OS defines
 if(WHOA_SYSTEM_WIN)
     # Avoid win32 header hell
