@@ -6,11 +6,18 @@ CCritSect::CCritSect() {
 #endif
 
 #if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_STORM_C_CRIT_SECT_RECURSIVE)
+    // Use of SRgnDuplicate on systems with pthreads needs recursive locking (inside s_rgntable) to prevent deadlocks.
+    // This behavior doesn't appear to have carried forward to World of Warcraft, probably because SCritSect was
+    // preferred.
     pthread_mutexattr_t mutex_attr;
     pthread_mutexattr_init(&mutex_attr);
     pthread_mutexattr_settype(&mutex_attr, PTHREAD_MUTEX_RECURSIVE);
 
     pthread_mutex_init(&this->m_critsect, &mutex_attr);
+#else
+    pthread_mutex_init(&this->m_critsect, nullptr);
+#endif
 #endif
 }
 
