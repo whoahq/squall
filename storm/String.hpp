@@ -37,6 +37,8 @@ const char* SStrStr(const char* string, const char* search);
 
 void SStrTokenize(const char** string, char* buffer, size_t bufferchars, const char* whitespace, int32_t* quoted);
 
+double SStrToDouble(const char* string);
+
 float SStrToFloat(const char* string);
 
 int32_t SStrToInt(const char* string);

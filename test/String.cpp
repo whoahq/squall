@@ -2,6 +2,7 @@
 #include "storm/Memory.hpp"
 #include "test/Test.hpp"
 
+#include <cfloat>
 #include <type_traits>
 
 
@@ -487,6 +488,84 @@ TEST_CASE("SStrTokenize", "[string]") {
     }
 }
 
+TEST_CASE("SStrToDouble", "[string]") {
+    SECTION("converts empty string to double") {
+        auto result = SStrToDouble("");
+        REQUIRE(result == 0.0f);
+    }
+
+    SECTION("converts whitespace string to double") {
+        auto result = SStrToDouble(" \t\r\n");
+        REQUIRE(result == 0.0f);
+    }
+
+    SECTION("converts random characters to double") {
+        auto result = SStrToDouble("abcd");
+        REQUIRE(result == 0.0f);
+    }
+
+    SECTION("converts string with positive int to double") {
+        auto result = SStrToDouble("123");
+        REQUIRE(result == 123.0f);
+    }
+
+    SECTION("converts string with negative int to double") {
+        auto result = SStrToDouble("-123");
+        REQUIRE(result == -123.0f);
+    }
+
+    SECTION("converts string with positive float to double") {
+        auto result = SStrToDouble("1.5");
+        REQUIRE(result == 1.5f);
+    }
+
+    SECTION("converts string with negative float to double") {
+        auto result = SStrToDouble("-1.5");
+        REQUIRE(result == -1.5f);
+    }
+
+    SECTION("converts string with float and positive exponent to double") {
+        auto result = SStrToDouble("1.5e3");
+        REQUIRE(result == 1500.0f);
+    }
+
+    SECTION("converts string with float and positive full form exponent to double") {
+        auto result = SStrToDouble("1.5e+3");
+        REQUIRE(result == 1500.0f);
+    }
+
+    SECTION("converts string with capital exponent to double") {
+        auto result = SStrToDouble("1.5E+3");
+        REQUIRE(result == 1500.0f);
+    }
+
+    SECTION("converts string with random added letter to double") {
+        auto result = SStrToDouble("1.5g3");
+        REQUIRE(result == 1.5f);
+    }
+
+    SECTION("converts string with float and negative exponent to double") {
+        auto result = SStrToDouble("1500.0e-3");
+        REQUIRE(result == 1.5f);
+    }
+
+    SECTION("converts string with zero to double") {
+        auto result = SStrToDouble("0");
+        REQUIRE(result == 0.0f);
+    }
+
+    SECTION("converts string with leading zero to double") {
+        auto result = SStrToDouble("01");
+        REQUIRE(result == 1.0f);
+    }
+
+    SECTION("converts large values to infinity") {
+        // beyond max double
+        REQUIRE(SStrToDouble("1.79769e+310") == HUGE_VAL);
+        REQUIRE(SStrToDouble("-1.79769e+310") == -HUGE_VAL);
+    }
+}
+
 TEST_CASE("SStrToFloat", "[string]") {
     SECTION("converts empty string to float") {
         auto result = SStrToFloat("");
@@ -556,6 +635,15 @@ TEST_CASE("SStrToFloat", "[string]") {
     SECTION("converts string with leading zero to float") {
         auto result = SStrToFloat("01");
         REQUIRE(result == 1.0f);
+    }
+
+    SECTION("converts large values to infinity") {
+        // max double
+        REQUIRE(SStrToFloat("1.79769e+308") == HUGE_VALF);
+
+        // beyond max double
+        REQUIRE(SStrToFloat("1.79769e+310") == HUGE_VALF);
+        REQUIRE(SStrToFloat("-1.79769e+310") == -HUGE_VALF);
     }
 }
 
