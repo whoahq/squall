@@ -678,6 +678,22 @@ int32_t SStrToInt(const char* string) {
     return result;
 }
 
+uint32_t SStrToUnsigned(const char* string) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE_END;
+
+    uint32_t result = 0;
+
+    uint32_t digit;
+    while ((digit = *string - '0') < 10) {
+        result = digit + (10 * result);
+        string++;
+    }
+
+    return result;
+}
+
 void SStrUpper(char* string) {
     while (*string) {
         *string = static_cast<char>(toupper(*string));

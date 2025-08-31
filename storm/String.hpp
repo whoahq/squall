@@ -41,6 +41,8 @@ float SStrToFloat(const char* string);
 
 int32_t SStrToInt(const char* string);
 
+uint32_t SStrToUnsigned(const char* string);
+
 void SStrUpper(char* string);
 
 #endif
