@@ -1,4 +1,5 @@
 #include "RegionTest.hpp"
+#include <cfloat>
 
 
 TEST_CASE("SRgnClear", "[region]") {
@@ -67,6 +68,11 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
     RECTF baseRect = { 0.0f, 0.0f, 1.0f, 1.0f };
     RECTF testRect = { 0.5f, 0.6f, 1.8f, 1.4f };
 
+    SECTION("does nothing with an invalid region object") {
+        HSRGN inval = reinterpret_cast<HSRGN>(1234);
+        SRgnCombineRectf(inval, &baseRect, nullptr, SRGN_OR);
+    }
+
     SECTION("combines the region with a single given rect 1") {
         SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
 
@@ -133,6 +139,78 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
         CHECK_THAT(buffer[2], MatchesRect({ 0.5f, 1.0f, 1.8f, 1.4f }));
     }
 
+    SECTION("OR operation on self does nothing") {
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
+
+        uint32_t numRects = 1;
+        RECTF buffer[1];
+        SRgnGetRectsf(region, &numRects, buffer);
+
+        CHECK(numRects == 1);
+        CHECK_THAT(buffer[0], MatchesRect({ 0.0f, 0.0f, 1.0f, 1.0f }));
+    }
+
+    SECTION("OR operation merges vertical rects") {
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
+        RECTF rect2 = { 0.0f, 2.0f, 1.0f, 3.0f};
+        RECTF rect3 = { 0.0f, 1.0f, 1.0f, 2.0f};
+        SRgnCombineRectf(region, &rect3, nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &rect2, nullptr, SRGN_OR);
+
+        uint32_t numRects = 1;
+        RECTF buffer[1];
+        SRgnGetRectsf(region, &numRects, buffer);
+
+        CHECK(numRects == 1);
+        CHECK_THAT(buffer[0], MatchesRect({ 0.0f, 0.0f, 1.0f, 3.0f }));
+    }
+
+    SECTION("OR operation merges vertical rects 2") {
+        RECTF rect2 = { 0.0f, 2.0f, 1.0f, 3.0f};
+        RECTF rect3 = { 0.0f, 1.0f, 1.0f, 2.0f};
+        SRgnCombineRectf(region, &rect3, nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &rect2, nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
+
+        uint32_t numRects = 1;
+        RECTF buffer[1];
+        SRgnGetRectsf(region, &numRects, buffer);
+
+        CHECK(numRects == 1);
+        CHECK_THAT(buffer[0], MatchesRect({ 0.0f, 0.0f, 1.0f, 3.0f }));
+    }
+
+    SECTION("OR operation merges horizontal rects") {
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
+        RECTF rect2 = { 2.0f, 0.0f, 3.0f, 1.0f};
+        RECTF rect3 = { 1.0f, 0.0f, 2.0f, 1.0f};
+        SRgnCombineRectf(region, &rect3, nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &rect2, nullptr, SRGN_OR);
+
+        uint32_t numRects = 1;
+        RECTF buffer[1];
+        SRgnGetRectsf(region, &numRects, buffer);
+
+        CHECK(numRects == 1);
+        CHECK_THAT(buffer[0], MatchesRect({ 0.0f, 0.0f, 3.0f, 1.0f }));
+    }
+
+    SECTION("OR operation merges horizontal rects 2") {
+        RECTF rect2 = { 2.0f, 0.0f, 3.0f, 1.0f};
+        RECTF rect3 = { 1.0f, 0.0f, 2.0f, 1.0f};
+        SRgnCombineRectf(region, &rect3, nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &rect2, nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
+
+        uint32_t numRects = 1;
+        RECTF buffer[1];
+        SRgnGetRectsf(region, &numRects, buffer);
+
+        CHECK(numRects == 1);
+        CHECK_THAT(buffer[0], MatchesRect({ 0.0f, 0.0f, 3.0f, 1.0f }));
+    }
+
     SECTION("AND operation intersects rects") {
         SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
         SRgnCombineRectf(region, &testRect, nullptr, SRGN_AND);
@@ -150,6 +228,18 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
         // └─────────┘
         CHECK(numRects == 1);
         CHECK_THAT(buffer[0], MatchesRect({ 0.5f, 0.6f, 1.0f, 1.0f }));
+    }
+
+    SECTION("AND operation on self does nothing") {
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_AND);
+
+        uint32_t numRects = 1;
+        RECTF buffer[1];
+        SRgnGetRectsf(region, &numRects, buffer);
+
+        CHECK(numRects == 1);
+        CHECK_THAT(buffer[0], MatchesRect({ 0.0f, 0.0f, 1.0f, 1.0f }));
     }
 
     SECTION("XOR operation takes exclusive differences of rects") {
@@ -174,6 +264,16 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
         CHECK_THAT(buffer[3], MatchesRect({ 0.5f, 1.0f, 1.8f, 1.4f }));
     }
 
+    SECTION("XOR operation on self erases rect") {
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_XOR);
+
+        uint32_t numRects = 1;
+        SRgnGetRectsf(region, &numRects, nullptr);
+
+        CHECK(numRects == 0);
+    }
+
     SECTION("DIFF operation removes parts of rects") {
         SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
         SRgnCombineRectf(region, &testRect, nullptr, SRGN_DIFF);
@@ -192,6 +292,16 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
         CHECK(numRects == 2);
         CHECK_THAT(buffer[0], MatchesRect({ 0.0f, 0.0f, 1.0f, 0.6f }));
         CHECK_THAT(buffer[1], MatchesRect({ 0.0f, 0.6f, 0.5f, 1.0f }));
+    }
+
+    SECTION("DIFF operation on self erases rect") {
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_DIFF);
+
+        uint32_t numRects = 1;
+        SRgnGetRectsf(region, &numRects, nullptr);
+
+        CHECK(numRects == 0);
     }
 
     SECTION("COPY operation splits intersecting rects") {
@@ -233,6 +343,18 @@ TEST_CASE("SRgnCombineRectf", "[region]") {
         CHECK_THAT(buffer[0], MatchesRect({ 0.0f, 0.0f, 1.0f, 0.4f }));
         CHECK_THAT(buffer[1], MatchesRect({ 0.0f, 0.4f, 1.0f, 0.6f }));
         CHECK_THAT(buffer[2], MatchesRect({ 0.0f, 0.6f, 1.0f, 1.0f }));
+    }
+
+    SECTION("COPY operation on self does nothing") {
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_COPY);
+
+        uint32_t numRects = 1;
+        RECTF buffer[1];
+        SRgnGetRectsf(region, &numRects, buffer);
+
+        CHECK(numRects == 1);
+        CHECK_THAT(buffer[0], MatchesRect({ 0.0f, 0.0f, 1.0f, 1.0f }));
     }
 
     SECTION("operation doesn't work when operating rect width or height is <= 0") {
@@ -350,7 +472,7 @@ TEST_CASE("SRgnDuplicate", "[region]") {
         CHECK_THAT(buffer[0], MatchesRect(baseRect));
     }
 
-    SECTION("copies parms") {
+    SECTION("copies params") {
         SRgnCombineRectf(region, &baseRect, &baseRect, SRGN_PARAMONLY);
 
         uint32_t numParams = 2;
@@ -379,6 +501,59 @@ TEST_CASE("SRgnDuplicate", "[region]") {
         SRgnDuplicate(inval, &newrgn);
 
         CHECK(newrgn == nullptr);
+    }
+}
+
+TEST_CASE("SRgnGetBoundingRectf", "[region]") {
+    RgnDataTest region;
+    RECTF result = {};
+    RECTF baseRect = { 0.0f, 0.0f, 1.0f, 1.0f };
+
+    SECTION("returns null rect when there are no rects") {
+        // make the result dirty so we test it being set
+        result = { 123, 456, 666, 9 };
+
+        SRgnGetBoundingRectf(region, &result);
+        CHECK_THAT(result, MatchesRect({ 0, 0, 0, 0 }));
+    }
+
+    SECTION("returns invalid rect when using an invalid region object") {
+        HSRGN inval = reinterpret_cast<HSRGN>(1234);
+
+        SRgnGetBoundingRectf(inval, &result);
+        CHECK_THAT(result, MatchesRect({ FLT_MAX, FLT_MAX, FLT_MIN, FLT_MIN }));
+    }
+
+    SECTION("returns the dimensions of 1 rect") {
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
+
+        SRgnGetBoundingRectf(region, &result);
+        CHECK_THAT(result, MatchesRect({ 0.0f, 0.0f, 1.0f, 1.0f }));
+    }
+
+    SECTION("returns the combined dimensions of multiple rects") {
+        RECTF testRect = { 0.5f, 0.5f, 1.5f, 1.5f };
+        RECTF testRect2 = { -0.5f, -0.5f, 0.5f, 0.5f };
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &testRect, nullptr, SRGN_OR);
+
+        SRgnGetBoundingRectf(region, &result);
+        CHECK_THAT(result, MatchesRect({ 0.0f, 0.0f, 1.5f, 1.5f }));
+
+        SRgnCombineRectf(region, &testRect2, nullptr, SRGN_OR);
+
+        SRgnGetBoundingRectf(region, &result);
+        CHECK_THAT(result, MatchesRect({ -0.5f, -0.5f, 1.5f, 1.5f }));
+    }
+
+    SECTION("excludes param rects") {
+        RECTF testRect = { 0.5f, 0.5f, 1.5f, 1.5f };
+        int param1 = 0;
+        SRgnCombineRectf(region, &baseRect, nullptr, SRGN_OR);
+        SRgnCombineRectf(region, &testRect, &param1, SRGN_PARAMONLY);
+
+        SRgnGetBoundingRectf(region, &result);
+        CHECK_THAT(result, MatchesRect({ 0.0f, 0.0f, 1.0f, 1.0f }));
     }
 }
 
@@ -427,6 +602,71 @@ TEST_CASE("SRgnGetRectParamsf", "[region]") {
         CHECK(numParams == 2);
         CHECK(buffer[0] == &param2);
         CHECK(buffer[1] == &param3);
+    }
+
+    SECTION("can have multiple params for same rect") {
+        RECTF rect1 = { 0, 0, 1, 1 };
+        RECTF queryRect = { 0, 0, 1, 1 };
+        int param1 = 5;
+        int param2 = 8;
+
+        SRgnCombineRectf(region, &rect1, &param1, SRGN_PARAMONLY);
+        SRgnCombineRectf(region, &rect1, &param2, SRGN_PARAMONLY);
+
+        uint32_t numParams = 0;
+        SRgnGetRectParamsf(region, &queryRect, &numParams, nullptr);
+        REQUIRE(numParams == 2);
+
+        void* buffer[2];
+        SRgnGetRectParamsf(region, &queryRect, &numParams, buffer);
+        CHECK(numParams == 2);
+        CHECK(buffer[0] == &param1);
+        CHECK(buffer[1] == &param2);
+    }
+
+    SECTION("can duplicate the same param") {
+        RECTF rect1 = { 0, 0, 1, 1 };
+        RECTF queryRect = { 0, 0, 1, 1 };
+        int param1 = 5;
+
+        SRgnCombineRectf(region, &rect1, &param1, SRGN_PARAMONLY);
+        SRgnCombineRectf(region, &rect1, &param1, SRGN_PARAMONLY);
+
+        uint32_t numParams = 0;
+        SRgnGetRectParamsf(region, &queryRect, &numParams, nullptr);
+        REQUIRE(numParams == 2);
+
+        void* buffer[2];
+        SRgnGetRectParamsf(region, &queryRect, &numParams, buffer);
+        CHECK(numParams == 2);
+        CHECK(buffer[0] == &param1);
+        CHECK(buffer[1] == &param1);
+    }
+
+    SECTION("orders params by sequence") {
+        RECTF rect1 = { 0, 0, 1, 1 };
+        RECTF queryRect = { 0, 0, 1, 1 };
+        int param1 = 11;
+        int param2 = 10;
+        int param3 = 5;
+        int param4 = 55;
+
+        SRgnCombineRectf(region, &rect1, &param1, SRGN_PARAMONLY);
+        SRgnCombineRectf(region, &rect1, &param2, SRGN_PARAMONLY);
+        SRgnCombineRectf(region, &rect1, &param3, SRGN_PARAMONLY);
+        SRgnCombineRectf(region, &rect1, &param4, SRGN_PARAMONLY);
+
+        uint32_t numParams = 0;
+        SRgnGetRectParamsf(region, &queryRect, &numParams, nullptr);
+        REQUIRE(numParams == 4);
+
+        void* buffer[4];
+        SRgnGetRectParamsf(region, &queryRect, &numParams, buffer);
+        CHECK(numParams == 4);
+        CHECK(buffer[0] == &param1);
+        CHECK(buffer[1] == &param2);
+        CHECK(buffer[2] == &param3);
+        CHECK(buffer[3] == &param4);
     }
 }
 
@@ -661,6 +901,12 @@ TEST_CASE("SRgnIsRectInRegionf", "[region]") {
 
 TEST_CASE("SRgnOffsetf", "[region]") {
     RgnDataTest region;
+
+    SECTION("does nothing when using an invalid region object") {
+        // doesn't crash
+        HSRGN inval = reinterpret_cast<HSRGN>(1234);
+        SRgnOffsetf(inval, 10.0f, 10.0f);
+    }
 
     SECTION("shifts rects by given amount") {
         RECTF rects[] = {
