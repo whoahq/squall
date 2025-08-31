@@ -2,76 +2,163 @@
 #include "storm/Memory.hpp"
 #include "test/Test.hpp"
 
-TEST_CASE("SStrChr", "[string]") {
-    auto string = "foobar";
+#include <type_traits>
+
+
+TEST_CASE("SStrChr const", "[string]") {
+    const char* string = "foobar";
+
+    static_assert(std::is_same<decltype(SStrChr(string, 'f')), const char*>::value, "Expect result to be const char*");
 
     SECTION("finds first character when it exists at start of string") {
-        auto result = SStrChr(string, 'f');
+        const char* result = SStrChr(string, 'f');
         REQUIRE(result == string);
     }
 
     SECTION("finds first character when it exists in middle of string") {
-        auto result = SStrChr(string, 'b');
+        const char* result = SStrChr(string, 'b');
         REQUIRE(result == string + 3);
     }
 
     SECTION("finds first character when it exists at end of string") {
-        auto result = SStrChr(string, 'r');
+        const char* result = SStrChr(string, 'r');
         REQUIRE(result == string + 5);
     }
 
     SECTION("returns nullptr when character does not exist in string") {
-        auto result = SStrChr(string, 'z');
+        const char* result = SStrChr(string, 'z');
         REQUIRE(result == nullptr);
     }
 
     SECTION("returns nullptr when string is empty") {
-        auto result = SStrChr("", 'z');
+        const char* result = SStrChr("", 'z');
         REQUIRE(result == nullptr);
     }
 
     SECTION("returns nullptr when character is 0") {
-        auto result = SStrChr(string, '\0');
+        const char* result = SStrChr(string, '\0');
+        REQUIRE(result == nullptr);
+    }
+}
+
+TEST_CASE("SStrChr", "[string]") {
+    char* string = "foobar";
+
+    static_assert(std::is_same<decltype(SStrChr(string, 'f')), char*>::value, "Expect result to be char*");
+
+    SECTION("finds first character when it exists at start of string") {
+        char* result = SStrChr(string, 'f');
+        REQUIRE(result == string);
+    }
+
+    SECTION("finds first character when it exists in middle of string") {
+        char* result = SStrChr(string, 'b');
+        REQUIRE(result == string + 3);
+    }
+
+    SECTION("finds first character when it exists at end of string") {
+        char* result = SStrChr(string, 'r');
+        REQUIRE(result == string + 5);
+    }
+
+    SECTION("returns nullptr when character does not exist in string") {
+        char* result = SStrChr(string, 'z');
+        REQUIRE(result == nullptr);
+    }
+
+    SECTION("returns nullptr when string is empty") {
+        char* string = "";
+        char* result = SStrChr(string, 'z');
+        REQUIRE(result == nullptr);
+    }
+
+    SECTION("returns nullptr when character is 0") {
+        char* result = SStrChr(string, '\0');
+        REQUIRE(result == nullptr);
+    }
+}
+
+TEST_CASE("SStrChrR const", "[string]") {
+    const char* string = "ffoobbaarr";
+
+    static_assert(std::is_same<decltype(SStrChrR(string, 'f')), const char*>::value, "Expect result to be const char*");
+
+    SECTION("finds last character when it exists at start of string") {
+        const char* result = SStrChrR(string, 'f');
+        REQUIRE(result == string + 1);
+    }
+
+    SECTION("finds last character when it exists in middle of string") {
+        const char* result = SStrChrR(string, 'b');
+        REQUIRE(result == string + 5);
+    }
+
+    SECTION("finds last character when it exists at end of string") {
+        const char* result = SStrChrR(string, 'r');
+        REQUIRE(result == string + 9);
+    }
+
+    SECTION("finds last character when it exists at start and end of string") {
+        const char* string = "ffoobbaarrff";
+        const char* result = SStrChrR(string, 'f');
+        REQUIRE(result == string + 11);
+    }
+
+    SECTION("returns nullptr when character does not exist in string") {
+        const char* result = SStrChrR(string, 'z');
+        REQUIRE(result == nullptr);
+    }
+
+    SECTION("returns nullptr when string is empty") {
+        const char* result = SStrChrR("", 'z');
+        REQUIRE(result == nullptr);
+    }
+
+    SECTION("returns nullptr when character is 0") {
+        const char* result = SStrChrR(string, '\0');
         REQUIRE(result == nullptr);
     }
 }
 
 TEST_CASE("SStrChrR", "[string]") {
-    auto string = "ffoobbaarr";
+    char* string = "ffoobbaarr";
+
+    static_assert(std::is_same<decltype(SStrChrR(string, 'f')), char*>::value, "Expect result to be char*");
 
     SECTION("finds last character when it exists at start of string") {
-        auto result = SStrChrR(string, 'f');
+        char* result = SStrChrR(string, 'f');
         REQUIRE(result == string + 1);
     }
 
     SECTION("finds last character when it exists in middle of string") {
-        auto result = SStrChrR(string, 'b');
+        char* result = SStrChrR(string, 'b');
         REQUIRE(result == string + 5);
     }
 
     SECTION("finds last character when it exists at end of string") {
-        auto result = SStrChrR(string, 'r');
+        char* result = SStrChrR(string, 'r');
         REQUIRE(result == string + 9);
     }
 
     SECTION("finds last character when it exists at start and end of string") {
-        auto string = "ffoobbaarrff";
-        auto result = SStrChrR(string, 'f');
+        char* string = "ffoobbaarrff";
+        char* result = SStrChrR(string, 'f');
         REQUIRE(result == string + 11);
     }
 
     SECTION("returns nullptr when character does not exist in string") {
-        auto result = SStrChrR(string, 'z');
+        char* result = SStrChrR(string, 'z');
         REQUIRE(result == nullptr);
     }
 
     SECTION("returns nullptr when string is empty") {
-        auto result = SStrChrR("", 'z');
+        char* string = "";
+        char* result = SStrChrR(string, 'z');
         REQUIRE(result == nullptr);
     }
 
     SECTION("returns nullptr when character is 0") {
-        auto result = SStrChrR(string, '\0');
+        char* result = SStrChrR(string, '\0');
         REQUIRE(result == nullptr);
     }
 }
