@@ -374,6 +374,13 @@ TEST_CASE("SStrPrintf", "[string]") {
         REQUIRE(!SStrCmp(dest, "wow"));
     }
 
+    SECTION("does nothing if maxchars is 0") {
+        char dest[10] = {};
+        auto length = SStrPrintf(dest, 0, "%d", 69);
+
+        REQUIRE(length == 0);
+        REQUIRE(!SStrCmp(dest, ""));
+    }
 }
 
 TEST_CASE("SStrStr", "[string]") {
@@ -591,6 +598,53 @@ TEST_CASE("SStrToInt", "[string]") {
     SECTION("converts string with two whitespace-separated numbers to int") {
         auto result = SStrToInt("123 456");
         REQUIRE(result == 123);
+    }
+}
+
+TEST_CASE("SStrToUnsigned", "[string]") {
+    SECTION("converts empty string to int") {
+        auto result = SStrToUnsigned("");
+        REQUIRE(result == 0);
+    }
+
+    SECTION("converts whitespace string to int") {
+        auto result = SStrToUnsigned(" ");
+        REQUIRE(result == 0);
+    }
+
+    SECTION("converts random characters to int") {
+        auto result = SStrToUnsigned("abcd");
+        REQUIRE(result == 0);
+    }
+
+    SECTION("converts string with positive number to int") {
+        auto result = SStrToUnsigned("123");
+        REQUIRE(result == 123);
+    }
+
+    SECTION("returns 0 if number is negative") {
+        auto result = SStrToUnsigned("-123");
+        REQUIRE(result == 0);
+    }
+
+    SECTION("converts string with zero to int") {
+        auto result = SStrToUnsigned("0");
+        REQUIRE(result == 0);
+    }
+
+    SECTION("converts string with leading zero to int") {
+        auto result = SStrToUnsigned("01");
+        REQUIRE(result == 1);
+    }
+
+    SECTION("converts string with two whitespace-separated numbers to int") {
+        auto result = SStrToUnsigned("123 456");
+        REQUIRE(result == 123);
+    }
+
+    SECTION("converts max unsigned int") {
+        auto result = SStrToUnsigned("4294967295");
+        REQUIRE(result == 4294967295u);
     }
 }
 
