@@ -7,7 +7,7 @@ void* SMemAlloc(size_t bytes, const char* filename, int32_t linenumber, uint32_t
 
     void* result;
 
-    if (flags & 0x8) {
+    if (flags & SMEM_FLAG_ZEROMEMORY) {
         result = calloc(1, alignedBytes);
     } else {
         result = malloc(alignedBytes);

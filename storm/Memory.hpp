@@ -4,12 +4,16 @@
 #include <cstdint>
 #include <cstdlib>
 
-void* SMemAlloc(size_t bytes, const char* filename, int32_t linenumber, uint32_t flags);
+
+#define SMEM_FLAG_ZEROMEMORY 8
+
+
+void* SMemAlloc(size_t bytes, const char* filename, int32_t linenumber, uint32_t flags = 0);
 
 void SMemFree(void* ptr);
 
-void SMemFree(void* ptr, const char* filename, int32_t linenumber, uint32_t flags);
+void SMemFree(void* ptr, const char* filename, int32_t linenumber, uint32_t flags = 0);
 
-void* SMemReAlloc(void* ptr, size_t bytes, const char* filename, int32_t linenumber, uint32_t flags);
+void* SMemReAlloc(void* ptr, size_t bytes, const char* filename, int32_t linenumber, uint32_t flags = 0);
 
 #endif
