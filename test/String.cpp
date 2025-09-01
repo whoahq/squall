@@ -44,7 +44,7 @@ TEST_CASE("SStrChr const", "[string]") {
 }
 
 TEST_CASE("SStrChr", "[string]") {
-    char* string = "foobar";
+    char string[] = "foobar";
 
     static_assert(std::is_same<decltype(SStrChr(string, 'f')), char*>::value, "Expect result to be char*");
 
@@ -69,7 +69,7 @@ TEST_CASE("SStrChr", "[string]") {
     }
 
     SECTION("returns nullptr when string is empty") {
-        char* string = "";
+        char string[] = "";
         char* result = SStrChr(string, 'z');
         REQUIRE(result == nullptr);
     }
@@ -123,7 +123,7 @@ TEST_CASE("SStrChrR const", "[string]") {
 }
 
 TEST_CASE("SStrChrR", "[string]") {
-    char* string = "ffoobbaarr";
+    char string[] = "ffoobbaarr";
 
     static_assert(std::is_same<decltype(SStrChrR(string, 'f')), char*>::value, "Expect result to be char*");
 
@@ -143,7 +143,7 @@ TEST_CASE("SStrChrR", "[string]") {
     }
 
     SECTION("finds last character when it exists at start and end of string") {
-        char* string = "ffoobbaarrff";
+        char string[] = "ffoobbaarrff";
         char* result = SStrChrR(string, 'f');
         REQUIRE(result == string + 11);
     }
@@ -154,7 +154,7 @@ TEST_CASE("SStrChrR", "[string]") {
     }
 
     SECTION("returns nullptr when string is empty") {
-        char* string = "";
+        char string[] = "";
         char* result = SStrChrR(string, 'z');
         REQUIRE(result == nullptr);
     }
@@ -537,7 +537,7 @@ TEST_CASE("SStrVPrintf", "[string]") {
 }
 
 TEST_CASE("SStrStr", "[string]") {
-    char* string = "foobar";
+    char string[] = "foobar";
 
     static_assert(std::is_same<decltype(SStrStr(string, "")), char*>::value, "Expect result to be char*");
 
@@ -567,7 +567,7 @@ TEST_CASE("SStrStr", "[string]") {
     }
 
     SECTION("returns nullptr when given empty string") {
-        char* string = "";
+        char string[] = "";
         char* substring = SStrStr(string, "bar");
         REQUIRE(substring == nullptr);
     }
@@ -610,7 +610,7 @@ TEST_CASE("SStrStr const", "[string]") {
 }
 
 TEST_CASE("SStrStrI", "[string]") {
-    char* string = "foobar";
+    char string[] = "foobar";
 
     static_assert(std::is_same<decltype(SStrStrI(string, "")), char*>::value, "Expect result to be char*");
 
@@ -640,7 +640,7 @@ TEST_CASE("SStrStrI", "[string]") {
     }
 
     SECTION("returns nullptr when given empty string") {
-        char* string = "";
+        char string[] = "";
         char* substring = SStrStrI(string, "bar");
         REQUIRE(substring == nullptr);
     }
