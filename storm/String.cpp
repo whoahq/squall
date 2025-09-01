@@ -640,11 +640,7 @@ void SStrTokenize(const char** string, char* buffer, size_t bufferchars, const c
     }
 }
 
-double SStrToDouble(const char* string) {
-    STORM_VALIDATE_BEGIN;
-    STORM_VALIDATE(string);
-    STORM_VALIDATE_END;
-
+static inline double ISStrToDouble(const char* string) {
     SStrInitialize();
 
     double result;
@@ -739,103 +735,20 @@ double SStrToDouble(const char* string) {
     return result;
 }
 
+double SStrToDouble(const char* string) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE_END;
+
+    return ISStrToDouble(string);
+}
+
 float SStrToFloat(const char* string) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE_END;
 
-    SStrInitialize();
-
-    double result;
-    bool negative = false;
-
-    if (*string == '-') {
-        negative = true;
-        string++;
-    }
-
-    double v16 = 10.0;
-    double v4 = 0.0;
-    uint32_t v5 = *string - '0';
-    const char* v6 = string;
-
-    if (v5 >= 10) {
-        v5 = 0;
-        result = static_cast<double>(v5);
-    } else {
-        string++;
-
-        uint32_t v8 = *string - '0';
-
-        if (v8 >= 10) {
-            result = static_cast<double>(v5);
-        } else {
-            do {
-                v5 = v8 + 10 * v5;
-                string++;
-
-                if (v5 >= 0x19999999) {
-                    v4 = v4 * pow(10.0, string - v6) + static_cast<double>(v5);
-                    v5 = 0;
-                    v6 = string;
-                }
-
-                v8 = *string - '0';
-            } while (v8 < 10);
-
-            if (v4 == 0.0) {
-                result = static_cast<double>(v5);
-            } else {
-                result = pow(10.0, string - v6) * v4 + static_cast<double>(v5);
-            }
-        }
-    }
-
-    if (*string == '.') {
-        string++;
-
-        uint32_t v23 = *string - '0';
-        int32_t v24 = 0;
-
-        if (v23 < 10) {
-            int32_t v25 = 0;
-            int32_t v26 = -1;
-            double v31;
-
-            do {
-                string++;
-
-                if (v24 < 20) {
-                    v31 = s_realDigit[0][v25 + v23];
-                } else {
-                    v31 = pow(v16, v26) * v23;
-                }
-
-                result += v31;
-
-                v23 = *string - '0';
-                v24++;
-                v26--;
-                v25 += 10;
-            } while (v23 < 10);
-        }
-    }
-
-    if (*string == 'e' || *string == 'E') {
-        const char* v32 = string + 1;
-
-        if (*v32 == '+') {
-            v32++;
-        }
-
-        result *= pow(10.0, SStrToInt(v32));
-    }
-
-    if (negative) {
-        result = -result;
-    }
-
-    return static_cast<float>(result);
+    return static_cast<float>(ISStrToDouble(string));
 }
 
 int32_t SStrToInt(const char* string) {
