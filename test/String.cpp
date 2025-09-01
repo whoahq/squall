@@ -436,32 +436,64 @@ TEST_CASE("SStrVPrintf", "[string]") {
 }
 
 TEST_CASE("SStrStr", "[string]") {
-    auto string = "foobar";
+    char* string = "foobar";
+
+    static_assert(std::is_same<decltype(SStrStr(string, "")), char*>::value, "Expect result to be char*");
 
     SECTION("finds substring when it exists at end of string") {
-        auto search = "bar";
-        auto substring = SStrStr(string, search);
+        char* substring = SStrStr(string, "bar");
         REQUIRE(substring == string + 3);
     }
 
     SECTION("finds substring when it exists at start of string") {
-        auto search = "foo";
-        auto substring = SStrStr(string, search);
+        char* substring = SStrStr(string, "foo");
         REQUIRE(substring == string);
     }
 
     SECTION("finds substring when search is empty") {
-        auto substring = SStrStr(string, "");
+        char* substring = SStrStr(string, "");
         REQUIRE(substring == string);
     }
 
     SECTION("returns nullptr when search does not exist in string") {
-        auto substring = SStrStr(string, "xyzzy");
+        char* substring = SStrStr(string, "xyzzy");
         REQUIRE(substring == nullptr);
     }
 
     SECTION("returns nullptr when given empty string") {
-        auto substring = SStrStr("", "bar");
+        char* string = "";
+        char* substring = SStrStr(string, "bar");
+        REQUIRE(substring == nullptr);
+    }
+}
+
+TEST_CASE("SStrStr const", "[string]") {
+    const char* string = "foobar";
+
+    static_assert(std::is_same<decltype(SStrStr(string, "")), const char*>::value, "Expect result to be const char*");
+
+    SECTION("finds substring when it exists at end of string") {
+        const char* substring = SStrStr(string, "bar");
+        REQUIRE(substring == string + 3);
+    }
+
+    SECTION("finds substring when it exists at start of string") {
+        const char* substring = SStrStr(string, "foo");
+        REQUIRE(substring == string);
+    }
+
+    SECTION("finds substring when search is empty") {
+        const char* substring = SStrStr(string, "");
+        REQUIRE(substring == string);
+    }
+
+    SECTION("returns nullptr when search does not exist in string") {
+        const char* substring = SStrStr(string, "xyzzy");
+        REQUIRE(substring == nullptr);
+    }
+
+    SECTION("returns nullptr when given empty string") {
+        const char* substring = SStrStr("", "bar");
         REQUIRE(substring == nullptr);
     }
 }
