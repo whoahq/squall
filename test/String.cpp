@@ -440,6 +440,11 @@ TEST_CASE("SStrStr", "[string]") {
 
     static_assert(std::is_same<decltype(SStrStr(string, "")), char*>::value, "Expect result to be char*");
 
+    SECTION("is case sensitive") {
+        char* substring = SStrStr(string, "OOBA");
+        REQUIRE(substring == nullptr);
+    }
+
     SECTION("finds substring when it exists at end of string") {
         char* substring = SStrStr(string, "bar");
         REQUIRE(substring == string + 3);
@@ -472,6 +477,11 @@ TEST_CASE("SStrStr const", "[string]") {
 
     static_assert(std::is_same<decltype(SStrStr(string, "")), const char*>::value, "Expect result to be const char*");
 
+    SECTION("is case sensitive") {
+        const char* substring = SStrStr(string, "OOBA");
+        REQUIRE(substring == nullptr);
+    }
+
     SECTION("finds substring when it exists at end of string") {
         const char* substring = SStrStr(string, "bar");
         REQUIRE(substring == string + 3);
@@ -494,6 +504,79 @@ TEST_CASE("SStrStr const", "[string]") {
 
     SECTION("returns nullptr when given empty string") {
         const char* substring = SStrStr("", "bar");
+        REQUIRE(substring == nullptr);
+    }
+}
+
+TEST_CASE("SStrStrI", "[string]") {
+    char* string = "foobar";
+
+    static_assert(std::is_same<decltype(SStrStrI(string, "")), char*>::value, "Expect result to be char*");
+
+    SECTION("is case insensitive") {
+        char* substring = SStrStrI(string, "OOBA");
+        REQUIRE(substring == string + 1);
+    }
+
+    SECTION("finds substring when it exists at end of string") {
+        char* substring = SStrStrI(string, "bar");
+        REQUIRE(substring == string + 3);
+    }
+
+    SECTION("finds substring when it exists at start of string") {
+        char* substring = SStrStrI(string, "foo");
+        REQUIRE(substring == string);
+    }
+
+    SECTION("finds substring when search is empty") {
+        char* substring = SStrStrI(string, "");
+        REQUIRE(substring == string);
+    }
+
+    SECTION("returns nullptr when search does not exist in string") {
+        char* substring = SStrStrI(string, "xyzzy");
+        REQUIRE(substring == nullptr);
+    }
+
+    SECTION("returns nullptr when given empty string") {
+        char* string = "";
+        char* substring = SStrStrI(string, "bar");
+        REQUIRE(substring == nullptr);
+    }
+}
+
+TEST_CASE("SStrStrI const", "[string]") {
+    const char* string = "foobar";
+
+    static_assert(std::is_same<decltype(SStrStrI(string, "")), const char*>::value, "Expect result to be const char*");
+
+    SECTION("is case insensitive") {
+        const char* substring = SStrStrI(string, "OOBA");
+        REQUIRE(substring == string + 1);
+    }
+
+    SECTION("finds substring when it exists at end of string") {
+        const char* substring = SStrStrI(string, "bar");
+        REQUIRE(substring == string + 3);
+    }
+
+    SECTION("finds substring when it exists at start of string") {
+        const char* substring = SStrStrI(string, "foo");
+        REQUIRE(substring == string);
+    }
+
+    SECTION("finds substring when search is empty") {
+        const char* substring = SStrStrI(string, "");
+        REQUIRE(substring == string);
+    }
+
+    SECTION("returns nullptr when search does not exist in string") {
+        const char* substring = SStrStrI(string, "xyzzy");
+        REQUIRE(substring == nullptr);
+    }
+
+    SECTION("returns nullptr when given empty string") {
+        const char* substring = SStrStrI("", "bar");
         REQUIRE(substring == nullptr);
     }
 }

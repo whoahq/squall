@@ -498,6 +498,38 @@ const char* SStrStr(const char* string, const char* search) {
     return nullptr;
 }
 
+char* SStrStrI(char* string, const char* search) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE(search);
+    STORM_VALIDATE_END;
+
+    size_t searchLength = SStrLen(search);
+
+    for (; *string; string++) {
+        if (!SStrCmpI(string, search, searchLength)) {
+            return string;
+        }
+    }
+    return nullptr;
+}
+
+const char* SStrStrI(const char* string, const char* search) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE(search);
+    STORM_VALIDATE_END;
+
+    size_t searchLength = SStrLen(search);
+
+    for (; *string; string++) {
+        if (!SStrCmpI(string, search, searchLength)) {
+            return string;
+        }
+    }
+    return nullptr;
+}
+
 void SStrTokenize(const char** string, char* buffer, size_t bufferchars, const char* whitespace, int32_t* quoted) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
