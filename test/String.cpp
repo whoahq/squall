@@ -247,6 +247,107 @@ TEST_CASE("SStrDupA", "[string]") {
     }
 }
 
+struct TestHash {
+    const char *str;
+    uint32_t hash;
+};
+
+TEST_CASE("SStrHash", "[string]") {
+    SECTION("hashes strings with case insensitivity") {
+        // Results obtained by directly calling Starcraft 1.17's SStrHash
+        auto testcase = GENERATE(
+            TestHash{ "bloop bloop", 0x3EB42E62 },
+            TestHash{ "BLOOP bloop", 0x3EB42E62 },
+            TestHash{ "Objects\\CameraHelper\\CameraHelper.mdx", 0xE99A51F5 },
+            TestHash{ "Objects/CameraHelper/CameraHelper.mdx", 0xE99A51F5 },
+            TestHash{ "abcdefghijklmnopqrstuvwxyz", 0x29564240 },
+            TestHash{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0x29564240 },
+            TestHash{ "123456789~!@#$%^&*()_+`-=[]{}|;':\",.<>?", 0x54E31141 },
+            TestHash{ "/", 0x57EC56C7 },
+            TestHash{ "\\", 0x57EC56C7 },
+            TestHash{ "\r\n\t ", 0x89351E43 }
+        );
+
+        auto hash = SStrHash(testcase.str);
+        CHECK(hash == testcase.hash);
+    }
+
+    SECTION("hashes strings with case sensitivity") {
+        // Results obtained by directly calling Starcraft 1.17's SStrHash
+        auto testcase = GENERATE(
+            TestHash{ "bloop bloop", 0x4E7D519E },
+            TestHash{ "BLOOP bloop", 0x307459CC },
+            TestHash{ "Objects\\CameraHelper\\CameraHelper.mdx", 0x5202C0C5 },
+            TestHash{ "Objects/CameraHelper/CameraHelper.mdx", 0x58BD40A9 },
+            TestHash{ "abcdefghijklmnopqrstuvwxyz", 0xEF065306 },
+            TestHash{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0x29564240 },
+            TestHash{ "123456789~!@#$%^&*()_+`-=[]{}|;':\",.<>?", 0x54E31141 },
+            TestHash{ "/", 0x93912757 },
+            TestHash{ "\\", 0x57EC56C7 },
+            TestHash{ "\r\n\t ", 0x89351E43 }
+        );
+
+        auto hash = SStrHash(testcase.str, SSTR_HASH_CASESENSITIVE);
+        CHECK(hash == testcase.hash);
+    }
+
+    SECTION("hashes strings with fixed seeds case insensitive") {
+        // Results obtained by directly calling Starcraft 1.17's SStrHash
+        auto testcase = GENERATE(
+            TestHash{ "bloop bloop", 0xDD85B006 },
+            TestHash{ "BLOOP bloop", 0xDD85B006 },
+            TestHash{ "Objects\\CameraHelper\\CameraHelper.mdx", 0x0EA7F863 },
+            TestHash{ "Objects/CameraHelper/CameraHelper.mdx", 0x0EA7F863 },
+            TestHash{ "abcdefghijklmnopqrstuvwxyz", 0x4BAB46BC },
+            TestHash{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0x4BAB46BC },
+            TestHash{ "123456789~!@#$%^&*()_+`-=[]{}|;':\",.<>?", 0x2A52D7D3 },
+            TestHash{ "/", 0xD7DED775 },
+            TestHash{ "\\", 0xD7DED775 },
+            TestHash{ "\r\n\t ", 0xC0038449 }
+        );
+
+        auto hash = SStrHash(testcase.str, 0, 123);
+        CHECK(hash == testcase.hash);
+    }
+
+    SECTION("hashes strings with fixed seeds case sensitive") {
+        // Results obtained by directly calling Starcraft 1.17's SStrHash
+        auto testcase = GENERATE(
+            TestHash{ "bloop bloop", 0x96187662 },
+            TestHash{ "BLOOP bloop", 0xC421E888 },
+            TestHash{ "Objects\\CameraHelper\\CameraHelper.mdx", 0x625F6763 },
+            TestHash{ "Objects/CameraHelper/CameraHelper.mdx", 0xC2A7DFE7 },
+            TestHash{ "abcdefghijklmnopqrstuvwxyz", 0x4018029E },
+            TestHash{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0x4BAB46BC },
+            TestHash{ "123456789~!@#$%^&*()_+`-=[]{}|;':\",.<>?", 0x2A52D7D3 },
+            TestHash{ "/", 0x13A3A6E5 },
+            TestHash{ "\\", 0xD7DED775 },
+            TestHash{ "\r\n\t ", 0xC0038449 }
+        );
+
+        auto hash = SStrHash(testcase.str, SSTR_HASH_CASESENSITIVE, 123);
+        CHECK(hash == testcase.hash);
+    }
+
+    SECTION("hashing empty string with seed of 0 gives default seed") {
+        auto hash = SStrHash("", 0, 0);
+        CHECK(hash == 0x7FED7FED);
+
+        hash = SStrHash("", SSTR_HASH_CASESENSITIVE, 0);
+        CHECK(hash == 0x7FED7FED);
+    }
+
+    SECTION("hashing empty string with custom seed returns that seed") {
+        auto seed = GENERATE(1, 123, 0x7FED7FED, 0xFFFFFFFF);
+
+        auto hash = SStrHash("", 0, seed);
+        CHECK(hash == seed);
+
+        hash = SStrHash("", SSTR_HASH_CASESENSITIVE, seed);
+        CHECK(hash == seed);
+    }
+}
+
 TEST_CASE("SStrHashHT", "[string]") {
     SECTION("hashes simple string correctly") {
         auto hash = SStrHashHT("foo");

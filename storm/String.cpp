@@ -50,6 +50,13 @@ int32_t s_initialized;
 
 double s_realDigit[20][10];
 
+const uint32_t s_hashtable[16] = {
+    0x486E26EE, 0xDCAA16B3, 0xE1918EEF, 0x202DAFDB,
+    0x341C7DC7, 0x1C365303, 0x40EF2D37, 0x65FD5E49,
+    0xD6057177, 0x904ECE93, 0x1C38024F, 0x98FD323B,
+    0xE3061AE7, 0xA39B0FA1, 0x9797F25F, 0xE4444563,
+};
+
 void GetNextTextUpper(uint32_t* orig, const char** string, uint32_t* upper) {
     uint8_t byte = **string;
     int32_t v3 = bytesFromUTF8[byte];
@@ -347,6 +354,42 @@ char* SStrDupA(const char* string, const char* filename, uint32_t linenumber) {
     memcpy(dup, string, len);
 
     return dup;
+}
+
+uint32_t SStrHash(const char* string, uint32_t flags, uint32_t seed) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE_END;
+
+    uint32_t result = seed ? seed : 0x7FED7FED;
+    uint32_t adjust = 0xEEEEEEEE;
+    uint32_t ch;
+
+    if (flags & SSTR_HASH_CASESENSITIVE) {
+        for (; *string; string++) {
+            ch = *string;
+
+            result = (s_hashtable[ch / 16] - s_hashtable[ch % 16]) ^ (adjust + result);
+            adjust = 33 * adjust + result + ch + 3;
+        }
+    }
+    else {
+        for (; *string; string++) {
+            ch = *string;
+
+            if (ch >= 'a' && ch <= 'z') {
+                ch -= 32;
+            }
+
+            if (ch == '/') {
+                ch = '\\';
+            }
+
+            result = (s_hashtable[ch / 16] - s_hashtable[ch % 16]) ^ (adjust + result);
+            adjust = 33 * adjust + result + ch + 3;
+        }
+    }
+    return result ? result : 1;
 }
 
 uint32_t SStrHashHT(const char* string) {
