@@ -40,6 +40,10 @@ char* SStrStr(char* string, const char* search);
 
 const char* SStrStr(const char* string, const char* search);
 
+char* SStrStrI(char* string, const char* search);
+
+const char* SStrStrI(const char* string, const char* search);
+
 void SStrTokenize(const char** string, char* buffer, size_t bufferchars, const char* whitespace, int32_t* quoted);
 
 double SStrToDouble(const char* string);
