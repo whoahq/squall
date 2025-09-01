@@ -36,6 +36,8 @@ size_t SStrPrintf(char* dest, size_t maxchars, const char* format, ...);
 
 size_t SStrVPrintf(char* dest, size_t maxchars, const char* format, va_list arglist);
 
+char* SStrStr(char* string, const char* search);
+
 const char* SStrStr(const char* string, const char* search);
 
 void SStrTokenize(const char** string, char* buffer, size_t bufferchars, const char* whitespace, int32_t* quoted);

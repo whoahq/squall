@@ -466,33 +466,36 @@ size_t SStrVPrintf(char* dest, size_t maxchars, const char* format, va_list argl
     return ISStrVPrintf(dest, maxchars, format, arglist);
 }
 
+char* SStrStr(char* string, const char* search) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE(search);
+    STORM_VALIDATE_END;
+
+    size_t searchLength = SStrLen(search);
+
+    for (; *string; string++) {
+        if (!SStrCmp(string, search, searchLength)) {
+            return string;
+        }
+    }
+    return nullptr;
+}
+
 const char* SStrStr(const char* string, const char* search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE(search);
     STORM_VALIDATE_END;
 
-    if (!*string) {
-        return nullptr;
-    }
+    size_t searchLength = SStrLen(search);
 
-    auto searchEnd = search;
-    while (*searchEnd) {
-        searchEnd++;
-    }
-    size_t searchLength = searchEnd - search;
-
-    auto substring = string;
-
-    while (SStrCmp(substring, search, searchLength)) {
-        substring++;
-
-        if (!*substring) {
-            return nullptr;
+    for (; *string; string++) {
+        if (!SStrCmp(string, search, searchLength)) {
+            return string;
         }
     }
-
-    return substring;
+    return nullptr;
 }
 
 void SStrTokenize(const char** string, char* buffer, size_t bufferchars, const char* whitespace, int32_t* quoted) {
