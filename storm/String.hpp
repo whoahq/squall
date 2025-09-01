@@ -1,6 +1,7 @@
 #ifndef STORM_STRING_HPP
 #define STORM_STRING_HPP
 
+#include <cstdarg>
 #include <cstdint>
 #include <cstdlib>
 
@@ -32,6 +33,8 @@ void SStrLower(char* string);
 uint32_t SStrPack(char* dest, const char* source, uint32_t destsize);
 
 size_t SStrPrintf(char* dest, size_t maxchars, const char* format, ...);
+
+size_t SStrVPrintf(char* dest, size_t maxchars, const char* format, va_list arglist);
 
 const char* SStrStr(const char* string, const char* search);
 
