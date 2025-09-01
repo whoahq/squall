@@ -3,6 +3,7 @@
 #include "test/Test.hpp"
 
 #include <cfloat>
+#include <cstdarg>
 #include <type_traits>
 
 
@@ -378,6 +379,56 @@ TEST_CASE("SStrPrintf", "[string]") {
     SECTION("does nothing if maxchars is 0") {
         char dest[10] = {};
         auto length = SStrPrintf(dest, 0, "%d", 69);
+
+        REQUIRE(length == 0);
+        REQUIRE(!SStrCmp(dest, ""));
+    }
+}
+
+static size_t CallSStrVPrintf(char* dest, size_t maxchars, const char* format, ...) {
+    va_list va;
+    va_start(va, format);
+    auto length = SStrVPrintf(dest, maxchars, format, va);
+    va_end(va);
+    return length;
+}
+
+TEST_CASE("SStrVPrintf", "[string]") {
+    SECTION("fills dest with formatted string") {
+        char dest[100] = {};
+        auto length = CallSStrVPrintf(dest, sizeof(dest), "%s - %s", "foo", "bar");
+
+        REQUIRE(length == 9);
+        REQUIRE(!SStrCmp(dest, "foo - bar"));
+    }
+
+    SECTION("fills dest with int") {
+        char dest[100] = {};
+        auto length = CallSStrVPrintf(dest, sizeof(dest), "%d", 69);
+
+        REQUIRE(length == 2);
+        REQUIRE(!SStrCmp(dest, "69"));
+    }
+
+    SECTION("fills dest with empty string") {
+        char dest[100] = {};
+        auto length = CallSStrVPrintf(dest, sizeof(dest), "");
+
+        REQUIRE(length == 0);
+        REQUIRE(!SStrCmp(dest, ""));
+    }
+
+    SECTION("truncates when dest size is not large enough") {
+        char dest[4] = {};
+        auto length = CallSStrVPrintf(dest, sizeof(dest), "%s", "wowzers");
+
+        REQUIRE(length == 3);
+        REQUIRE(!SStrCmp(dest, "wow"));
+    }
+
+    SECTION("does nothing if maxchars is 0") {
+        char dest[10] = {};
+        auto length = CallSStrVPrintf(dest, 0, "%d", 69);
 
         REQUIRE(length == 0);
         REQUIRE(!SStrCmp(dest, ""));

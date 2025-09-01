@@ -176,7 +176,7 @@ void InitializeFloatDigits() {
     }
 }
 
-size_t ISStrVPrintf(const char* format, va_list va, char* dest, size_t maxchars) {
+size_t ISStrVPrintf(char* dest, size_t maxchars, const char* format, va_list va) {
     if (!maxchars) {
         return 0;
     }
@@ -454,7 +454,16 @@ size_t SStrPrintf(char* dest, size_t maxchars, const char* format, ...) {
     STORM_VALIDATE(format);
     STORM_VALIDATE_END;
 
-    return ISStrVPrintf(format, va, dest, maxchars);
+    return ISStrVPrintf(dest, maxchars, format, va);
+}
+
+size_t SStrVPrintf(char* dest, size_t maxchars, const char* format, va_list arglist) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(dest);
+    STORM_VALIDATE(format);
+    STORM_VALIDATE_END;
+
+    return ISStrVPrintf(dest, maxchars, format, arglist);
 }
 
 const char* SStrStr(const char* string, const char* search) {
