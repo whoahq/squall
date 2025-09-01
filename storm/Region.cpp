@@ -460,6 +460,7 @@ void SRgnDelete(HSRGN handle) {
 }
 
 void SRgnDuplicate(HSRGN origHandle, HSRGN* handle, uint32_t reserved) {
+#if defined(WHOA_STORM_C_CRIT_SECT_RECURSIVE)
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
     *handle = nullptr;
@@ -475,18 +476,16 @@ void SRgnDuplicate(HSRGN origHandle, HSRGN* handle, uint32_t reserved) {
         return;
     }
 
-#if defined(WHOA_STORM_C_CRIT_SECT_RECURSIVE)
     HLOCKEDRGN newlockedhandle;
 
     auto newrgn = s_rgntable.NewLock(handle, &newlockedhandle);
     *newrgn = *rgn;
-    s_rgntable.Unlock(newlockedhandle);
-#else
-    auto newrgn = s_rgntable.New(handle);
-    *newrgn = *rgn;
-#endif
 
+    s_rgntable.Unlock(newlockedhandle);
     s_rgntable.Unlock(origlockedhandle);
+#else
+    STORM_ASSERT_FATAL(!"SRgnDuplicate is not implemented in this build");
+#endif
 }
 
 void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect) {

@@ -451,6 +451,7 @@ TEST_CASE("SRgnDelete", "[region]") {
     }
 }
 
+#if defined(WHOA_STORM_C_CRIT_SECT_RECURSIVE)
 TEST_CASE("SRgnDuplicate", "[region]") {
     RgnDataTest region;
     RECTF baseRect = { -1.0f, 1.0f, 1.0f, 2.0f };
@@ -503,6 +504,7 @@ TEST_CASE("SRgnDuplicate", "[region]") {
         CHECK(newrgn == nullptr);
     }
 }
+#endif
 
 TEST_CASE("SRgnGetBoundingRectf", "[region]") {
     RgnDataTest region;
