@@ -4,7 +4,7 @@
 class HASHKEY_PTR {
     public:
     // Member variables
-    void* m_key;
+    void* m_key = nullptr;
 
     // Member functions
     bool operator==(const HASHKEY_PTR& key);
@@ -13,7 +13,7 @@ class HASHKEY_PTR {
 class HASHKEY_STR {
     public:
     // Member variables
-    char* m_str;
+    char* m_str = nullptr;
 
     // Member functions
     ~HASHKEY_STR();
