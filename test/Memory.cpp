@@ -103,3 +103,21 @@ TEST_CASE("SMemReAlloc", "[memory]") {
         SMemFree(ptr2);
     }
 }
+
+TEST_CASE("SMemZero", "[memory]") {
+    std::vector<uint8_t> data = { 1, 255, 128, 42, 69, 99, 13, 37 };
+
+    SECTION("zeroes out memory") {
+        std::vector<uint8_t> result = { 0, 0, 0, 0, 0, 99, 13, 37 };
+        SMemZero(data.data(), 5);
+
+        CHECK_THAT(data, Catch::Matchers::Equals(result));
+    }
+
+    SECTION("does nothing if size is 0") {
+        std::vector<uint8_t> change = data;
+        SMemZero(change.data(), 0);
+
+        CHECK_THAT(change, Catch::Matchers::Equals(data));
+    }
+}

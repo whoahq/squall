@@ -18,4 +18,6 @@ void SMemFree(void* ptr, const char* filename, int32_t linenumber, uint32_t flag
 
 void* SMemReAlloc(void* ptr, size_t bytes, const char* filename, int32_t linenumber, uint32_t flags = 0);
 
+void SMemZero(void* ptr, size_t bytes);
+
 #endif
