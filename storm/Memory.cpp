@@ -2,7 +2,9 @@
 
 #include <cstring>
 
+
 constexpr size_t ALIGNMENT = 8;
+
 
 void* SMemAlloc(size_t bytes, const char* filename, int32_t linenumber, uint32_t flags) {
     size_t alignedBytes = (bytes + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1);
@@ -23,6 +25,10 @@ void* SMemAlloc(size_t bytes, const char* filename, int32_t linenumber, uint32_t
     }
 }
 
+void SMemCopy(void* dst, void* src, size_t bytes) {
+    memmove(dst, src, bytes);
+}
+
 void SMemFill(void* ptr, size_t bytes, uint8_t value) {
     memset(ptr, value, bytes);
 }
@@ -37,6 +43,10 @@ void SMemFree(void* ptr, const char* filename, int32_t linenumber, uint32_t flag
     if (ptr) {
         free(ptr);
     }
+}
+
+void SMemMove(void* dst, void* src, size_t bytes) {
+    memmove(dst, src, bytes);
 }
 
 void* SMemReAlloc(void* ptr, size_t bytes, const char* filename, int32_t linenumber, uint32_t flags) {

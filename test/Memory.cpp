@@ -3,6 +3,7 @@
 
 #include <cstring>
 #include <numeric>
+#include <vector>
 
 
 TEST_CASE("SMemAlloc", "[memory]") {
@@ -27,6 +28,38 @@ TEST_CASE("SMemAlloc", "[memory]") {
         void* ptr = SMemAlloc(0, __FILE__, __LINE__);
         REQUIRE(ptr != nullptr);
         SMemFree(ptr);
+    }
+}
+
+TEST_CASE("SMemCopy", "[memory]") {
+    std::vector<uint8_t> data = { 1, 255, 128, 42, 69, 99, 13, 37 };
+
+    SECTION("copies memory") {
+        std::vector<uint8_t> dest(8);
+        SMemCopy(dest.data(), data.data(), 8);
+
+        CHECK_THAT(dest, Catch::Matchers::Equals(data));
+    }
+
+    SECTION("copies nothing if size is 0") {
+        std::vector<uint8_t> dest(8);
+        SMemCopy(dest.data(), data.data(), 0);
+
+        CHECK(std::accumulate(dest.begin(), dest.end(), 0u) == 0);
+    }
+
+    SECTION("copies overlapping memory right") {
+        std::vector<uint8_t> result = { 1, 255, 1, 255, 128, 42, 13, 37 };
+        SMemCopy(data.data() + 2, data.data(), 4);
+
+        CHECK_THAT(data, Catch::Matchers::Equals(result));
+    }
+
+    SECTION("copies overlapping memory left") {
+        std::vector<uint8_t> result = { 1, 255, 69, 99, 13, 37, 13, 37 };
+        SMemCopy(data.data() + 2, data.data() + 4, 4);
+
+        CHECK_THAT(data, Catch::Matchers::Equals(result));
     }
 }
 
@@ -60,6 +93,38 @@ TEST_CASE("SMemFree", "[memory]") {
 TEST_CASE("SMemFree full args", "[memory]") {
     SECTION("does nothing on nullptr") {
         CHECK_NOTHROW(SMemFree(nullptr, __FILE__, __LINE__));
+    }
+}
+
+TEST_CASE("SMemMove", "[memory]") {
+    std::vector<uint8_t> data = { 1, 255, 128, 42, 69, 99, 13, 37 };
+
+    SECTION("copies memory") {
+        std::vector<uint8_t> dest(8);
+        SMemMove(dest.data(), data.data(), 8);
+
+        CHECK_THAT(dest, Catch::Matchers::Equals(data));
+    }
+
+    SECTION("copies nothing if size is 0") {
+        std::vector<uint8_t> dest(8);
+        SMemMove(dest.data(), data.data(), 0);
+
+        CHECK(std::accumulate(dest.begin(), dest.end(), 0u) == 0);
+    }
+
+    SECTION("copies overlapping memory right") {
+        std::vector<uint8_t> result = { 1, 255, 1, 255, 128, 42, 13, 37 };
+        SMemMove(data.data() + 2, data.data(), 4);
+
+        CHECK_THAT(data, Catch::Matchers::Equals(result));
+    }
+
+    SECTION("copies overlapping memory left") {
+        std::vector<uint8_t> result = { 1, 255, 69, 99, 13, 37, 13, 37 };
+        SMemMove(data.data() + 2, data.data() + 4, 4);
+
+        CHECK_THAT(data, Catch::Matchers::Equals(result));
     }
 }
 
