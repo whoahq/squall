@@ -23,6 +23,8 @@ class CSRWLock {
 #endif
 
     // Member functions
+    CSRWLock();
+    ~CSRWLock();
     void Enter(int32_t forwriting);
     void Leave(int32_t fromwriting);
 };

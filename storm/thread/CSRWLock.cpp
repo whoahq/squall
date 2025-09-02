@@ -1,5 +1,27 @@
 #include "storm/thread/CSRWLock.hpp"
 
+CSRWLock::CSRWLock() {
+#if defined(WHOA_SYSTEM_WIN)
+    // TODO
+    SRWLock::SURWLockInitialize(&this->m_opaqueData);
+#endif
+
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+    pthread_rwlock_init(&this->m_lock, nullptr);
+#endif
+}
+
+CSRWLock::~CSRWLock() {
+#if defined(WHOA_SYSTEM_WIN)
+    SRWLock::SURWLockDelete(&this->m_opaqueData);
+    // TODO
+#endif
+
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+    pthread_rwlock_destroy(&this->m_lock);
+#endif
+}
+
 void CSRWLock::Enter(int32_t forwriting) {
 #if defined(WHOA_SYSTEM_WIN)
     SRWLock::SURWLockEnter(&this->m_opaqueData, forwriting);
