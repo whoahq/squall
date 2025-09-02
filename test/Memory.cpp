@@ -30,6 +30,27 @@ TEST_CASE("SMemAlloc", "[memory]") {
     }
 }
 
+TEST_CASE("SMemFill", "[memory]") {
+    std::vector<uint8_t> data = { 1, 255, 128, 42, 69, 99, 13, 37 };
+
+    SECTION("replaces bytes") {
+        std::vector<uint8_t> result1(8, 255);
+        SMemFill(data.data(), 8, 255);
+        CHECK_THAT(data, Catch::Matchers::Equals(result1));
+
+        std::vector<uint8_t> result2 = { 0, 0, 0, 0, 0, 255, 255, 255 };
+        SMemFill(data.data(), 5, 0);
+        CHECK_THAT(data, Catch::Matchers::Equals(result2));
+    }
+
+    SECTION("does nothing if size is 0") {
+        std::vector<uint8_t> changedata = data;
+        SMemFill(changedata.data(), 0, 255);
+
+        CHECK_THAT(changedata, Catch::Matchers::Equals(data));
+    }
+}
+
 TEST_CASE("SMemFree", "[memory]") {
     SECTION("does nothing on nullptr") {
         CHECK_NOTHROW(SMemFree(nullptr));
