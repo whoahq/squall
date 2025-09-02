@@ -8,8 +8,8 @@ class CSBasePriorityQueue;
 class CSBasePriority {
     public:
     // Member variables
-    CSBasePriorityQueue* m_queue;
-    uint32_t m_index;
+    CSBasePriorityQueue* m_queue = nullptr;
+    uint32_t m_index = 0;
 
     // Member functions
     virtual bool Compare(CSBasePriority* a) = 0;
