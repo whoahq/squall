@@ -70,3 +70,10 @@ void* SMemReAlloc(void* ptr, size_t bytes, const char* filename, int32_t linenum
         return nullptr;
     }
 }
+
+void SMemZero(void* ptr, size_t bytes) {
+    uint8_t* ptrdata = static_cast<uint8_t*>(ptr);
+    for (size_t i = 0; i < bytes; i++) {
+        ptrdata[i] = 0;
+    }
+}
