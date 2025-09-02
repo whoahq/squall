@@ -94,17 +94,13 @@ T* TSHashTable<T, TKey>::Head() {
 template <class T, class TKey>
 void TSHashTable<T, TKey>::Initialize() {
     this->m_slotmask = 3;
-    this->m_slotlistarray.SetCount(4);
+    this->m_slotlistarray.SetCount(this->m_slotmask + 1);
 
-    int32_t linkOfs = this->GetLinkOffset();
-    uint32_t v3 = 0;
-    STORM_EXPLICIT_LIST(T, m_linktoslot)* v4;
+    auto linkOffset = this->GetLinkOffset();
 
-    do {
-        v4 = &this->m_slotlistarray[v3];
-        v4->ChangeLinkOffset(linkOfs);
-        ++v3;
-    } while (v3 < this->m_slotmask);
+    for (uint32_t slot = 0; slot <= this->m_slotmask; slot++) {
+        this->m_slotlistarray[slot].ChangeLinkOffset(linkOffset);
+    }
 }
 
 template <class T, class TKey>
