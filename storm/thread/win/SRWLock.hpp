@@ -19,6 +19,8 @@ class SRWLock {
     // Static functions
     static void SUNNLockEnter(volatile SUNNLOCK* sunnlock);
     static void SUNNLockLeave(volatile SUNNLOCK* sunnlock);
+    static void SURWLockInitialize(volatile SURWLOCK* surwlock);
+    static void SURWLockDelete(volatile SURWLOCK* surwlock);
     static void SURWLockEnter(volatile SURWLOCK* surwlock, int32_t forwriting);
     static void SURWLockLeave(volatile SURWLOCK* surwlock, int32_t fromwriting);
 };
