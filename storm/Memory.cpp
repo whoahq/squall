@@ -1,5 +1,7 @@
 #include "storm/Memory.hpp"
 
+#include <cstring>
+
 constexpr size_t ALIGNMENT = 8;
 
 void* SMemAlloc(size_t bytes, const char* filename, int32_t linenumber, uint32_t flags) {
@@ -19,6 +21,10 @@ void* SMemAlloc(size_t bytes, const char* filename, int32_t linenumber, uint32_t
         // TODO handle errors
         return nullptr;
     }
+}
+
+void SMemFill(void* ptr, size_t bytes, uint8_t value) {
+    memset(ptr, value, bytes);
 }
 
 void SMemFree(void* ptr) {
