@@ -9,7 +9,7 @@ class HASHKEY_PTR {
     // Member functions
     HASHKEY_PTR();
     HASHKEY_PTR(void* key);
-    bool operator==(const HASHKEY_PTR& key);
+    bool operator==(const HASHKEY_PTR& key) const;
 };
 
 class HASHKEY_STR {
@@ -22,14 +22,14 @@ class HASHKEY_STR {
     HASHKEY_STR(const char* str);
     ~HASHKEY_STR();
     HASHKEY_STR& operator=(const char* str);
-    bool operator==(const char* str);
+    bool operator==(const char* str) const;
 };
 
 class HASHKEY_STRI : public HASHKEY_STR {
     public:
     // Member functions
     HASHKEY_STRI& operator=(const char* str);
-    bool operator==(const char* str);
+    bool operator==(const char* str) const;
 };
 
 class HASHKEY_NONE {
