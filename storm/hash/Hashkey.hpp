@@ -4,10 +4,10 @@
 class HASHKEY_PTR {
     public:
     // Member variables
-    void* m_key = nullptr;
+    void* m_key;
 
     // Member functions
-    HASHKEY_PTR() = default;
+    HASHKEY_PTR();
     HASHKEY_PTR(void* key);
     bool operator==(const HASHKEY_PTR& key);
 };
@@ -15,9 +15,11 @@ class HASHKEY_PTR {
 class HASHKEY_STR {
     public:
     // Member variables
-    char* m_str = nullptr;
+    char* m_str;
 
     // Member functions
+    HASHKEY_STR();
+    HASHKEY_STR(const char* str);
     ~HASHKEY_STR();
     HASHKEY_STR& operator=(const char* str);
     bool operator==(const char* str);

@@ -14,6 +14,26 @@ typedef void* TestExportObjectHandle;
 
 typedef void* TestExportLockedHandle;
 
+TEST_CASE("HASHKEY_PTR", "[hash]") {
+    SECTION("constructs correctly") {
+        HASHKEY_PTR key1;
+        HASHKEY_PTR key2;
+        REQUIRE(key1.operator==(key2));
+
+        void* ptr = reinterpret_cast<void*>(0xDEAFBEEF);
+        HASHKEY_PTR key3 = { ptr };
+        HASHKEY_PTR key4 = { ptr };
+        REQUIRE(key3.operator==(key4));
+    }
+}
+
+TEST_CASE("HASHKEY_STR", "[hash]") {
+    SECTION("constructs correctly") {
+        HASHKEY_STR key = { "foo" };
+        REQUIRE(key.operator==("foo"));
+    }
+}
+
 TEST_CASE("TSHashTable", "[hash]") {
     SECTION("constructs correctly") {
         TSHashTable<TestHashObject, HASHKEY_STRI> hashTable;

@@ -6,12 +6,24 @@ bool HASHKEY_NONE::operator==(const HASHKEY_NONE& key) {
     return true;
 }
 
+HASHKEY_PTR::HASHKEY_PTR() {
+    this->m_key = nullptr;
+}
+
 HASHKEY_PTR::HASHKEY_PTR(void* key) {
     this->m_key = key;
 }
 
 bool HASHKEY_PTR::operator==(const HASHKEY_PTR& key) {
     return this->m_key == key.m_key;
+}
+
+HASHKEY_STR::HASHKEY_STR() {
+    this->m_str = nullptr;
+}
+
+HASHKEY_STR::HASHKEY_STR(const char* str) {
+    this->m_str = SStrDupA(str, __FILE__, __LINE__);
 }
 
 HASHKEY_STR::~HASHKEY_STR() {
