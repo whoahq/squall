@@ -14,7 +14,7 @@ HASHKEY_PTR::HASHKEY_PTR(void* key) {
     this->m_key = key;
 }
 
-bool HASHKEY_PTR::operator==(const HASHKEY_PTR& key) {
+bool HASHKEY_PTR::operator==(const HASHKEY_PTR& key) const {
     return this->m_key == key.m_key;
 }
 
@@ -44,7 +44,7 @@ HASHKEY_STR& HASHKEY_STR::operator=(const char* str) {
     return *this;
 }
 
-bool HASHKEY_STR::operator==(const char* str) {
+bool HASHKEY_STR::operator==(const char* str) const {
     return SStrCmp(this->m_str, str, STORM_MAX_STR) == 0;
 }
 
@@ -53,6 +53,6 @@ HASHKEY_STRI& HASHKEY_STRI::operator=(const char* str) {
     return *this;
 }
 
-bool HASHKEY_STRI::operator==(const char* str) {
+bool HASHKEY_STRI::operator==(const char* str) const {
     return SStrCmpI(this->m_str, str, STORM_MAX_STR) == 0;
 }

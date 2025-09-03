@@ -18,19 +18,19 @@ TEST_CASE("HASHKEY_PTR", "[hash]") {
     SECTION("constructs correctly") {
         HASHKEY_PTR key1;
         HASHKEY_PTR key2;
-        REQUIRE(key1.operator==(key2));
+        REQUIRE(key1 == key2);
 
         void* ptr = reinterpret_cast<void*>(0xDEAFBEEF);
         HASHKEY_PTR key3 = { ptr };
         HASHKEY_PTR key4 = { ptr };
-        REQUIRE(key3.operator==(key4));
+        REQUIRE(key3 == key4);
     }
 }
 
 TEST_CASE("HASHKEY_STR", "[hash]") {
     SECTION("constructs correctly") {
         HASHKEY_STR key = { "foo" };
-        REQUIRE(key.operator==("foo"));
+        REQUIRE(key == "foo");
     }
 }
 
