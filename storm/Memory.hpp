@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <cstdlib>
+#include <new>
 
 #define SMEM_FLAG_ZEROMEMORY 0x8
 
