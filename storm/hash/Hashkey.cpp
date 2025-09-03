@@ -6,6 +6,10 @@ bool HASHKEY_NONE::operator==(const HASHKEY_NONE& key) {
     return true;
 }
 
+HASHKEY_PTR::HASHKEY_PTR(void* key) {
+    this->m_key = key;
+}
+
 bool HASHKEY_PTR::operator==(const HASHKEY_PTR& key) {
     return this->m_key == key.m_key;
 }
