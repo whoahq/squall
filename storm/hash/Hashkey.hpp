@@ -7,6 +7,7 @@ class HASHKEY_PTR {
     void* m_key = nullptr;
 
     // Member functions
+    HASHKEY_PTR() = default;
     HASHKEY_PTR(void* key);
     bool operator==(const HASHKEY_PTR& key);
 };
