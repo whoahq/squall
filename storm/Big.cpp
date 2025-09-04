@@ -99,8 +99,7 @@ void SBigMul(BigData* a, BigData* b, BigData* c) {
 }
 
 void SBigNew(BigData** num) {
-    auto m = SMemAlloc(sizeof(BigData), __FILE__, __LINE__, 0x0);
-    *num = new (m) BigData();
+    *num = STORM_NEW(BigData);
 }
 
 void SBigNot(BigData* a, BigData* b) {
