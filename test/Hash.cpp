@@ -17,20 +17,118 @@ typedef void* TestExportLockedHandle;
 TEST_CASE("HASHKEY_PTR", "[hash]") {
     SECTION("constructs correctly") {
         HASHKEY_PTR key1;
-        HASHKEY_PTR key2;
-        REQUIRE(key1 == key2);
+        REQUIRE(key1.GetPtr() == nullptr);
 
         void* ptr = reinterpret_cast<void*>(0xDEAFBEEF);
-        HASHKEY_PTR key3 = { ptr };
-        HASHKEY_PTR key4 = { ptr };
-        REQUIRE(key3 == key4);
+        HASHKEY_PTR key2 = { ptr };
+        REQUIRE(key2.GetPtr() == ptr);
+    }
+}
+
+TEST_CASE("HASHKEY_PTR::operator=") {
+    SECTION("assigns from another key") {
+        void* ptr1 = reinterpret_cast<void*>(0xDEAFBEEF);
+        HASHKEY_PTR key1 = { ptr1 };
+        void* ptr2 = reinterpret_cast<void*>(0xFEEDFACE);
+        HASHKEY_PTR key2 = { ptr2 };
+        REQUIRE (!(key1 == key2));
+
+        key1 = key2;
+        REQUIRE(key1 == key2);
+    }
+}
+
+TEST_CASE("HASHKEY_PTR::operator==") {
+    SECTION("compares to another key") {
+        void* ptr1 = reinterpret_cast<void*>(0xDEAFBEEF);
+        HASHKEY_PTR key1 = { ptr1 };
+        HASHKEY_PTR key2 = { ptr1 };
+        REQUIRE(key1 == key2);
+
+        void* ptr2 = reinterpret_cast<void*>(0xFEEDFACE);
+        HASHKEY_PTR key3 = { ptr2 };
+        REQUIRE(!(key1 == key3));
     }
 }
 
 TEST_CASE("HASHKEY_STR", "[hash]") {
     SECTION("constructs correctly") {
+        HASHKEY_STR key1;
+        REQUIRE(key1.GetString() == nullptr);
+
+        HASHKEY_STR key2 = { "foo" };
+        REQUIRE(SStrCmp(key2.GetString(), "foo") == 0);
+    }
+}
+
+TEST_CASE("HASHKEY_STR::operator=") {
+    SECTION("assigns from another string") {
+        HASHKEY_STR key;
+        key = "foo";
+        REQUIRE(SStrCmp(key.GetString(), "foo") == 0);
+    }
+
+    SECTION("assigns from another key") {
+        HASHKEY_STR key1 = { "foo" };
+        HASHKEY_STR key2 = { "bar" };
+        REQUIRE(!(key1 == key2));
+
+        key1 = key2;
+        REQUIRE(key1 == key2);
+    }
+}
+
+TEST_CASE("HASHKEY_STR::operator==") {
+    SECTION("compares to another string") {
         HASHKEY_STR key = { "foo" };
         REQUIRE(key == "foo");
+        REQUIRE(!(key == "FOO"));
+    }
+
+    SECTION("compares to another key") {
+        HASHKEY_STR key1 = { "foo" };
+        HASHKEY_STR key2 = { "foo" };
+        REQUIRE(key1 == key2);
+    }
+}
+
+TEST_CASE("HASHKEY_STRI", "[hash]") {
+    SECTION("constructs correctly") {
+        HASHKEY_STRI key1;
+        REQUIRE(key1.GetString() == nullptr);
+
+        HASHKEY_STRI key2 = { "foo" };
+        REQUIRE(SStrCmp(key2.GetString(), "foo") == 0);
+    }
+}
+
+TEST_CASE("HASHKEY_STRI::operator=") {
+    SECTION("assigns from another string") {
+        HASHKEY_STRI key;
+        key = "foo";
+        REQUIRE(SStrCmp(key.GetString(), "foo") == 0);
+    }
+
+    SECTION("assigns from another key") {
+        HASHKEY_STRI key1 = { "foo" };
+        HASHKEY_STRI key2 = { "bar" };
+        REQUIRE(!(key1 == key2));
+
+        key1 = key2;
+        REQUIRE(key1 == key2);
+    }
+}
+
+TEST_CASE("HASHKEY_STRI::operator==") {
+    SECTION("compares to another string") {
+        HASHKEY_STRI key = { "foo" };
+        REQUIRE(key == "FOO");
+    }
+
+    SECTION("compares to another key") {
+        HASHKEY_STRI key1 = { "foo" };
+        HASHKEY_STRI key2 = { "Foo" };
+        REQUIRE(key1 == key2);
     }
 }
 
