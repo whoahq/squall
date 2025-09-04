@@ -4,9 +4,9 @@
 #include "storm/Handle.hpp"
 #include <cstdint>
 
-DECLARE_HANDLE(HSRGN);
+DECLARE_STORM_HANDLE(HSRGN);
 
-DECLARE_HANDLE(HLOCKEDRGN);
+DECLARE_STORM_HANDLE(HLOCKEDRGN);
 
 struct RECTF {
     float left;
