@@ -1,7 +1,6 @@
 #include "RegionTest.hpp"
 #include <cfloat>
 
-
 TEST_CASE("SRgnClear", "[region]") {
     RgnDataTest region;
 

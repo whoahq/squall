@@ -28,23 +28,23 @@ std::ostream& operator <<(std::ostream& os, RECTF const& value) {
 
 template <class T>
 class RECTMatcher : public Catch::MatcherBase<T> {
-private:
-  T cmp;
+    private:
+    T cmp;
 
-public:
-  RECTMatcher(T arg) : cmp(arg) {}
+    public:
+    RECTMatcher(T arg) : cmp(arg) {}
 
-  bool match(T const& in) const override {
-    return cmp.left == in.left && cmp.bottom == in.bottom && cmp.right == in.right && cmp.top == in.top;
-  }
+    bool match(T const& in) const override {
+        return cmp.left == in.left && cmp.bottom == in.bottom && cmp.right == in.right && cmp.top == in.top;
+    }
 
-  std::string describe() const override {
-    std::ostringstream ss;
-    ss << "equals " << cmp;
-    return ss.str();
-  }
+    std::string describe() const override {
+        std::ostringstream ss;
+        ss << "equals " << cmp;
+        return ss.str();
+    }
 };
 
 RECTMatcher<RECTF> MatchesRect(RECTF arg) {
-  return { arg };
+    return { arg };
 }

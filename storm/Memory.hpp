@@ -4,9 +4,7 @@
 #include <cstdint>
 #include <cstdlib>
 
-
-#define SMEM_FLAG_ZEROMEMORY 8
-
+#define SMEM_FLAG_ZEROMEMORY 0x8
 
 void* SMemAlloc(size_t bytes, const char* filename, int32_t linenumber, uint32_t flags = 0);
 

@@ -14,13 +14,11 @@
 #define ERROR_INVALID_PARAMETER 0x57
 #endif
 
-
 #ifdef _DEBUG
 #ifndef ASSERTIONS_ENABLED
 #define ASSERTIONS_ENABLED
 #endif
 #endif
-
 
 #if defined(ASSERTIONS_ENABLED)
 #define STORM_ASSERT(x)                                                                     \
@@ -37,7 +35,6 @@
 #define STORM_ASSERT(x)
 #define STORM_ASSERT_FATAL(x)
 #endif
-
 
 #if defined(NDEBUG)
 #define STORM_VALIDATE_BEGIN    { bool __storm_result = true
@@ -58,7 +55,6 @@
 #define STORM_VALIDATE_END          }
 #define STORM_VALIDATE_END_VOID     }
 #endif
-
 
 #define STORM_ERROR_ASSERTION                0x85100000
 #define STORM_ERROR_BAD_ARGUMENT             0x85100065
@@ -96,13 +92,11 @@
 #define STORM_ERROR_GAME_TYPE_UNAVAILABLE    0x85100085
 #define STORM_ERROR_FATAL_CONDITION          0x85100086
 
-
 #define SERR_LINECODE_FUNCTION  -1
 #define SERR_LINECODE_OBJECT    -2
 #define SERR_LINECODE_HANDLE    -3
 #define SERR_LINECODE_FILE      -4
 #define SERR_LINECODE_EXCEPTION -5  // exception handler
-
 
 [[noreturn]] void SErrDisplayAppFatal(const char* format, ...);
 

@@ -6,7 +6,7 @@
 #include "storm/Hash.hpp"
 #include <cstdint>
 
-// region flgs
+// Region flags
 #define SF_NONE      0x00000000
 #define SF_ADDING    0x00000001
 #define SF_OVERLAPS  0x00000002

@@ -5,7 +5,6 @@
 #include <numeric>
 #include <vector>
 
-
 TEST_CASE("SMemAlloc", "[memory]") {
     SECTION("allocates memory") {
         void* ptr = SMemAlloc(16, __FILE__, __LINE__);

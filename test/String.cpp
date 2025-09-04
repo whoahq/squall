@@ -2,10 +2,8 @@
 #include "storm/Memory.hpp"
 #include "test/Test.hpp"
 
-#include <cfloat>
 #include <cstdarg>
 #include <type_traits>
-
 
 TEST_CASE("SStrChr const", "[string]") {
     const char* string = "foobar";

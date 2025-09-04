@@ -5,12 +5,10 @@
 #include <cstdint>
 #include <cstdlib>
 
-
 #define STORM_MAX_PATH 260
 #define STORM_MAX_STR 0x7FFFFFFF
 
 #define SSTR_HASH_CASESENSITIVE 1
-
 
 char* SStrChr(char* string, char search);
 

@@ -2,9 +2,7 @@
 
 #include <cstring>
 
-
 constexpr size_t ALIGNMENT = 8;
-
 
 void* SMemAlloc(size_t bytes, const char* filename, int32_t linenumber, uint32_t flags) {
     size_t alignedBytes = (bytes + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1);

@@ -8,7 +8,7 @@
 
 SSyncObject::SSyncObject() {
 #if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
-    pthread_mutex_init(&this->m_mutex, 0);
+    pthread_mutex_init(&this->m_mutex, nullptr);
 #endif
 }
 

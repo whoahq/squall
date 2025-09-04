@@ -5,15 +5,12 @@
 #include "storm/Thread.hpp"
 #include <limits>
 
-
 static TSExportTableSyncReuse<RGN, HSRGN, HLOCKEDRGN, CCritSect> s_rgntable;
-
 
 void DeleteCombinedRect(TSGrowableArray<RECTF>* combinedArray, uint32_t index);
 void DeleteRect(RECTF* rect);
 void DeleteSourceRect(TSGrowableArray<SOURCE>* sourceArray, uint32_t index);
 int32_t IsNullRect(const RECTF* rect);
-
 
 void AddCombinedRect(TSGrowableArray<RECTF>* combinedArray, const RECTF* rect) {
     RECTF* newRect = combinedArray->New();
@@ -115,14 +112,18 @@ int SortFoundParamsCallback(const void* elem1, const void* elem2) {
 }
 
 void FindSourceParams(RGN* rgnptr, const RECTF* rect) {
-    if (CompareRects(rect, &rgnptr->foundparamsrect)) return;
+    if (CompareRects(rect, &rgnptr->foundparamsrect)) {
+        return;
+    }
 
     rgnptr->foundparams.SetCount(0);
     uint32_t sourceRects = rgnptr->source.Count();
     uint32_t params = 0;
 
     for (uint32_t i = 0; i < sourceRects; i++) {
-        if (!CheckForIntersection(rect, &rgnptr->source[i].rect)) continue;
+        if (!CheckForIntersection(rect, &rgnptr->source[i].rect)) {
+            continue;
+        }
 
         int32_t sequence = rgnptr->source[i].sequence;
         int32_t found = 0;
@@ -366,8 +367,14 @@ int SortRectCallback(const void* elem1, const void* elem2) {
 
     double result = rct1->top == rct2->top ? rct1->left - rct2->left : rct1->top - rct2->top;
 
-    if (result > 0.0) return 1;
-    if (result < 0.0) return -1;
+    if (result > 0.0) {
+        return 1;
+    }
+
+    if (result < 0.0) {
+        return -1;
+    }
+
     return 0;
 }
 
@@ -387,7 +394,10 @@ void ProduceCombinedRectangles(RGN* rgn) {
     std::qsort(rgn->combined.Ptr(), rgn->combined.Count(), sizeof(RECTF), SortRectCallback);
 
     for (uint32_t i = rgn->combined.Count(); i > 0; i = rgn->combined.Count()) {
-        if (!IsNullRect(&rgn->combined[i-1])) break;
+        if (!IsNullRect(&rgn->combined[i-1])) {
+            break;
+        }
+
         rgn->combined.SetCount(i - 1);
     }
 }
@@ -402,7 +412,9 @@ void SRgnCombineRectf(HSRGN handle, const RECTF* rect, void* param, int32_t comb
 
     HLOCKEDRGN lockedHandle;
     auto rgn = s_rgntable.Lock(handle, &lockedHandle, 0);
-    if (!rgn) return;
+    if (!rgn) {
+        return;
+    }
 
     if (combineMode == SRGN_OR || combineMode == SRGN_PARAMONLY) {
         if (!IsNullRect(rect)) {
@@ -502,7 +514,9 @@ void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect) {
 
     HLOCKEDRGN lockedHandle;
     auto rgn = s_rgntable.Lock(handle, &lockedHandle, 0);
-    if (!rgn) return;
+    if (!rgn) {
+        return;
+    }
 
     for (uint32_t i = 0; i < rgn->source.Count(); i++) {
         auto source = &rgn->source[i];
@@ -602,7 +616,9 @@ int32_t SRgnIsPointInRegionf(HSRGN handle, float x, float y) {
 
     HLOCKEDRGN lockedHandle;
     auto rgn = s_rgntable.Lock(handle, &lockedHandle, 0);
-    if (!rgn) return 0;
+    if (!rgn) {
+        return 0;
+    }
 
     int32_t result = 0;
 
@@ -630,7 +646,9 @@ int32_t SRgnIsRectInRegionf(HSRGN handle, const RECTF* rect) {
 
     HLOCKEDRGN lockedHandle;
     auto rgn = s_rgntable.Lock(handle, &lockedHandle, 0);
-    if (!rgn) return 0;
+    if (!rgn) {
+        return 0;
+    }
 
     int32_t result = 0;
 
@@ -656,7 +674,9 @@ void SRgnOffsetf(HSRGN handle, float xoffset, float yoffset) {
 
     HLOCKEDRGN lockedHandle;
     auto rgn = s_rgntable.Lock(handle, &lockedHandle, 0);
-    if (!rgn) return;
+    if (!rgn) {
+        return;
+    }
 
     SOURCE* sourceArray = rgn->source.Ptr();
     uint32_t sourceRects = rgn->source.Count();

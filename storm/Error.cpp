@@ -78,9 +78,9 @@ void SErrPrepareAppFatal(const char* filename, int32_t linenumber) {
 
 void SErrSetLastError(uint32_t errorcode) {
     s_lasterror = errorcode;
-    #if defined(WHOA_SYSTEM_WIN)
+#if defined(WHOA_SYSTEM_WIN)
     SetLastError(errorcode);
-    #endif
+#endif
 }
 
 uint32_t SErrGetLastError() {
