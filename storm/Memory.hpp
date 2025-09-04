@@ -6,6 +6,18 @@
 
 #define SMEM_FLAG_ZEROMEMORY 0x8
 
+#define STORM_ALLOC(bytes)  \
+    SMemAlloc(bytes, __FILE__, __LINE__, 0x0)
+
+#define STORM_ALLOC_ZERO(bytes) \
+    SMemAlloc(bytes, __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY)
+
+#define STORM_NEW(t)    \
+    new(SMemAlloc(sizeof(t), __FILE__, __LINE__, 0x0)) t
+
+#define STORM_NEW_ZERO(t)   \
+    new(SMemAlloc(sizeof(t), __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY)) t
+
 void* SMemAlloc(size_t bytes, const char* filename, int32_t linenumber, uint32_t flags = 0);
 
 void SMemCopy(void* dst, void* src, size_t bytes);

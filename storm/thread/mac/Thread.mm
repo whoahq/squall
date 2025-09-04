@@ -40,8 +40,7 @@ void* SCreateThread(uint32_t (*threadProc)(void*), void* threadParam, void* a3, 
 
     uint32_t threadId = S_Thread::s_threadID++;
 
-    void* m = SMemAlloc(sizeof(SThreadParmBlock), __FILE__, __LINE__, 0x8);
-    auto params = new (m) SThreadParmBlock();
+    auto params = STORM_NEW_ZERO(SThreadParmBlock);
     params->threadProc = threadProc;
     params->threadParam = threadParam;
     params->threadID = threadId;
