@@ -5,6 +5,24 @@
 #include <numeric>
 #include <vector>
 
+TEST_CASE("operator new", "[memory]") {
+    SECTION("allocates memory") {
+        auto ptr = new int32_t;
+        REQUIRE(ptr != nullptr);
+
+        delete ptr;
+    }
+}
+
+TEST_CASE("operator new[]", "[memory]") {
+    SECTION("allocates memory") {
+        auto ptr = new int32_t[10];
+        REQUIRE(ptr != nullptr);
+
+        delete[] ptr;
+    }
+}
+
 TEST_CASE("SMemAlloc", "[memory]") {
     SECTION("allocates memory") {
         void* ptr = SMemAlloc(16, __FILE__, __LINE__);
