@@ -25,6 +25,10 @@ list(APPEND CMAKE_MODULE_PATH
 
 include(system)
 
+if(WHOA_ASSERTIONS_ENABLED)
+    add_definitions(-DWHOA_ASSERTIONS_ENABLED)
+endif()
+
 # Storm flavors
 if(WHOA_STORM_FLAVOR STREQUAL "SC1")
     message(STATUS "Building Storm with StarCraft flavoring")
