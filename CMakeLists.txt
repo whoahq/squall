@@ -29,7 +29,9 @@ include(system)
 if(WHOA_STORM_FLAVOR STREQUAL "SC1")
     message(STATUS "Building Storm with StarCraft flavoring")
 
-    add_definitions(-DWHOA_STORM_C_CRIT_SECT_RECURSIVE)
+    if (WHOA_SYSTEM_MAC OR WHOA_SYSTEM_LINUX)
+        add_definitions(-DWHOA_STORM_C_CRIT_SECT_RECURSIVE)
+    endif()
 elseif(WHOA_STORM_FLAVOR STREQUAL "WOW")
     message(STATUS "Building Storm with World of Warcraft flavoring")
 else()
@@ -38,6 +40,9 @@ endif()
 
 # OS defines
 if(WHOA_SYSTEM_WIN)
+    # Implicit behavior of CriticalSection
+    add_definitions(-DWHOA_STORM_C_CRIT_SECT_RECURSIVE)
+
     # Avoid win32 header hell
     add_compile_definitions(
         NOMINMAX
