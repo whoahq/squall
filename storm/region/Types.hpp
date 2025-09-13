@@ -3,9 +3,9 @@
 
 #include "storm/Handle.hpp"
 #include <cstdint>
+#include <limits>
 
 DECLARE_STORM_HANDLE(HSRGN);
-
 DECLARE_STORM_HANDLE(HLOCKEDRGN);
 
 struct RECTF {
@@ -13,6 +13,13 @@ struct RECTF {
     float bottom;
     float right;
     float top;
+};
+
+// NOTE: This is a made up type to replace WINAPI's RECT.
+// Implementation requires RECT and RECTF to be the same size but WINAPI uses `long`,
+// which can change size in 64-bit.
+struct RECTI {
+    int32_t left, top, right, bottom;
 };
 
 // Combine modes
