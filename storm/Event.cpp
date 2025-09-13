@@ -57,7 +57,7 @@ void DeleteIdHashTable(_IDHASHTABLE* pTable) {
             delete pEntry;
         }
     }
-    SMemFree(pTable->data, __FILE__, __LINE__, 0);
+    STORM_FREE(pTable->data);
     delete pTable;
 }
 
@@ -305,7 +305,7 @@ int32_t SEvtRegisterHandler(uint32_t type, uint32_t subtype, uint32_t id, uint32
                     }
                 }
                 if (s_typehashtable) {
-                    SMemFree(s_typehashtable, __FILE__, __LINE__, 0);
+                    STORM_FREE(s_typehashtable);
                 }
             }
             s_typehashtable = pNewTable;
@@ -350,9 +350,9 @@ int32_t SEvtRegisterHandler(uint32_t type, uint32_t subtype, uint32_t id, uint32
             }
         }
 
-        SMemFree(pTempTable, __FILE__, __LINE__, 0);
+        STORM_FREE(pTempTable);
         if (pTypeHash->idhashtable->data) {
-            SMemFree(pTypeHash->idhashtable->data, __FILE__, __LINE__, 0);
+            STORM_FREE(pTypeHash->idhashtable->data);
         }
         pTypeHash->idhashtable->data = pNewTable;
         pTypeHash->idhashtable->size = newsize;

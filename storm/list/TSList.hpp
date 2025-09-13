@@ -73,7 +73,7 @@ T* TSList<T, TGetLink>::DeleteNode(T* ptr) {
     T* next = this->Next(ptr);
 
     ptr->~T();
-    SMemFree(ptr, __FILE__, __LINE__, 0);
+    STORM_FREE(ptr);
 
     return next;
 }
