@@ -8,6 +8,8 @@ void SRgnClear(HSRGN handle);
 
 void SRgnCombineRectf(HSRGN handle, const RECTF* rect, void* param, int32_t combineMode);
 
+void SRgnCombineRecti(HSRGN handle, const RECT* rect, void* param, int32_t combineMode);
+
 void SRgnCreate(HSRGN* handlePtr, uint32_t reserved = 0);
 
 void SRgnDelete(HSRGN handle);
@@ -16,14 +18,26 @@ void SRgnDuplicate(HSRGN origHandle, HSRGN* handle, uint32_t reserved = 0);
 
 void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect);
 
+void SRgnGetBoundingRecti(HSRGN handle, RECT* rect);
+
 void SRgnGetRectParamsf(HSRGN handle, const RECTF* rect, uint32_t* numParams, void** buffer);
+
+void SRgnGetRectParamsi(HSRGN handle, const RECT* rect, uint32_t* numParams, void** buffer);
 
 void SRgnGetRectsf(HSRGN handle, uint32_t* numRects, RECTF* buffer);
 
+void SRgnGetRectsi(HSRGN handle, uint32_t* numRects, RECT* buffer);
+
 int32_t SRgnIsPointInRegionf(HSRGN handle, float x, float y);
+
+int32_t SRgnIsPointInRegioni(HSRGN handle, int32_t x, int32_t y);
 
 int32_t SRgnIsRectInRegionf(HSRGN handle, const RECTF* rect);
 
+int32_t SRgnIsRectInRegioni(HSRGN handle, const RECT* rect);
+
 void SRgnOffsetf(HSRGN handle, float xoffset, float yoffset);
+
+void SRgnOffseti(HSRGN handle, int32_t xoffset, int32_t yoffset);
 
 #endif

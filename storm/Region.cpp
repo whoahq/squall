@@ -435,6 +435,21 @@ void SRgnCombineRectf(HSRGN handle, const RECTF* rect, void* param, int32_t comb
     s_rgntable.Unlock(lockedHandle);
 }
 
+void SRgnCombineRecti(HSRGN handle, const RECT* rect, void* param, int32_t combineMode) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(rect);
+    STORM_VALIDATE_END_VOID;
+
+    // NOTE: top and bottom get flipped, this is a bug in Storm
+    RECTF rectf = {
+        static_cast<float>(rect->left),
+        static_cast<float>(rect->top),
+        static_cast<float>(rect->right),
+        static_cast<float>(rect->bottom)
+    };
+    SRgnCombineRectf(handle, &rectf, param, combineMode);
+}
+
 void SRgnClear(HSRGN handle) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
@@ -539,6 +554,21 @@ void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect) {
     }
 }
 
+void SRgnGetBoundingRecti(HSRGN handle, RECT* rect) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(rect);
+    STORM_VALIDATE_END_VOID;
+
+    RECTF rectf;
+    SRgnGetBoundingRectf(handle, &rectf);
+
+    // NOTE: top and bottom get flipped, this is a bug in Storm
+    rect->left = static_cast<int32_t>(rectf.left);
+    rect->top = static_cast<int32_t>(rectf.bottom);
+    rect->right = static_cast<int32_t>(rectf.right);
+    rect->bottom = static_cast<int32_t>(rectf.top);
+}
+
 void SRgnGetRectParamsf(HSRGN handle, const RECTF* rect, uint32_t* numParams, void** buffer) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
@@ -580,6 +610,21 @@ void SRgnGetRectParamsf(HSRGN handle, const RECTF* rect, uint32_t* numParams, vo
     s_rgntable.Unlock(lockedHandle);
 }
 
+void SRgnGetRectParamsi(HSRGN handle, const RECT* rect, uint32_t* numParams, void** buffer) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(rect);
+    STORM_VALIDATE_END_VOID;
+
+    // NOTE: top and bottom get flipped, this is a bug in Storm
+    RECTF rectf = {
+        static_cast<float>(rect->left),
+        static_cast<float>(rect->top),
+        static_cast<float>(rect->right),
+        static_cast<float>(rect->bottom)
+    };
+    SRgnGetRectParamsf(handle, &rectf, numParams, buffer);
+}
+
 void SRgnGetRectsf(HSRGN handle, uint32_t* numRects, RECTF* buffer) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
@@ -607,6 +652,22 @@ void SRgnGetRectsf(HSRGN handle, uint32_t* numRects, RECTF* buffer) {
     }
 
     s_rgntable.Unlock(lockedHandle);
+}
+
+void SRgnGetRectsi(HSRGN handle, uint32_t* numRects, RECT* buffer) {
+    RECTF* bufferf = reinterpret_cast<RECTF*>(buffer);
+    SRgnGetRectsf(handle, numRects, bufferf);
+    if (buffer) {
+        for (uint32_t i = 0; i < *numRects; i++) {
+            float bottom = bufferf[i].bottom;
+            float top = bufferf[i].top;
+
+            buffer[i].left = static_cast<int32_t>(bufferf[i].left);
+            buffer[i].bottom = static_cast<int32_t>(bottom);
+            buffer[i].right = static_cast<int32_t>(bufferf[i].right);
+            buffer[i].top = static_cast<int32_t>(top);
+        }
+    }
 }
 
 int32_t SRgnIsPointInRegionf(HSRGN handle, float x, float y) {
@@ -638,6 +699,10 @@ int32_t SRgnIsPointInRegionf(HSRGN handle, float x, float y) {
     return result;
 }
 
+int32_t SRgnIsPointInRegioni(HSRGN handle, int32_t x, int32_t y) {
+    return SRgnIsPointInRegionf(handle, static_cast<float>(x), static_cast<float>(y));
+}
+
 int32_t SRgnIsRectInRegionf(HSRGN handle, const RECTF* rect) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
@@ -667,6 +732,21 @@ int32_t SRgnIsRectInRegionf(HSRGN handle, const RECTF* rect) {
     return result;
 }
 
+int32_t SRgnIsRectInRegioni(HSRGN handle, const RECT* rect) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(rect);
+    STORM_VALIDATE_END;
+
+    // NOTE: top and bottom get flipped, this is a bug in Storm
+    RECTF rectf = {
+        static_cast<float>(rect->left),
+        static_cast<float>(rect->top),
+        static_cast<float>(rect->right),
+        static_cast<float>(rect->bottom)
+    };
+    return SRgnIsRectInRegionf(handle, &rectf);
+}
+
 void SRgnOffsetf(HSRGN handle, float xoffset, float yoffset) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
@@ -689,4 +769,8 @@ void SRgnOffsetf(HSRGN handle, float xoffset, float yoffset) {
     InvalidateRegion(rgn);
 
     s_rgntable.Unlock(lockedHandle);
+}
+
+void SRgnOffseti(HSRGN handle, int32_t xoffset, int32_t yoffset) {
+    SRgnOffsetf(handle, static_cast<float>(xoffset), static_cast<float>(yoffset));
 }

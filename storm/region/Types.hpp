@@ -3,9 +3,9 @@
 
 #include "storm/Handle.hpp"
 #include <cstdint>
+#include <limits>
 
 DECLARE_STORM_HANDLE(HSRGN);
-
 DECLARE_STORM_HANDLE(HLOCKEDRGN);
 
 struct RECTF {
@@ -14,6 +14,15 @@ struct RECTF {
     float right;
     float top;
 };
+
+#if defined(WHOA_SYSTEM_WIN)
+// NOTE: WINAPI's RECT uses `long`.
+#include <Windows.h>
+#else
+struct RECT {
+    int32_t left, top, right, bottom;
+};
+#endif
 
 // Combine modes
 #define SRGN_AND 1
