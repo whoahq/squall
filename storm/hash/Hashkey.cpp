@@ -37,14 +37,14 @@ HASHKEY_STR::HASHKEY_STR(const char* str) {
 
 HASHKEY_STR::~HASHKEY_STR() {
     if (this->m_str) {
-        SMemFree(this->m_str, __FILE__, __LINE__);
+        STORM_FREE(this->m_str);
     }
 }
 
 HASHKEY_STR& HASHKEY_STR::operator=(const char* str) {
     if (this->m_str != str) {
         if (this->m_str) {
-            SMemFree(this->m_str, __FILE__, __LINE__);
+            STORM_FREE(this->m_str);
         }
 
         this->m_str = SStrDupA(str, __FILE__, __LINE__);

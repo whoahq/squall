@@ -31,6 +31,13 @@ TEST_CASE("SMemAlloc", "[memory]") {
         SMemFree(ptr);
     }
 
+    SECTION("allocates memory with null filename") {
+        void* ptr = SMemAlloc(16, nullptr, 0);
+        REQUIRE(ptr != nullptr);
+        CHECK_NOTHROW(memset(ptr, 1, 16));
+        SMemFree(ptr);
+    }
+
     SECTION("allocates memory initialized to 0 with flag") {
         void* ptr = SMemAlloc(16, __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY);
         REQUIRE(ptr != nullptr);
@@ -111,6 +118,11 @@ TEST_CASE("SMemFree full args", "[memory]") {
     SECTION("does nothing on nullptr") {
         CHECK_NOTHROW(SMemFree(nullptr, __FILE__, __LINE__));
     }
+
+    SECTION("can take a null filename") {
+        void* ptr = STORM_ALLOC(10);
+        CHECK_NOTHROW(SMemFree(ptr, nullptr, 0));
+    }
 }
 
 TEST_CASE("SMemMove", "[memory]") {
@@ -148,6 +160,13 @@ TEST_CASE("SMemMove", "[memory]") {
 TEST_CASE("SMemReAlloc", "[memory]") {
     SECTION("allocates memory") {
         void* ptr = SMemReAlloc(nullptr, 16, __FILE__, __LINE__);
+        REQUIRE(ptr != nullptr);
+        CHECK_NOTHROW(memset(ptr, 1, 16));
+        SMemFree(ptr);
+    }
+
+    SECTION("allocates memory with null filename") {
+        void* ptr = SMemReAlloc(nullptr, 16, nullptr, 0);
         REQUIRE(ptr != nullptr);
         CHECK_NOTHROW(memset(ptr, 1, 16));
         SMemFree(ptr);

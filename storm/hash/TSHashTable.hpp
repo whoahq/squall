@@ -137,7 +137,7 @@ void TSHashTable<T, TKey>::InternalClear(int32_t warn) {
 template <class T, class TKey>
 void TSHashTable<T, TKey>::InternalDelete(T* ptr) {
     ptr->~T();
-    SMemFree(ptr, __FILE__, __LINE__, 0x0);
+    STORM_FREE(ptr);
 }
 
 template <class T, class TKey>

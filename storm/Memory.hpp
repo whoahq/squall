@@ -13,6 +13,9 @@
 #define STORM_ALLOC_ZERO(bytes) \
     SMemAlloc(bytes, __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY)
 
+#define STORM_FREE(ptr)  \
+    SMemFree(ptr, __FILE__, __LINE__, 0x0)
+
 #define STORM_NEW(t)    \
     new(SMemAlloc(sizeof(t), __FILE__, __LINE__, 0x0)) t
 
