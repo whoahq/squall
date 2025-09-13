@@ -26,6 +26,12 @@ std::ostream& operator <<(std::ostream& os, RECTF const& value) {
     return os;
 }
 
+// Helpers for comparing RECTF structs
+std::ostream& operator <<(std::ostream& os, RECT const& value) {
+    os << "{ " << value.left << ", " << value.top << ", " << value.right << ", " << value.bottom << " }";
+    return os;
+}
+
 template <class T>
 class RECTMatcher : public Catch::MatcherBase<T> {
     private:
@@ -45,6 +51,10 @@ class RECTMatcher : public Catch::MatcherBase<T> {
     }
 };
 
-RECTMatcher<RECTF> MatchesRect(RECTF arg) {
+RECTMatcher<RECTF> MatchesRectf(RECTF arg) {
+    return { arg };
+}
+
+RECTMatcher<RECT> MatchesRecti(RECT arg) {
     return { arg };
 }
