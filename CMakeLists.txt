@@ -36,6 +36,8 @@ if(WHOA_STORM_FLAVOR STREQUAL "SC1")
     if (WHOA_SYSTEM_MAC OR WHOA_SYSTEM_LINUX)
         add_definitions(-DWHOA_STORM_C_CRIT_SECT_RECURSIVE)
     endif()
+
+    add_definitions(-DWHOA_RECT_USES_SCREEN_COORDINATES)
 elseif(WHOA_STORM_FLAVOR STREQUAL "WOW")
     message(STATUS "Building Storm with World of Warcraft flavoring")
 else()

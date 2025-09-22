@@ -27,10 +27,17 @@ void AddSourceRect(TSGrowableArray<SOURCE>* sourceArray, const RECTF* rect, void
 }
 
 int32_t CheckForIntersection(const RECTF* sourceRect, const RECTF* targetRect) {
+#if defined(WHOA_RECT_USES_SCREEN_COORDINATES)
+    return sourceRect->left < targetRect->right
+        && sourceRect->top < targetRect->bottom
+        && sourceRect->right > targetRect->left
+        && sourceRect->bottom > targetRect->top;
+#else
     return sourceRect->left < targetRect->right
         && sourceRect->bottom < targetRect->top
         && sourceRect->right > targetRect->left
         && sourceRect->top > targetRect->bottom;
+#endif
 }
 
 void CombineRectangles(TSGrowableArray<RECTF>* combinedArray) {
@@ -41,12 +48,18 @@ void CombineRectangles(TSGrowableArray<RECTF>* combinedArray) {
 
             if (rctA->left == rctB->left && rctA->right == rctB->right) {
                 if (rctA->bottom == rctB->top || rctB->bottom == rctA->top) {
+#if defined(WHOA_RECT_USES_SCREEN_COORDINATES)
+                    rctA->top = std::min(rctB->top, rctA->top);
+                    rctA->bottom = std::max(rctB->bottom, rctA->bottom);
+#else
                     rctA->bottom = std::min(rctB->bottom, rctA->bottom);
                     rctA->top = std::max(rctB->top, rctA->top);
+#endif
                     DeleteRect(rctB);
                     break;
                 }
             }
+
             if (rctA->left == rctB->right || rctB->left == rctA->right) {
                 if (rctA->bottom == rctB->bottom && rctA->top == rctB->top) {
                     rctA->left = std::min(rctB->left, rctA->left);
@@ -57,9 +70,23 @@ void CombineRectangles(TSGrowableArray<RECTF>* combinedArray) {
             }
 
             if (rctA->left == rctB->right || rctB->left == rctA->right) {
-                if (rctA->bottom < rctB->top && rctB->bottom < rctA->top) {
-                    RECTF newrect[5];
+                RECTF newrect[5];
 
+#if defined(WHOA_RECT_USES_SCREEN_COORDINATES)
+                if (rctA->top < rctB->bottom && rctB->top < rctA->bottom) {
+                    newrect[0] = { rctA->left, rctA->top, rctA->right, rctB->top };
+                    newrect[1] = { rctB->left, rctB->top, rctB->right, rctA->top };
+                    newrect[2] = { rctA->left, rctB->bottom, rctA->right, rctA->bottom };
+                    newrect[3] = { rctB->left, rctA->bottom, rctB->right, rctB->bottom };
+
+                    newrect[4] = {
+                        std::min(rctB->left, rctA->left),
+                        std::max(rctB->top, rctA->top),
+                        std::max(rctB->right, rctA->right),
+                        std::min(rctB->bottom, rctA->bottom)
+                    };
+#else
+                if (rctA->bottom < rctB->top && rctB->bottom < rctA->top) {
                     newrect[0] = { rctA->left, rctA->bottom, rctA->right, rctB->bottom };
                     newrect[1] = { rctB->left, rctB->bottom, rctB->right, rctA->bottom };
                     newrect[2] = { rctA->left, rctB->top, rctA->right, rctA->top };
@@ -71,6 +98,7 @@ void CombineRectangles(TSGrowableArray<RECTF>* combinedArray) {
                         std::max(rctB->right, rctA->right),
                         std::min(rctB->top, rctA->top)
                     };
+#endif
 
                     for (uint32_t k = 0; k < 5; k++) {
                         if (!IsNullRect(&newrect[k])) {
@@ -163,6 +191,23 @@ void FragmentCombinedRectangles(TSGrowableArray<RECTF>* combinedArray, uint32_t 
     }
 
     RECTF newrect[4];
+
+#if defined(WHOA_RECT_USES_SCREEN_COORDINATES)
+    newrect[0] = { rect->left, rect->top, rect->right, checkRect->top };
+    newrect[1] = { rect->left, checkRect->bottom, rect->right, rect->bottom };
+    newrect[2] = {
+        rect->left,
+        std::max(checkRect->top, rect->top),
+        checkRect->left,
+        std::min(checkRect->bottom, rect->bottom)
+    };
+    newrect[3] = {
+        checkRect->right,
+        std::max(checkRect->top, rect->top),
+        rect->right,
+        std::min(checkRect->bottom, rect->bottom)
+    };
+#else
     newrect[0] = { rect->left, rect->bottom, rect->right, checkRect->bottom };
     newrect[1] = { rect->left, checkRect->top, rect->right, rect->top };
     newrect[2] = {
@@ -177,6 +222,7 @@ void FragmentCombinedRectangles(TSGrowableArray<RECTF>* combinedArray, uint32_t 
         rect->right,
         std::min(checkRect->top, rect->top)
     };
+#endif
 
     for (uint32_t i = 0; i < 4; i++) {
         if (!IsNullRect(&newrect[i])) {
@@ -211,6 +257,42 @@ void FragmentSourceRectangles(TSGrowableArray<SOURCE>* sourceArray, uint32_t fir
 
             RECTF newRect[5];
 
+#if defined(WHOA_RECT_USES_SCREEN_COORDINATES)
+            newRect[0] = {
+                overlapRect[minTop]->left,
+                overlapRect[minTop]->top,
+                overlapRect[minTop]->right,
+                overlapRect[maxTop]->top,
+            };
+
+            newRect[1] = {
+                overlapRect[maxBottom]->left,
+                overlapRect[minBottom]->bottom,
+                overlapRect[maxBottom]->right,
+                overlapRect[maxBottom]->bottom,
+            };
+
+            newRect[2] = {
+                overlapRect[minLeft]->left,
+                overlapRect[maxTop]->top,
+                overlapRect[maxLeft]->left,
+                overlapRect[minBottom]->bottom,
+            };
+
+            newRect[3] = {
+                overlapRect[minRight]->right,
+                overlapRect[maxTop]->top,
+                overlapRect[maxRight]->right,
+                overlapRect[minBottom]->bottom,
+            };
+
+            newRect[4] = {
+                overlapRect[maxLeft]->left,
+                overlapRect[maxTop]->top,
+                overlapRect[minRight]->right,
+                overlapRect[minBottom]->bottom,
+            };
+#else
             newRect[0] = {
                 overlapRect[minBottom]->left,
                 overlapRect[minBottom]->bottom,
@@ -245,6 +327,7 @@ void FragmentSourceRectangles(TSGrowableArray<SOURCE>* sourceArray, uint32_t fir
                 overlapRect[minRight]->right,
                 overlapRect[minTop]->top,
             };
+#endif
 
             int32_t overlaps[5][2];
             for (uint32_t j = 0; j < 5; j++) {
@@ -287,7 +370,11 @@ void FragmentSourceRectangles(TSGrowableArray<SOURCE>* sourceArray, uint32_t fir
 }
 
 int32_t IsNullRect(const RECTF* rect) {
+#if defined(WHOA_RECT_USES_SCREEN_COORDINATES)
+    return rect->left >= rect->right || rect->top >= rect->bottom;
+#else
     return rect->left >= rect->right || rect->bottom >= rect->top;
+#endif
 }
 
 void ClearRegion(RGN* rgn) {
@@ -522,10 +609,12 @@ void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect) {
     STORM_VALIDATE(rect);
     STORM_VALIDATE_END_VOID;
 
-    rect->left = std::numeric_limits<float>::max();
-    rect->bottom = std::numeric_limits<float>::max();
-    rect->right = std::numeric_limits<float>::min();
-    rect->top = std::numeric_limits<float>::min();
+    *rect = {
+        std::numeric_limits<float>::max(),
+        std::numeric_limits<float>::max(),
+        std::numeric_limits<float>::min(),
+        std::numeric_limits<float>::min(),
+    };
 
     HLOCKEDRGN lockedHandle;
     auto rgn = s_rgntable.Lock(handle, &lockedHandle, 0);
@@ -538,9 +627,15 @@ void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect) {
 
         if (!(source->flags & SF_PARAMONLY)) {
             rect->left = std::min(source->rect.left, rect->left);
-            rect->bottom = std::min(source->rect.bottom, rect->bottom);
             rect->right = std::max(source->rect.right, rect->right);
+
+#if defined(WHOA_RECT_USES_SCREEN_COORDINATES)
+            rect->top = std::min(source->rect.top, rect->top);
+            rect->bottom = std::max(source->rect.bottom, rect->bottom);
+#else
+            rect->bottom = std::min(source->rect.bottom, rect->bottom);
             rect->top = std::max(source->rect.top, rect->top);
+#endif
         }
     }
 
@@ -562,11 +657,16 @@ void SRgnGetBoundingRecti(HSRGN handle, RECT* rect) {
     RECTF rectf;
     SRgnGetBoundingRectf(handle, &rectf);
 
-    // NOTE: top and bottom get flipped, this is a bug in Storm
     rect->left = static_cast<int32_t>(rectf.left);
-    rect->top = static_cast<int32_t>(rectf.bottom);
     rect->right = static_cast<int32_t>(rectf.right);
+#if defined(WHOA_RECT_USES_SCREEN_COORDINATES)
+    rect->top = static_cast<int32_t>(rectf.top);
+    rect->bottom = static_cast<int32_t>(rectf.bottom);
+#else
+    // NOTE: top and bottom get flipped, this is a bug in Storm
+    rect->top = static_cast<int32_t>(rectf.bottom);
     rect->bottom = static_cast<int32_t>(rectf.top);
+#endif
 }
 
 void SRgnGetRectParamsf(HSRGN handle, const RECTF* rect, uint32_t* numParams, void** buffer) {
@@ -659,13 +759,18 @@ void SRgnGetRectsi(HSRGN handle, uint32_t* numRects, RECT* buffer) {
     SRgnGetRectsf(handle, numRects, bufferf);
     if (buffer) {
         for (uint32_t i = 0; i < *numRects; i++) {
+#if defined(WHOA_RECT_USES_SCREEN_COORDINATES)
+            buffer[i].top = static_cast<int32_t>(bufferf[i].top);
+            buffer[i].bottom = static_cast<int32_t>(bufferf[i].bottom);
+#else
             float bottom = bufferf[i].bottom;
             float top = bufferf[i].top;
 
-            buffer[i].left = static_cast<int32_t>(bufferf[i].left);
             buffer[i].bottom = static_cast<int32_t>(bottom);
-            buffer[i].right = static_cast<int32_t>(bufferf[i].right);
             buffer[i].top = static_cast<int32_t>(top);
+#endif
+            buffer[i].left = static_cast<int32_t>(bufferf[i].left);
+            buffer[i].right = static_cast<int32_t>(bufferf[i].right);
         }
     }
 }
@@ -687,8 +792,13 @@ int32_t SRgnIsPointInRegionf(HSRGN handle, float x, float y) {
     uint32_t sourceRects = rgn->source.Count();
     for (uint32_t i = 0; i < sourceRects; i++) {
         if (!(sourceArray[i].flags & SF_PARAMONLY)) {
+#if defined(WHOA_RECT_USES_SCREEN_COORDINATES)
+            if (x >= sourceArray[i].rect.left && y >= sourceArray[i].rect.top &&
+                x < sourceArray[i].rect.right && y < sourceArray[i].rect.bottom) {
+#else
             if (x >= sourceArray[i].rect.left && y >= sourceArray[i].rect.bottom &&
                 x < sourceArray[i].rect.right && y < sourceArray[i].rect.top) {
+#endif
                 result = 1;
                 break;
             }
