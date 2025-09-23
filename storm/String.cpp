@@ -206,14 +206,14 @@ size_t ISStrVPrintf(char* dest, size_t maxchars, const char* format, va_list va)
     return result;
 }
 
-void SStrInitialize() {
+void STORMAPI SStrInitialize() {
     if (!s_initialized) {
         InitializeFloatDigits();
         s_initialized = 1;
     }
 }
 
-char* SStrChr(char* string, char search) {
+char* STORMAPI SStrChr(char* string, char search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE_END;
@@ -233,7 +233,7 @@ char* SStrChr(char* string, char search) {
     return string;
 }
 
-const char* SStrChr(const char* string, char search) {
+const char* STORMAPI SStrChr(const char* string, char search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE_END;
@@ -253,7 +253,7 @@ const char* SStrChr(const char* string, char search) {
     return string;
 }
 
-char* SStrChrR(char* string, char search) {
+char* STORMAPI SStrChrR(char* string, char search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE_END;
@@ -269,7 +269,7 @@ char* SStrChrR(char* string, char search) {
     return result;
 }
 
-const char* SStrChrR(const char* string, char search) {
+const char* STORMAPI SStrChrR(const char* string, char search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE_END;
@@ -285,7 +285,7 @@ const char* SStrChrR(const char* string, char search) {
     return result;
 }
 
-int32_t SStrCmp(const char* string1, const char* string2, size_t maxchars) {
+int32_t STORMAPI SStrCmp(const char* string1, const char* string2, size_t maxchars) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string1);
     STORM_VALIDATE(string2);
@@ -294,7 +294,7 @@ int32_t SStrCmp(const char* string1, const char* string2, size_t maxchars) {
     return strncmp(string1, string2, maxchars);
 }
 
-int32_t SStrCmpI(const char* string1, const char* string2, size_t maxchars) {
+int32_t STORMAPI SStrCmpI(const char* string1, const char* string2, size_t maxchars) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string1);
     STORM_VALIDATE(string2);
@@ -309,7 +309,7 @@ int32_t SStrCmpI(const char* string1, const char* string2, size_t maxchars) {
 #endif
 }
 
-size_t SStrCopy(char* dest, const char* source, size_t destsize) {
+size_t STORMAPI SStrCopy(char* dest, const char* source, size_t destsize) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(dest);
     STORM_VALIDATE(source);
@@ -344,7 +344,7 @@ size_t SStrCopy(char* dest, const char* source, size_t destsize) {
     return static_cast<size_t>(destbuf - dest);
 }
 
-char* SStrDupA(const char* string, const char* filename, uint32_t linenumber) {
+char* STORMAPI SStrDupA(const char* string, const char* filename, uint32_t linenumber) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE_END;
@@ -356,7 +356,7 @@ char* SStrDupA(const char* string, const char* filename, uint32_t linenumber) {
     return dup;
 }
 
-uint32_t SStrHash(const char* string, uint32_t flags, uint32_t seed) {
+uint32_t STORMAPI SStrHash(const char* string, uint32_t flags, uint32_t seed) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE_END;
@@ -392,7 +392,7 @@ uint32_t SStrHash(const char* string, uint32_t flags, uint32_t seed) {
     return result ? result : 1;
 }
 
-uint32_t SStrHashHT(const char* string) {
+uint32_t STORMAPI SStrHashHT(const char* string) {
     char normalized[0x400];
     char* buf = normalized;
 
@@ -423,7 +423,7 @@ uint32_t SStrHashHT(const char* string) {
     return bjhash((uint8_t*)&normalized, length, 0);
 }
 
-size_t SStrLen(const char* string) {
+size_t STORMAPI SStrLen(const char* string) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE_END;
@@ -436,14 +436,14 @@ size_t SStrLen(const char* string) {
     return stringEnd - string;
 }
 
-void SStrLower(char* string) {
+void STORMAPI SStrLower(char* string) {
     while (*string) {
         *string = static_cast<char>(tolower(*string));
         string++;
     }
 }
 
-uint32_t SStrPack(char* dest, const char* source, uint32_t destsize) {
+uint32_t STORMAPI SStrPack(char* dest, const char* source, uint32_t destsize) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(dest);
     STORM_VALIDATE(source);
@@ -488,7 +488,7 @@ uint32_t SStrPack(char* dest, const char* source, uint32_t destsize) {
     return static_cast<uint32_t>(i - dest);
 }
 
-size_t SStrPrintf(char* dest, size_t maxchars, const char* format, ...) {
+size_t STORMCDECL SStrPrintf(char* dest, size_t maxchars, const char* format, ...) {
     va_list va;
     va_start(va, format);
 
@@ -500,7 +500,7 @@ size_t SStrPrintf(char* dest, size_t maxchars, const char* format, ...) {
     return ISStrVPrintf(dest, maxchars, format, va);
 }
 
-size_t SStrVPrintf(char* dest, size_t maxchars, const char* format, va_list arglist) {
+size_t STORMAPI SStrVPrintf(char* dest, size_t maxchars, const char* format, va_list arglist) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(dest);
     STORM_VALIDATE(format);
@@ -509,7 +509,7 @@ size_t SStrVPrintf(char* dest, size_t maxchars, const char* format, va_list argl
     return ISStrVPrintf(dest, maxchars, format, arglist);
 }
 
-char* SStrStr(char* string, const char* search) {
+char* STORMAPI SStrStr(char* string, const char* search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE(search);
@@ -525,7 +525,7 @@ char* SStrStr(char* string, const char* search) {
     return nullptr;
 }
 
-const char* SStrStr(const char* string, const char* search) {
+const char* STORMAPI SStrStr(const char* string, const char* search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE(search);
@@ -541,7 +541,7 @@ const char* SStrStr(const char* string, const char* search) {
     return nullptr;
 }
 
-char* SStrStrI(char* string, const char* search) {
+char* STORMAPI SStrStrI(char* string, const char* search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE(search);
@@ -557,7 +557,7 @@ char* SStrStrI(char* string, const char* search) {
     return nullptr;
 }
 
-const char* SStrStrI(const char* string, const char* search) {
+const char* STORMAPI SStrStrI(const char* string, const char* search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE(search);
@@ -573,7 +573,7 @@ const char* SStrStrI(const char* string, const char* search) {
     return nullptr;
 }
 
-void SStrTokenize(const char** string, char* buffer, size_t bufferchars, const char* whitespace, int32_t* quoted) {
+void STORMAPI SStrTokenize(const char** string, char* buffer, size_t bufferchars, const char* whitespace, int32_t* quoted) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE(*string);
@@ -735,7 +735,7 @@ static inline double ISStrToDouble(const char* string) {
     return result;
 }
 
-double SStrToDouble(const char* string) {
+double STORMAPI SStrToDouble(const char* string) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE_END;
@@ -743,7 +743,7 @@ double SStrToDouble(const char* string) {
     return ISStrToDouble(string);
 }
 
-float SStrToFloat(const char* string) {
+float STORMAPI SStrToFloat(const char* string) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE_END;
@@ -751,7 +751,7 @@ float SStrToFloat(const char* string) {
     return static_cast<float>(ISStrToDouble(string));
 }
 
-int32_t SStrToInt(const char* string) {
+int32_t STORMAPI SStrToInt(const char* string) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE_END;
@@ -777,7 +777,7 @@ int32_t SStrToInt(const char* string) {
     return result;
 }
 
-uint32_t SStrToUnsigned(const char* string) {
+uint32_t STORMAPI SStrToUnsigned(const char* string) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE_END;
@@ -793,7 +793,7 @@ uint32_t SStrToUnsigned(const char* string) {
     return result;
 }
 
-void SStrUpper(char* string) {
+void STORMAPI SStrUpper(char* string) {
     while (*string) {
         *string = static_cast<char>(toupper(*string));
         string++;

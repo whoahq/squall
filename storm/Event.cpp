@@ -100,14 +100,14 @@ void CopyIdHashTable(_IDHASHTABLE *dest, _IDHASHTABLE *source) {
     }
 }
 
-int32_t SEvtBreakHandlerChain(void* data) {
+int32_t STORMAPI SEvtBreakHandlerChain(void* data) {
     s_critsect.Enter();
     s_breakcmdlist.NewNode(2, 0, 0)->data = data;
     s_critsect.Leave();
     return 1;
 }
 
-int32_t SEvtDestroy() {
+int32_t STORMAPI SEvtDestroy() {
     s_critsect.Enter();
 
     for (uint32_t i = 0; i < s_typehashtablesize; i++) {
@@ -134,7 +134,7 @@ int32_t SEvtDestroy() {
     return 1;
 }
 
-int32_t SEvtDispatch(uint32_t type, uint32_t subtype, uint32_t id, void* data) {
+int32_t STORMAPI SEvtDispatch(uint32_t type, uint32_t subtype, uint32_t id, void* data) {
     SInterlockedIncrement(&s_dispatchesinprogress);
 
     int32_t success = 0;
@@ -229,7 +229,7 @@ int32_t SEvtDispatch(uint32_t type, uint32_t subtype, uint32_t id, void* data) {
     return success;
 }
 
-int32_t SEvtPopState(uint32_t type, uint32_t subtype) {
+int32_t STORMAPI SEvtPopState(uint32_t type, uint32_t subtype) {
     int32_t success = 0;
     s_critsect.Enter();
 
@@ -259,7 +259,7 @@ int32_t SEvtPopState(uint32_t type, uint32_t subtype) {
     return success;
 }
 
-int32_t SEvtPushState(uint32_t type, uint32_t subtype) {
+int32_t STORMAPI SEvtPushState(uint32_t type, uint32_t subtype) {
     int32_t success = 0;
     s_critsect.Enter();
 
@@ -279,7 +279,7 @@ int32_t SEvtPushState(uint32_t type, uint32_t subtype) {
     return success;
 }
 
-int32_t SEvtRegisterHandler(uint32_t type, uint32_t subtype, uint32_t id, uint32_t flags, SEVTHANDLER handler) {
+int32_t STORMAPI SEvtRegisterHandler(uint32_t type, uint32_t subtype, uint32_t id, uint32_t flags, SEVTHANDLER handler) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handler);
     STORM_VALIDATE(!flags);
@@ -375,7 +375,7 @@ int32_t SEvtRegisterHandler(uint32_t type, uint32_t subtype, uint32_t id, uint32
     return 1;
 }
 
-int32_t SEvtUnregisterHandler(uint32_t type, uint32_t subtype, uint32_t id, SEVTHANDLER handler) {
+int32_t STORMAPI SEvtUnregisterHandler(uint32_t type, uint32_t subtype, uint32_t id, SEVTHANDLER handler) {
     int32_t success = 0;
     s_critsect.Enter();
 
@@ -404,7 +404,7 @@ int32_t SEvtUnregisterHandler(uint32_t type, uint32_t subtype, uint32_t id, SEVT
     return success;
 }
 
-int32_t SEvtUnregisterType(uint32_t type, uint32_t subtype) {
+int32_t STORMAPI SEvtUnregisterType(uint32_t type, uint32_t subtype) {
     int32_t success = 0;
     s_critsect.Enter();
 

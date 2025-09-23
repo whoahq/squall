@@ -24,7 +24,7 @@ void operator delete[](void* ptr) noexcept {
     }
 }
 
-void* SMemAlloc(size_t bytes, const char* filename, int32_t linenumber, uint32_t flags) {
+void* STORMAPI SMemAlloc(size_t bytes, const char* filename, int32_t linenumber, uint32_t flags) {
     size_t alignedBytes = (bytes + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1);
 
     void* result;
@@ -43,31 +43,31 @@ void* SMemAlloc(size_t bytes, const char* filename, int32_t linenumber, uint32_t
     }
 }
 
-void SMemCopy(void* dst, void* src, size_t bytes) {
+void STORMAPI SMemCopy(void* dst, void* src, size_t bytes) {
     memmove(dst, src, bytes);
 }
 
-void SMemFill(void* ptr, size_t bytes, uint8_t value) {
+void STORMAPI SMemFill(void* ptr, size_t bytes, uint8_t value) {
     memset(ptr, value, bytes);
 }
 
-void SMemFree(void* ptr) {
+void STORMAPI SMemFree(void* ptr) {
     if (ptr) {
         free(ptr);
     }
 }
 
-void SMemFree(void* ptr, const char* filename, int32_t linenumber, uint32_t flags) {
+void STORMAPI SMemFree(void* ptr, const char* filename, int32_t linenumber, uint32_t flags) {
     if (ptr) {
         free(ptr);
     }
 }
 
-void SMemMove(void* dst, void* src, size_t bytes) {
+void STORMAPI SMemMove(void* dst, void* src, size_t bytes) {
     memmove(dst, src, bytes);
 }
 
-void* SMemReAlloc(void* ptr, size_t bytes, const char* filename, int32_t linenumber, uint32_t flags) {
+void* STORMAPI SMemReAlloc(void* ptr, size_t bytes, const char* filename, int32_t linenumber, uint32_t flags) {
     if (flags == 0xB00BEEE5) {
         return nullptr;
     }
@@ -99,7 +99,7 @@ void* SMemReAlloc(void* ptr, size_t bytes, const char* filename, int32_t linenum
     }
 }
 
-void SMemZero(void* ptr, size_t bytes) {
+void STORMAPI SMemZero(void* ptr, size_t bytes) {
     uint8_t* ptrdata = static_cast<uint8_t*>(ptr);
     for (size_t i = 0; i < bytes; i++) {
         ptrdata[i] = 0;
