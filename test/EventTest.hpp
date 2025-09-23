@@ -1,5 +1,5 @@
 #include "test/Test.hpp"
-#include "storm/Event.h"
+#include "storm/Event.hpp"
 
 #include <deque>
 #include <sstream>

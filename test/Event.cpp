@@ -1,4 +1,4 @@
-#include "EventTest.h"
+#include "EventTest.hpp"
 
 
 static void STORMAPI TestBreakEventHandlerSelf(void* data) {
