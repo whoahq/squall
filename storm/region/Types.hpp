@@ -8,12 +8,15 @@
 DECLARE_STORM_HANDLE(HSRGN);
 DECLARE_STORM_HANDLE(HLOCKEDRGN);
 
+#if defined(WHOA_RECT_USES_SCREEN_COORDINATES)
 struct RECTF {
-    float left;
-    float bottom;
-    float right;
-    float top;
+    float left, top, right, bottom;
 };
+#else
+struct RECTF {
+    float left, bottom, right, top;
+};
+#endif
 
 #if defined(WHOA_SYSTEM_WIN)
 // NOTE: WINAPI's RECT uses `long`.

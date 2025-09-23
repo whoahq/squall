@@ -22,7 +22,11 @@ struct RgnDataTest {
 
 // Helpers for comparing RECTF structs
 std::ostream& operator <<(std::ostream& os, RECTF const& value) {
+#if defined(WHOA_RECT_USES_SCREEN_COORDINATES)
+    os << "{ " << value.left << ", " << value.top << ", " << value.right << ", " << value.bottom << " }";
+#else
     os << "{ " << value.left << ", " << value.bottom << ", " << value.right << ", " << value.top << " }";
+#endif
     return os;
 }
 
