@@ -27,7 +27,7 @@ TEST_CASE("SUniSGetUTF8", "[unicode]") {
         int32_t chars = 0;
         auto code = SUniSGetUTF8(reinterpret_cast<const uint8_t*>(string), &chars);
 
-        REQUIRE(code == -1u);
+        REQUIRE(code == ~0u);
         REQUIRE(chars == 0);
     }
 }

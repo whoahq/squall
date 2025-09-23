@@ -43,12 +43,12 @@ THandle TSExportTableSimpleReuse<T, THandle>::GenerateUniqueHandle() {
             this->m_wrapped = 1;
         }
 
-        if (!this->m_wrapped || !this->Ptr(reinterpret_cast<THandle>(this->m_sequence))) {
+        if (!this->m_wrapped || !this->Ptr(reinterpret_cast<THandle>(static_cast<uintptr_t>(this->m_sequence)))) {
             break;
         }
     }
 
-    return reinterpret_cast<THandle>(this->m_sequence);
+    return reinterpret_cast<THandle>(static_cast<uintptr_t>(this->m_sequence));
 }
 
 template <class T, class THandle>
