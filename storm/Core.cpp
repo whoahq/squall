@@ -1,5 +1,6 @@
 #include "Core.hpp"
 #include "Event.hpp"
+#include "Transparency.hpp"
 
 int32_t STORMAPI StormDestroy() {
     // Combined list of all calls from every game
@@ -22,6 +23,6 @@ int32_t STORMAPI StormDestroy() {
     // SRegDestroy();
     // SErrDestroy();
     // SLogDestroy();
-    // STransDestroy();
+    STransDestroy();
     return 1;
 }
