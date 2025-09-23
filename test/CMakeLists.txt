@@ -9,6 +9,7 @@ if(WHOA_TEST_STORMDLL)
         Region.cpp
         String.cpp
         Test.cpp
+        Transparency.cpp
     )
 
     if(WHOA_STORMDLL_VERSION GREATER_EQUAL 2003)
@@ -18,6 +19,7 @@ else()
     file(GLOB TEST_SOURCES
         "*.cpp"
         "big/*.cpp"
+        "trans/*.cpp"
     )
 endif()
 
