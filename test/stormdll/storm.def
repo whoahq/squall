@@ -245,22 +245,22 @@ EXPORTS
     ;SRegGetNumSubKeys             @430 NONAME
 
     ; Transparency
-    ;STransBlt                     @431 NONAME
-    ;STransBltUsingMask            @432 NONAME
-    ;STransCreateI                 @433 NONAME
-    ;STransDelete                  @434 NONAME
+    STransBlt                     @431 NONAME
+    STransBltUsingMask            @432 NONAME
+    STransCreateI                 @433 NONAME
+    STransDelete                  @434 NONAME
     ;STransDestroy                 @435 NONAME
-    ;STransDuplicate               @436 NONAME
-    ;STransIntersectDirtyArray     @437 NONAME
-    ;STransInvertMask              @438 NONAME
+    STransDuplicate               @436 NONAME
+    STransIntersectDirtyArray     @437 NONAME
+    STransInvertMask              @438 NONAME
     ;STransLoadI                   @439 NONAME
-    ;STransSetDirtyArrayInfo       @440 NONAME
-    ;STransUpdateDirtyArray        @441 NONAME
-    ;STransIsPixelInMask           @442 NONAME
-    ;STransCombineMasks            @443 NONAME
-    ;STransCreateMaskI             @444 NONAME
-    ;STransCreateE                 @445 NONAME
-    ;STransCreateMaskE             @446 NONAME
+    STransSetDirtyArrayInfo       @440 NONAME
+    STransUpdateDirtyArray        @441 NONAME
+    STransIsPixelInMask           @442 NONAME
+    STransCombineMasks            @443 NONAME
+    STransCreateMaskI             @444 NONAME
+    STransCreateE                 @445 NONAME
+    STransCreateMaskE             @446 NONAME
     ;STransLoadE                   @447 NONAME
 
     ; Video

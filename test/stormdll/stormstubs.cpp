@@ -117,6 +117,24 @@ int32_t STORMAPI SStrToInt(const char*) { return 0; }
 uint32_t STORMAPI SStrToUnsigned(const char*) { return 0; }
 void STORMAPI SStrUpper(char*) {}
 
+#include <storm/Transparency.hpp>
+
+int32_t STORMAPI STransBlt(uint8_t*, int32_t, int32_t, int32_t, HSTRANS) { return 0; }
+int32_t STORMAPI STransBltUsingMask(uint8_t*, uint8_t*, int32_t, int32_t, HSTRANS) { return 0; }
+int32_t STORMAPI STransCombineMasks(HSTRANS, HSTRANS, int32_t, int32_t, uint32_t, HSTRANS*) { return 0; }
+int32_t STORMAPI STransCreateE(uint8_t*, int32_t, int32_t, int32_t, RECT*, uint32_t, HSTRANS*) { return 0; }
+int32_t STORMAPI STransCreateI(uint8_t*, int32_t, int32_t, int32_t, RECT*, uint32_t, HSTRANS*) { return 0; }
+int32_t STORMAPI STransCreateMaskE(uint8_t*, int32_t, int32_t, int32_t, RECT*, uint32_t, HSTRANS*) { return 0; }
+int32_t STORMAPI STransCreateMaskI(uint8_t*, int32_t, int32_t, int32_t, RECT*, uint32_t, HSTRANS*) { return 0; }
+int32_t STORMAPI STransDelete(HSTRANS) { return 0; }
+int32_t STORMAPI STransDestroy() { return 0; }
+int32_t STORMAPI STransDuplicate(HSTRANS, HSTRANS*) { return 0; }
+int32_t STORMAPI STransIntersectDirtyArray(HSTRANS, uint8_t*, uint8_t, HSTRANS*) { return 0; }
+int32_t STORMAPI STransInvertMask(HSTRANS, HSTRANS*) { return 0; }
+int32_t STORMAPI STransIsPixelInMask(HSTRANS, int32_t, int32_t) { return 0; }
+int32_t STORMAPI STransSetDirtyArrayInfo(int32_t, int32_t, int32_t, int32_t) { return 0; }
+int32_t STORMAPI STransUpdateDirtyArray(uint8_t*, uint8_t, int32_t, int32_t, HSTRANS, int32_t) { return 0; }
+
 #include <storm/Unicode.hpp>
 
 ptrdiff_t STORMAPI SUniConvertUTF16ToDos(char*, const char16_t*, uint32_t) { return 0; };
