@@ -43,6 +43,8 @@ add_library(storm STATIC
     ${STORM_SOURCES}
 )
 
+target_compile_definitions(storm PRIVATE _CRT_SECURE_NO_WARNINGS)
+
 target_include_directories(storm
     PUBLIC
         ${PROJECT_SOURCE_DIR}
