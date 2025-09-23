@@ -1,6 +1,7 @@
 #include "storm/Hash.hpp"
 #include "storm/Thread.hpp"
 #include "test/Test.hpp"
+#include <cstdint>
 
 struct TestHashObject : TSHashObject<TestHashObject, HASHKEY_STRI> {
     uint32_t index = 255;
@@ -11,15 +12,16 @@ struct TestExportObject : TSHashObject<TestHashObject, HASHKEY_NONE> {
 };
 
 typedef void* TestExportObjectHandle;
-
 typedef void* TestExportLockedHandle;
+
+#define MAKEINTPTR(x) reinterpret_cast<void*>(static_cast<uintptr_t>(x));
 
 TEST_CASE("HASHKEY_PTR", "[hash]") {
     SECTION("constructs correctly") {
         HASHKEY_PTR key1;
         REQUIRE(key1.GetPtr() == nullptr);
 
-        void* ptr = reinterpret_cast<void*>(0xDEAFBEEF);
+        void* ptr = MAKEINTPTR(0xDEAFBEEF);
         HASHKEY_PTR key2 = { ptr };
         REQUIRE(key2.GetPtr() == ptr);
     }
@@ -27,9 +29,9 @@ TEST_CASE("HASHKEY_PTR", "[hash]") {
 
 TEST_CASE("HASHKEY_PTR::operator=") {
     SECTION("assigns from another key") {
-        void* ptr1 = reinterpret_cast<void*>(0xDEAFBEEF);
+        void* ptr1 = MAKEINTPTR(0xDEAFBEEF);
         HASHKEY_PTR key1 = { ptr1 };
-        void* ptr2 = reinterpret_cast<void*>(0xFEEDFACE);
+        void* ptr2 = MAKEINTPTR(0xFEEDFACE);
         HASHKEY_PTR key2 = { ptr2 };
         REQUIRE (!(key1 == key2));
 
@@ -40,12 +42,12 @@ TEST_CASE("HASHKEY_PTR::operator=") {
 
 TEST_CASE("HASHKEY_PTR::operator==") {
     SECTION("compares to another key") {
-        void* ptr1 = reinterpret_cast<void*>(0xDEAFBEEF);
+        void* ptr1 = MAKEINTPTR(0xDEAFBEEF);
         HASHKEY_PTR key1 = { ptr1 };
         HASHKEY_PTR key2 = { ptr1 };
         REQUIRE(key1 == key2);
 
-        void* ptr2 = reinterpret_cast<void*>(0xFEEDFACE);
+        void* ptr2 = MAKEINTPTR(0xFEEDFACE);
         HASHKEY_PTR key3 = { ptr2 };
         REQUIRE(!(key1 == key3));
     }
