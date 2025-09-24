@@ -10,7 +10,7 @@
 static uint32_t s_lasterror = ERROR_SUCCESS;
 static uint32_t s_suppress;
 
-[[noreturn]] void SErrDisplayAppFatal(const char* format, ...) {
+[[noreturn]] void STORMCDECL SErrDisplayAppFatal(const char* format, ...) {
     va_list args;
     va_start(args, format);
     vprintf(format, args);
@@ -60,7 +60,7 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
     }
 }
 
-int32_t SErrDisplayErrorFmt(uint32_t errorcode, const char* filename, int32_t linenumber, int32_t recoverable, uint32_t exitcode, const char* format, ...) {
+int32_t STORMCDECL SErrDisplayErrorFmt(uint32_t errorcode, const char* filename, int32_t linenumber, int32_t recoverable, uint32_t exitcode, const char* format, ...) {
     char buffer[2048];
 
     va_list args;

@@ -36,9 +36,9 @@ void STORMAPI SStrLower(char* string);
 
 uint32_t STORMAPI SStrPack(char* dest, const char* source, uint32_t destsize);
 
-size_t STORMAPI SStrPrintf(char* dest, size_t maxchars, const char* format, ...);
+size_t STORMCDECL SStrPrintf(char* dest, size_t maxchars, const char* format, ...);
 
-size_t STORMAPI SStrVPrintf(char* dest, size_t maxchars, const char* format, va_list arglist);
+size_t STORMCDECL SStrVPrintf(char* dest, size_t maxchars, const char* format, va_list arglist);
 
 char* STORMAPI SStrStr(char* string, const char* search);
 
