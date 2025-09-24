@@ -69,7 +69,7 @@ T* TSExportTableSyncReuse<T, THandle, TLockedHandle, TSync>::NewLock(THandle* ha
 template <class T, class THandle, class TLockedHandle, class TSync>
 void TSExportTableSyncReuse<T, THandle, TLockedHandle, TSync>::SyncEnterLock(TLockedHandle* lockedHandlePtr, int32_t forWriting) {
     this->m_sync.Enter(forWriting);
-    *lockedHandlePtr = reinterpret_cast<TLockedHandle>(forWriting ? 1 : -1);
+    *lockedHandlePtr = reinterpret_cast<TLockedHandle>(static_cast<intptr_t>(forWriting ? 1 : -1));
 }
 
 template <class T, class THandle, class TLockedHandle, class TSync>
