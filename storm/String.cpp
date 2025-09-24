@@ -500,7 +500,7 @@ size_t STORMCDECL SStrPrintf(char* dest, size_t maxchars, const char* format, ..
     return ISStrVPrintf(dest, maxchars, format, va);
 }
 
-size_t STORMAPI SStrVPrintf(char* dest, size_t maxchars, const char* format, va_list arglist) {
+size_t STORMCDECL SStrVPrintf(char* dest, size_t maxchars, const char* format, va_list arglist) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(dest);
     STORM_VALIDATE(format);

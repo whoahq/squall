@@ -41,6 +41,7 @@ TEST_CASE("SStrChr const", "[string]") {
     }
 }
 
+#if !defined(WHOA_TEST_STORMDLL)
 TEST_CASE("SStrChr", "[string]") {
     char string[] = "foobar";
 
@@ -77,6 +78,7 @@ TEST_CASE("SStrChr", "[string]") {
         REQUIRE(result == nullptr);
     }
 }
+#endif
 
 TEST_CASE("SStrChrR const", "[string]") {
     const char* string = "ffoobbaarr";
@@ -120,6 +122,7 @@ TEST_CASE("SStrChrR const", "[string]") {
     }
 }
 
+#if !defined(WHOA_TEST_STORMDLL)
 TEST_CASE("SStrChrR", "[string]") {
     char string[] = "ffoobbaarr";
 
@@ -162,6 +165,7 @@ TEST_CASE("SStrChrR", "[string]") {
         REQUIRE(result == nullptr);
     }
 }
+#endif
 
 TEST_CASE("SStrCmp", "[string]") {
     SECTION("compares two strings that exactly match correctly") {
@@ -221,6 +225,8 @@ TEST_CASE("SStrCmpI", "[string]") {
     }
 }
 
+#if !defined(WHOA_TEST_STORMDLL)
+// TODO: SStrDup in SC only has 1 arg
 TEST_CASE("SStrDupA", "[string]") {
     SECTION("duplicates string correctly") {
         auto string1 = "foo bar";
@@ -244,6 +250,7 @@ TEST_CASE("SStrDupA", "[string]") {
         REQUIRE(newPtr == true);
     }
 }
+#endif
 
 struct TestHash {
     const char *str;
@@ -346,6 +353,7 @@ TEST_CASE("SStrHash", "[string]") {
     }
 }
 
+#if !defined(WHOA_TEST_STORMDLL)
 TEST_CASE("SStrHashHT", "[string]") {
     SECTION("hashes simple string correctly") {
         auto hash = SStrHashHT("foo");
@@ -363,6 +371,7 @@ TEST_CASE("SStrHashHT", "[string]") {
         REQUIRE(hashForwardSlash == hashBackSlash);
     }
 }
+#endif
 
 TEST_CASE("SStrLen", "[string]") {
     SECTION("calculates string length correctly") {
