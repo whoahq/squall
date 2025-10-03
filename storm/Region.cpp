@@ -453,7 +453,11 @@ int SortRectCallback(const void* elem1, const void* elem2) {
     const RECTF* rct1 = static_cast<const RECTF*>(elem1);
     const RECTF* rct2 = static_cast<const RECTF*>(elem2);
 
+#if defined(WHOA_RECT_USES_SCREEN_COORDINATES)
+    double result = rct1->bottom == rct2->bottom ? rct1->left - rct2->left : rct1->bottom - rct2->bottom;
+#else
     double result = rct1->top == rct2->top ? rct1->left - rct2->left : rct1->top - rct2->top;
+#endif
 
     if (result > 0.0) {
         return 1;
