@@ -95,6 +95,7 @@ void CopyIdHashTable(_IDHASHTABLE *dest, _IDHASHTABLE *source) {
 
             *ppDestData = pNewEntry;
             *pNewEntry = *pSourceData;
+            ppDestData = &(*ppDestData)->next;
         }
         *ppDestData = nullptr;
     }
