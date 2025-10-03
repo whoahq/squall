@@ -1,6 +1,17 @@
 #include "storm/Region.hpp"
 #include "test/Test.hpp"
 #include <sstream>
+#include <initializer_list>
+#include <vector>
+
+
+// Flips top and bottom when not using screen coordinates.
+// Avoids ifdefs everywhere inside each test.
+#if defined(WHOA_RECT_USES_SCREEN_COORDINATES)
+#define DEP_RECT(left, top, right, bottom) { left, top, right, bottom }
+#else
+#define DEP_RECT(left, top, right, bottom) { left, bottom, right, top }
+#endif
 
 // Fixture for repetitive handling of Rgn objects.
 struct RgnDataTest {
@@ -18,6 +29,38 @@ struct RgnDataTest {
     HSRGN* operator &() { return &rgn; }
     operator HSRGN() const { return rgn; }
     HSRGN operator->() const { return rgn; }
+
+    void AddTestRectsi(std::initializer_list<RECT> rects) {
+        for (RECT rct : rects) {
+            SRgnCombineRecti(this->rgn, &rct, nullptr, SRGN_OR);
+        }
+    }
+
+    void AddTestRectsf(std::initializer_list<RECTF> rects) {
+        for (RECTF rct : rects) {
+            SRgnCombineRectf(this->rgn, &rct, nullptr, SRGN_OR);
+        }
+    }
+
+    std::vector<RECT> GetResultRectsi() {
+        uint32_t numRects = 0;
+        SRgnGetRectsi(this->rgn, &numRects, nullptr);
+
+        std::vector<RECT> result(numRects);
+        SRgnGetRectsi(this->rgn, &numRects, result.data());
+
+        return result;
+    }
+
+    std::vector<RECTF> GetResultRectsf() {
+        uint32_t numRects = 0;
+        SRgnGetRectsf(this->rgn, &numRects, nullptr);
+
+        std::vector<RECTF> result(numRects);
+        SRgnGetRectsf(this->rgn, &numRects, result.data());
+
+        return result;
+    }
 };
 
 // Helpers for comparing RECTF structs
