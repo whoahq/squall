@@ -1132,7 +1132,8 @@ TEST_CASE("SRgnGetRectsf", "[region]") {
         CHECK_THAT(buffer[0], MatchesRectf({ -10, -10, 10, 10 }));
     }
 
-    SECTION("retrieves rects in order of top value") {
+    SECTION("retrieves rects in order of last value") {
+        // The last value in WoW is top, in WC2/WC3/D1/D2/SC is bottom
         region.AddTestRectsf({
             { 0, 0, 1, 1 },
             { 4, -2, 5, 5 },
@@ -1145,20 +1146,13 @@ TEST_CASE("SRgnGetRectsf", "[region]") {
         SRgnGetRectsf(region, &numrects, buffer);
 
         CHECK(numrects == 4);
-#if defined(WHOA_RECT_USES_SCREEN_COORDINATES)
-        CHECK_THAT(buffer[0], MatchesRectf({ 2, -3, 3, -1 }));
-        CHECK_THAT(buffer[1], MatchesRectf({ 4, -2, 5, 5 }));
-        CHECK_THAT(buffer[2], MatchesRectf({ 0, 0, 1, 1 }));
-        CHECK_THAT(buffer[3], MatchesRectf({ -2, 2, -1, 3 }));
-#else
         CHECK_THAT(buffer[0], MatchesRectf({ 2, -3, 3, -1 }));
         CHECK_THAT(buffer[1], MatchesRectf({ 0, 0, 1, 1 }));
         CHECK_THAT(buffer[2], MatchesRectf({ -2, 2, -1, 3 }));
         CHECK_THAT(buffer[3], MatchesRectf({ 4, -2, 5, 5 }));
-#endif
     }
 
-    SECTION("retrieves rects in order of left value when tops are equal") {
+    SECTION("retrieves rects in order of left value when last are equal") {
         region.AddTestRectsf({
             { 0, 0, 1, 1 },
             { 4, 0, 5, 1 },
@@ -1232,7 +1226,8 @@ TEST_CASE("SRgnGetRectsi", "[region]") {
         CHECK_THAT(buffer[0], MatchesRecti(DEP_RECT(-10, -10, 10, 10)));
     }
 
-    SECTION("retrieves rects in order of top value") {
+    SECTION("retrieves rects in order of last value") {
+        // Last value in WoW is top, in WC2/WC3/D1/D2/SC is bottom
         region.AddTestRectsi({
             { 0, 0, 1, 1 },
             { 4, -2, 5, 5 },
@@ -1245,20 +1240,13 @@ TEST_CASE("SRgnGetRectsi", "[region]") {
         SRgnGetRectsi(region, &numrects, buffer);
 
         CHECK(numrects == 4);
-#if defined(WHOA_RECT_USES_SCREEN_COORDINATES)
-        CHECK_THAT(buffer[0], MatchesRecti({ 2, -3, 3, -1 }));
-        CHECK_THAT(buffer[1], MatchesRecti({ 4, -2, 5, 5 }));
-        CHECK_THAT(buffer[2], MatchesRecti({ 0, 0, 1, 1 }));
-        CHECK_THAT(buffer[3], MatchesRecti({ -2, 2, -1, 3 }));
-#else
-        CHECK_THAT(buffer[0], MatchesRecti({ 2, -1, 3, -3 }));
-        CHECK_THAT(buffer[1], MatchesRecti({ 0, 1, 1, 0 }));
-        CHECK_THAT(buffer[2], MatchesRecti({ -2, 3, -1, 2 }));
-        CHECK_THAT(buffer[3], MatchesRecti({ 4, 5, 5, -2 }));
-#endif
+        CHECK_THAT(buffer[0], MatchesRecti(DEP_RECT(2, -3, 3, -1)));
+        CHECK_THAT(buffer[1], MatchesRecti(DEP_RECT(0, 0, 1, 1)));
+        CHECK_THAT(buffer[2], MatchesRecti(DEP_RECT(-2, 2, -1, 3)));
+        CHECK_THAT(buffer[3], MatchesRecti(DEP_RECT(4, -2, 5, 5)));
     }
 
-    SECTION("retrieves rects in order of left value when tops are equal") {
+    SECTION("retrieves rects in order of left value when last are equal") {
         region.AddTestRectsi({
             { 0, 0, 10, 10 },
             { 40, 0, 50, 10 },
