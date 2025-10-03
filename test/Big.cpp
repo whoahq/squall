@@ -1,5 +1,4 @@
-#include "storm/Big.hpp"
-#include "test/Test.hpp"
+#include "BigTest.hpp"
 #include <string>
 
 TEST_CASE("SBigAdd", "[big]") {

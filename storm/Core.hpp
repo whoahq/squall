@@ -13,5 +13,6 @@
 #endif
 #endif
 
+int32_t STORMAPI StormDestroy();
 
 #endif

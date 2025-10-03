@@ -10,8 +10,7 @@ static void STORMAPI TestBreakEventHandlerSelf(void* data) {
 static void STORMAPI TestBreakEventHandlerOther(void* data) {
     EventHandlerTest::RegisterCall(10, data);
 
-    int bunk = 0;
-    CHECK(SEvtBreakHandlerChain(&bunk) == 1);
+    CHECK(SEvtBreakHandlerChain(nullptr) == 1);
 }
 
 TEST_CASE("SEvtBreakHandlerChain", "[event]") {
@@ -22,6 +21,7 @@ TEST_CASE("SEvtBreakHandlerChain", "[event]") {
 
         SEvtRegisterHandler(7357, 1, 0, 0, &TestEventHandler1);
         CHECK(SEvtDispatch(7357, 1, 0, nullptr) == 0);
+        CHECK(SEvtDispatch(7357, 1, 0, nullptr) == 1);
     }
 
     SECTION("causes SEvtDispatch to break early if one of many data matches") {
@@ -34,6 +34,11 @@ TEST_CASE("SEvtBreakHandlerChain", "[event]") {
 
         SEvtRegisterHandler(7357, 1, 0, 0, &TestEventHandler1);
         CHECK(SEvtDispatch(7357, 1, 0, &data2) == 0);
+
+        // CLEANUP - SEvtDestroy doesn't erase registered breaks, avoid polluting other tests
+        CHECK(SEvtDispatch(7357, 1, 0, nullptr) == 0);
+        CHECK(SEvtDispatch(7357, 1, 0, &data1) == 0);
+        CHECK(SEvtDispatch(7357, 1, 0, &data3) == 0);
     }
 
     SECTION("doesn't break SEvtDispatch if no data matches") {
@@ -46,6 +51,12 @@ TEST_CASE("SEvtBreakHandlerChain", "[event]") {
 
         SEvtRegisterHandler(7357, 1, 0, 0, &TestEventHandler1);
         CHECK(SEvtDispatch(7357, 1, 0, &test) == 1);
+
+        // CLEANUP - SEvtDestroy doesn't erase registered breaks, avoid polluting other tests
+        CHECK(SEvtDispatch(7357, 1, 0, nullptr) == 0);
+        CHECK(SEvtDispatch(7357, 1, 0, &data1) == 0);
+        CHECK(SEvtDispatch(7357, 1, 0, &data2) == 0);
+        CHECK(SEvtDispatch(7357, 1, 0, &data3) == 0);
     }
 
     SECTION("deduplicates multiple same-data breaks") {
@@ -75,15 +86,20 @@ TEST_CASE("SEvtBreakHandlerChain", "[event]") {
         SEvtRegisterHandler(0, 0, 0, 0, &TestBreakEventHandlerOther);
         SEvtRegisterHandler(0, 0, 0, 0, &TestEventHandler2);
 
-        CHECK(SEvtDispatch(0, 0, 0, nullptr) == 1);
+        int data = 42;
+        CHECK(SEvtDispatch(0, 0, 0, &data) == 1);
         CHECK(test.NumCalls() == 3);
         // Calls are reverse order, TestEventHandler1 doesn't get called
-        CHECK_THAT(test.CallResult(), MatchesCall({ 2, nullptr }));
-        CHECK_THAT(test.CallResult(), MatchesCall({ 10, nullptr }));
-        CHECK_THAT(test.CallResult(), MatchesCall({ 1, nullptr }));
+        CHECK_THAT(test.CallResult(), MatchesCall({ 2, &data }));
+        CHECK_THAT(test.CallResult(), MatchesCall({ 10, &data }));
+        CHECK_THAT(test.CallResult(), MatchesCall({ 1, &data }));
+
+        // CLEANUP - SEvtDestroy doesn't erase registered breaks, avoid polluting other tests
+        CHECK(SEvtDispatch(0, 0, 0, nullptr) == 0);
     }
 }
 
+#if !defined(WHOA_TEST_STORMDLL)
 TEST_CASE("SEvtDestroy", "[event]") {
     EventHandlerTest test;
 
@@ -117,6 +133,7 @@ TEST_CASE("SEvtDestroy", "[event]") {
         CHECK(SEvtDispatch(0, 0, 0, nullptr) == 1);
     }
 }
+#endif
 
 static void STORMAPI TestNestedDispatchEventHandler(void* data) {
     EventHandlerTest::RegisterCall(20, data);
