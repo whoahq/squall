@@ -2,7 +2,9 @@
 if(WHOA_TEST_STORMDLL)
     set(TEST_SOURCES
         #Big.cpp
-        #Event.cpp
+        Core.cpp
+        Event.cpp
+        EventTest.cpp
         Memory.cpp
         Region.cpp
         String.cpp
