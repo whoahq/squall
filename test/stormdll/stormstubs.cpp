@@ -1,3 +1,7 @@
+#include <storm/Core.hpp>
+
+int32_t STORMAPI StormDestroy() { return 0; }
+
 #include <storm/Big.hpp>
 
 void STORMAPI SBigAdd(BigData*, BigData*, BigData*) {}
@@ -39,7 +43,6 @@ void STORMAPI SErrPrepareAppFatal(const char*, int32_t) {}
 void STORMAPI SErrSetLastError(uint32_t) {}
 uint32_t STORMAPI SErrGetLastError() { return 0; }
 void STORMAPI SErrSuppressErrors(uint32_t) {}
-
 
 #include <storm/Event.hpp>
 
