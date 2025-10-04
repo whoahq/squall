@@ -8,6 +8,11 @@
 #include <cstdint>
 #include <typeinfo>
 
+#define STORM_LIST_LINK_AFTER   1
+#define STORM_LIST_LINK_BEFORE  2
+#define STORM_LIST_HEAD         STORM_LIST_LINK_AFTER
+#define STORM_LIST_TAIL         STORM_LIST_LINK_BEFORE
+
 #define STORM_LIST(T) TSList<T, TSGetLink<T>>
 
 template <class T, class TGetLink>
@@ -124,7 +129,7 @@ void TSList<T, TGetLink>::LinkNode(T* ptr, uint32_t linktype, T* existingptr) {
     TSLink<T>* v8;
 
     switch (linktype) {
-    case 1:
+    case STORM_LIST_LINK_AFTER:
         // After existingptr
         v5->m_prevlink = v7;
         v5->m_next = v7->m_next;
@@ -133,7 +138,7 @@ void TSList<T, TGetLink>::LinkNode(T* ptr, uint32_t linktype, T* existingptr) {
 
         break;
 
-    case 2:
+    case STORM_LIST_LINK_BEFORE:
         // Before existingptr
         v8 = v7->m_prevlink;
         v5->m_prevlink = v7->m_prevlink;
@@ -151,12 +156,12 @@ void TSList<T, TGetLink>::LinkNode(T* ptr, uint32_t linktype, T* existingptr) {
 
 template <class T, class TGetLink>
 void TSList<T, TGetLink>::LinkToHead(T* ptr) {
-    this->LinkNode(ptr, 1, nullptr);
+    this->LinkNode(ptr, STORM_LIST_HEAD, nullptr);
 }
 
 template <class T, class TGetLink>
 void TSList<T, TGetLink>::LinkToTail(T* ptr) {
-    this->LinkNode(ptr, 2, nullptr);
+    this->LinkNode(ptr, STORM_LIST_TAIL, nullptr);
 }
 
 template <class T, class TGetLink>
