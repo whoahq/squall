@@ -1,7 +1,22 @@
-file(GLOB_RECURSE TEST_SOURCES
-    "*.cpp"
-    "big/*.cpp"
-)
+
+if(WHOA_TEST_STORMDLL)
+    set(TEST_SOURCES
+        #Big.cpp
+        Core.cpp
+        Event.cpp
+        EventTest.cpp
+        Memory.cpp
+        Region.cpp
+        String.cpp
+        Test.cpp
+        Unicode.cpp
+    )
+else()
+    file(GLOB TEST_SOURCES
+        "*.cpp"
+        "big/*.cpp"
+    )
+endif()
 
 if(WHOA_SYSTEM_MAC)
     set_source_files_properties(${TEST_SOURCES}

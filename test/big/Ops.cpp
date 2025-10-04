@@ -1,6 +1,5 @@
-#include "storm/Big.hpp"
+#include "test/BigTest.hpp"
 #include "storm/big/Ops.hpp"
-#include "test/Test.hpp"
 #include <vector>
 
 TEST_CASE("Add", "[big]") {

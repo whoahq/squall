@@ -1,6 +1,6 @@
 #include "storm/Unicode.hpp"
 
-uint32_t SUniSGetUTF8(const uint8_t* strptr, int32_t* chars) {
+uint32_t STORMAPI SUniSGetUTF8(const uint8_t* strptr, int32_t* chars) {
     if (chars) {
         *chars = 0;
     }
@@ -58,7 +58,7 @@ uint32_t SUniSGetUTF8(const uint8_t* strptr, int32_t* chars) {
     return value;
 }
 
-void SUniSPutUTF8(uint32_t c, char* strptr) {
+void STORMAPI SUniSPutUTF8(uint32_t c, char* strptr) {
     if (!strptr) {
         return;
     }
