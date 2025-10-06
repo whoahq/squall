@@ -3,6 +3,7 @@
 #include "storm/Error.hpp"
 #include "storm/Hash.hpp"
 #include "storm/Thread.hpp"
+
 #include <limits>
 
 static TSExportTableSyncReuse<RGN, HSRGN, HLOCKEDRGN, CCritSect> s_rgntable;
@@ -489,7 +490,7 @@ void ProduceCombinedRectangles(RGN* rgn) {
     }
 }
 
-void SRgnCombineRectf(HSRGN handle, const RECTF* rect, void* param, int32_t combineMode) {
+void STORMAPI SRgnCombineRectf(HSRGN handle, const RECTF* rect, void* param, int32_t combineMode) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
     STORM_VALIDATE(rect);
@@ -522,7 +523,7 @@ void SRgnCombineRectf(HSRGN handle, const RECTF* rect, void* param, int32_t comb
     s_rgntable.Unlock(lockedHandle);
 }
 
-void SRgnCombineRecti(HSRGN handle, const RECT* rect, void* param, int32_t combineMode) {
+void STORMAPI SRgnCombineRecti(HSRGN handle, const RECT* rect, void* param, int32_t combineMode) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(rect);
     STORM_VALIDATE_END_VOID;
@@ -537,7 +538,7 @@ void SRgnCombineRecti(HSRGN handle, const RECT* rect, void* param, int32_t combi
     SRgnCombineRectf(handle, &rectf, param, combineMode);
 }
 
-void SRgnClear(HSRGN handle) {
+void STORMAPI SRgnClear(HSRGN handle) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
     STORM_VALIDATE_END_VOID;
@@ -551,7 +552,7 @@ void SRgnClear(HSRGN handle) {
     }
 }
 
-void SRgnCreate(HSRGN* handlePtr, uint32_t reserved) {
+void STORMAPI SRgnCreate(HSRGN* handlePtr, uint32_t reserved) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handlePtr);
     STORM_VALIDATE(!reserved);
@@ -565,7 +566,7 @@ void SRgnCreate(HSRGN* handlePtr, uint32_t reserved) {
     s_rgntable.Unlock(lockedHandle);
 }
 
-void SRgnDelete(HSRGN handle) {
+void STORMAPI SRgnDelete(HSRGN handle) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
     STORM_VALIDATE_END_VOID;
@@ -573,7 +574,7 @@ void SRgnDelete(HSRGN handle) {
     s_rgntable.Delete(handle);
 }
 
-void SRgnDuplicate(HSRGN origHandle, HSRGN* handle, uint32_t reserved) {
+void STORMAPI SRgnDuplicate(HSRGN origHandle, HSRGN* handle, uint32_t reserved) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
     *handle = nullptr;
@@ -603,7 +604,7 @@ void SRgnDuplicate(HSRGN origHandle, HSRGN* handle, uint32_t reserved) {
     s_rgntable.Unlock(origlockedhandle);
 }
 
-void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect) {
+void STORMAPI SRgnGetBoundingRectf(HSRGN handle, RECTF* rect) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
     STORM_VALIDATE(rect);
@@ -649,7 +650,7 @@ void SRgnGetBoundingRectf(HSRGN handle, RECTF* rect) {
     }
 }
 
-void SRgnGetBoundingRecti(HSRGN handle, RECT* rect) {
+void STORMAPI SRgnGetBoundingRecti(HSRGN handle, RECT* rect) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(rect);
     STORM_VALIDATE_END_VOID;
@@ -669,7 +670,7 @@ void SRgnGetBoundingRecti(HSRGN handle, RECT* rect) {
 #endif
 }
 
-void SRgnGetRectParamsf(HSRGN handle, const RECTF* rect, uint32_t* numParams, void** buffer) {
+void STORMAPI SRgnGetRectParamsf(HSRGN handle, const RECTF* rect, uint32_t* numParams, void** buffer) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
     STORM_VALIDATE(rect);
@@ -710,7 +711,7 @@ void SRgnGetRectParamsf(HSRGN handle, const RECTF* rect, uint32_t* numParams, vo
     s_rgntable.Unlock(lockedHandle);
 }
 
-void SRgnGetRectParamsi(HSRGN handle, const RECT* rect, uint32_t* numParams, void** buffer) {
+void STORMAPI SRgnGetRectParamsi(HSRGN handle, const RECT* rect, uint32_t* numParams, void** buffer) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(rect);
     STORM_VALIDATE_END_VOID;
@@ -725,7 +726,7 @@ void SRgnGetRectParamsi(HSRGN handle, const RECT* rect, uint32_t* numParams, voi
     SRgnGetRectParamsf(handle, &rectf, numParams, buffer);
 }
 
-void SRgnGetRectsf(HSRGN handle, uint32_t* numRects, RECTF* buffer) {
+void STORMAPI SRgnGetRectsf(HSRGN handle, uint32_t* numRects, RECTF* buffer) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
     STORM_VALIDATE(numRects);
@@ -754,7 +755,7 @@ void SRgnGetRectsf(HSRGN handle, uint32_t* numRects, RECTF* buffer) {
     s_rgntable.Unlock(lockedHandle);
 }
 
-void SRgnGetRectsi(HSRGN handle, uint32_t* numRects, RECT* buffer) {
+void STORMAPI SRgnGetRectsi(HSRGN handle, uint32_t* numRects, RECT* buffer) {
     RECTF* bufferf = reinterpret_cast<RECTF*>(buffer);
     SRgnGetRectsf(handle, numRects, bufferf);
     if (buffer) {
@@ -775,7 +776,7 @@ void SRgnGetRectsi(HSRGN handle, uint32_t* numRects, RECT* buffer) {
     }
 }
 
-int32_t SRgnIsPointInRegionf(HSRGN handle, float x, float y) {
+int32_t STORMAPI SRgnIsPointInRegionf(HSRGN handle, float x, float y) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
     STORM_VALIDATE_END;
@@ -809,11 +810,11 @@ int32_t SRgnIsPointInRegionf(HSRGN handle, float x, float y) {
     return result;
 }
 
-int32_t SRgnIsPointInRegioni(HSRGN handle, int32_t x, int32_t y) {
+int32_t STORMAPI SRgnIsPointInRegioni(HSRGN handle, int32_t x, int32_t y) {
     return SRgnIsPointInRegionf(handle, static_cast<float>(x), static_cast<float>(y));
 }
 
-int32_t SRgnIsRectInRegionf(HSRGN handle, const RECTF* rect) {
+int32_t STORMAPI SRgnIsRectInRegionf(HSRGN handle, const RECTF* rect) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
     STORM_VALIDATE(rect);
@@ -842,7 +843,7 @@ int32_t SRgnIsRectInRegionf(HSRGN handle, const RECTF* rect) {
     return result;
 }
 
-int32_t SRgnIsRectInRegioni(HSRGN handle, const RECT* rect) {
+int32_t STORMAPI SRgnIsRectInRegioni(HSRGN handle, const RECT* rect) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(rect);
     STORM_VALIDATE_END;
@@ -857,7 +858,7 @@ int32_t SRgnIsRectInRegioni(HSRGN handle, const RECT* rect) {
     return SRgnIsRectInRegionf(handle, &rectf);
 }
 
-void SRgnOffsetf(HSRGN handle, float xoffset, float yoffset) {
+void STORMAPI SRgnOffsetf(HSRGN handle, float xoffset, float yoffset) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);
     STORM_VALIDATE_END_VOID;
@@ -881,6 +882,6 @@ void SRgnOffsetf(HSRGN handle, float xoffset, float yoffset) {
     s_rgntable.Unlock(lockedHandle);
 }
 
-void SRgnOffseti(HSRGN handle, int32_t xoffset, int32_t yoffset) {
+void STORMAPI SRgnOffseti(HSRGN handle, int32_t xoffset, int32_t yoffset) {
     SRgnOffsetf(handle, static_cast<float>(xoffset), static_cast<float>(yoffset));
 }

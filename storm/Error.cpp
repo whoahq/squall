@@ -10,7 +10,7 @@
 static uint32_t s_lasterror = ERROR_SUCCESS;
 static uint32_t s_suppress;
 
-[[noreturn]] void SErrDisplayAppFatal(const char* format, ...) {
+[[noreturn]] void STORMCDECL SErrDisplayAppFatal(const char* format, ...) {
     va_list args;
     va_start(args, format);
     vprintf(format, args);
@@ -20,7 +20,7 @@ static uint32_t s_suppress;
     exit(EXIT_FAILURE);
 }
 
-int32_t SErrDisplayError(uint32_t errorcode, const char* filename, int32_t linenumber, const char* description, int32_t recoverable, uint32_t exitcode, uint32_t a7) {
+int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int32_t linenumber, const char* description, int32_t recoverable, uint32_t exitcode, uint32_t a7) {
     // TODO
 
     printf("\n=========================================================\n");
@@ -60,7 +60,7 @@ int32_t SErrDisplayError(uint32_t errorcode, const char* filename, int32_t linen
     }
 }
 
-int32_t SErrDisplayErrorFmt(uint32_t errorcode, const char* filename, int32_t linenumber, int32_t recoverable, uint32_t exitcode, const char* format, ...) {
+int32_t STORMCDECL SErrDisplayErrorFmt(uint32_t errorcode, const char* filename, int32_t linenumber, int32_t recoverable, uint32_t exitcode, const char* format, ...) {
     char buffer[2048];
 
     va_list args;
@@ -72,21 +72,21 @@ int32_t SErrDisplayErrorFmt(uint32_t errorcode, const char* filename, int32_t li
     return SErrDisplayError(errorcode, filename, linenumber, buffer, recoverable, exitcode, 1);
 }
 
-void SErrPrepareAppFatal(const char* filename, int32_t linenumber) {
+void STORMAPI SErrPrepareAppFatal(const char* filename, int32_t linenumber) {
     // TODO
 }
 
-void SErrSetLastError(uint32_t errorcode) {
+void STORMAPI SErrSetLastError(uint32_t errorcode) {
     s_lasterror = errorcode;
 #if defined(WHOA_SYSTEM_WIN)
     SetLastError(errorcode);
 #endif
 }
 
-uint32_t SErrGetLastError() {
+uint32_t STORMAPI SErrGetLastError() {
     return s_lasterror;
 }
 
-void SErrSuppressErrors(uint32_t suppress) {
+void STORMAPI SErrSuppressErrors(uint32_t suppress) {
     s_suppress = suppress;
 }
