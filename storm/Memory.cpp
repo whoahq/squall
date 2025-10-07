@@ -51,12 +51,6 @@ void STORMAPI SMemFill(void* ptr, size_t bytes, uint8_t value) {
     memset(ptr, value, bytes);
 }
 
-void STORMAPI SMemFree(void* ptr) {
-    if (ptr) {
-        free(ptr);
-    }
-}
-
 void STORMAPI SMemFree(void* ptr, const char* filename, int32_t linenumber, uint32_t flags) {
     if (ptr) {
         free(ptr);
