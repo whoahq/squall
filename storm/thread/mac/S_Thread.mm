@@ -37,7 +37,7 @@ uint32_t S_Thread::s_SLaunchThread(void* threadParam) {
         pthread_cond_signal(&params->syncObject->m_cond);
     }
 
-    SMemFree(threadParam);
+    STORM_FREE(threadParam);
 
     return 0;
 }

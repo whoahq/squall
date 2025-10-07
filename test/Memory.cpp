@@ -28,14 +28,14 @@ TEST_CASE("SMemAlloc", "[memory]") {
         void* ptr = SMemAlloc(16, __FILE__, __LINE__);
         REQUIRE(ptr != nullptr);
         CHECK_NOTHROW(memset(ptr, 1, 16));
-        SMemFree(ptr);
+        STORM_FREE(ptr);
     }
 
     SECTION("allocates memory with null filename") {
         void* ptr = SMemAlloc(16, nullptr, 0);
         REQUIRE(ptr != nullptr);
         CHECK_NOTHROW(memset(ptr, 1, 16));
-        SMemFree(ptr);
+        STORM_FREE(ptr);
     }
 
     SECTION("allocates memory initialized to 0 with flag") {
@@ -45,13 +45,13 @@ TEST_CASE("SMemAlloc", "[memory]") {
         uint8_t* pArray = static_cast<uint8_t*>(ptr);
         CHECK(std::accumulate(pArray, pArray + 16, 0u) == 0);
 
-        SMemFree(ptr);
+        STORM_FREE(ptr);
     }
 
     SECTION("allocates a memory pointer even if the size is 0") {
         void* ptr = SMemAlloc(0, __FILE__, __LINE__);
         REQUIRE(ptr != nullptr);
-        SMemFree(ptr);
+        STORM_FREE(ptr);
     }
 }
 
@@ -110,12 +110,6 @@ TEST_CASE("SMemFill", "[memory]") {
 
 TEST_CASE("SMemFree", "[memory]") {
     SECTION("does nothing on nullptr") {
-        CHECK_NOTHROW(SMemFree(nullptr));
-    }
-}
-
-TEST_CASE("SMemFree full args", "[memory]") {
-    SECTION("does nothing on nullptr") {
         CHECK_NOTHROW(SMemFree(nullptr, __FILE__, __LINE__));
     }
 
@@ -162,14 +156,14 @@ TEST_CASE("SMemReAlloc", "[memory]") {
         void* ptr = SMemReAlloc(nullptr, 16, __FILE__, __LINE__);
         REQUIRE(ptr != nullptr);
         CHECK_NOTHROW(memset(ptr, 1, 16));
-        SMemFree(ptr);
+        STORM_FREE(ptr);
     }
 
     SECTION("allocates memory with null filename") {
         void* ptr = SMemReAlloc(nullptr, 16, nullptr, 0);
         REQUIRE(ptr != nullptr);
         CHECK_NOTHROW(memset(ptr, 1, 16));
-        SMemFree(ptr);
+        STORM_FREE(ptr);
     }
 
     SECTION("allocates memory initialized to 0 with flag") {
@@ -179,13 +173,13 @@ TEST_CASE("SMemReAlloc", "[memory]") {
         uint8_t* pArray = static_cast<uint8_t*>(ptr);
         CHECK(std::accumulate(pArray, pArray + 16, 0u) == 0);
 
-        SMemFree(ptr);
+        STORM_FREE(ptr);
     }
 
     SECTION("allocates a memory pointer even if the size is 0") {
         void* ptr = SMemReAlloc(nullptr, 0, __FILE__, __LINE__);
         REQUIRE(ptr != nullptr);
-        SMemFree(ptr);
+        STORM_FREE(ptr);
     }
 
     SECTION("reallocates memory") {
@@ -201,7 +195,7 @@ TEST_CASE("SMemReAlloc", "[memory]") {
         CHECK(*static_cast<uint32_t*>(ptr2) == 123456);
         CHECK_NOTHROW(memset(ptr2, 1, 1024 * 1024));
 
-        SMemFree(ptr2);
+        STORM_FREE(ptr2);
     }
 }
 

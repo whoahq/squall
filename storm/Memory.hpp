@@ -29,8 +29,6 @@ void STORMAPI SMemCopy(void* dst, void* src, size_t bytes);
 
 void STORMAPI SMemFill(void* ptr, size_t bytes, uint8_t value);
 
-void STORMAPI SMemFree(void* ptr);
-
 void STORMAPI SMemFree(void* ptr, const char* filename, int32_t linenumber, uint32_t flags = 0);
 
 void STORMAPI SMemMove(void* dst, void* src, size_t bytes);

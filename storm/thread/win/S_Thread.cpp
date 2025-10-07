@@ -6,7 +6,7 @@ DWORD WINAPI S_Thread::s_SLaunchThread(void* threadParam) {
     auto proc = params->threadProc;
     auto param = params->threadParam;
 
-    SMemFree(threadParam);
+    STORM_FREE(threadParam);
 
     auto val = proc(param);
 
