@@ -44,10 +44,10 @@ EXPORTS
     ;SNetCheckDataFile             @140 NONAME
     ;SNetSendLeagueCommand         @141 NONAME
     ;SNetSendReplayPath            @142 NONAME
-    ;SNetGetLeagueName             @143 NONAME
+    ;SNetGetLeagueId               @143 NONAME
     ;SNetGetPlayerNames            @144 NONAME
     ;SNetLeagueLogout              @145 NONAME
-    ;SNetGetLeaguePlayerName       @146 NONAME
+    ;SNetGetReplyName              @146 NONAME
 
     ; Dlg
     ;SDlgBeginPaint                @201 NONAME
@@ -469,3 +469,4 @@ EXPORTS
     ;SUniConvertMacToUTF16         @913 NONAME
     ;SUniConvertDosToUTF16         @914 NONAME
     ;SUniConvertUTF8ToWin          @915 NONAME
+
