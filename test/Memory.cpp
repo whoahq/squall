@@ -55,6 +55,30 @@ TEST_CASE("SMemAlloc", "[memory]") {
     }
 }
 
+TEST_CASE("SMemCmp", "[memory]") {
+    std::vector<uint8_t> data = { 1, 255, 128, 42, 69, 99, 13, 37 };
+
+    SECTION("compares zero bytes") {
+        int blah = 6;
+        CHECK(SMemCmp(data.data(), &blah, 0) == 0);
+    }
+
+    SECTION("compares equally") {
+        std::vector<uint8_t> memes = { 128, 42, 69, 99, 99, 129 };
+        CHECK(SMemCmp(&data[2], memes.data(), 4) == 0);
+    }
+
+    SECTION("compares greater") {
+        std::vector<uint8_t> memes = { 128, 42, 69, 99, 99, 129 };
+        CHECK(SMemCmp(&data[2], memes.data(), 5) < 0);
+    }
+
+    SECTION("compares lesser") {
+        std::vector<uint8_t> memes = { 128, 42, 69, 99, 12, 129 };
+        CHECK(SMemCmp(&data[2], memes.data(), 5) > 0);
+    }
+}
+
 TEST_CASE("SMemCopy", "[memory]") {
     std::vector<uint8_t> data = { 1, 255, 128, 42, 69, 99, 13, 37 };
 

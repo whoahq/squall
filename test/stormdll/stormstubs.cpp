@@ -58,6 +58,7 @@ int32_t STORMAPI SEvtUnregisterType(uint32_t, uint32_t) { return 0; }
 #include <storm/Memory.hpp>
 
 void* STORMAPI SMemAlloc(size_t, const char*, int32_t, uint32_t) { return 0; }
+int STORMAPI SMemCmp(void*, void*, size_t) { return 0; }
 void STORMAPI SMemCopy(void*, void*, size_t) {}
 void STORMAPI SMemFill(void*, size_t, uint8_t) {}
 void STORMAPI SMemFree(void*, const char*, int32_t, uint32_t) {}
