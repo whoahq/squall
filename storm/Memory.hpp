@@ -25,6 +25,8 @@
 
 void* STORMAPI SMemAlloc(size_t bytes, const char* filename, int32_t linenumber, uint32_t flags = 0);
 
+int STORMAPI SMemCmp(void* ptrA, void* ptrB, size_t bytes);
+
 void STORMAPI SMemCopy(void* dst, void* src, size_t bytes);
 
 void STORMAPI SMemFill(void* ptr, size_t bytes, uint8_t value);
