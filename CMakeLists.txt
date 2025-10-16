@@ -80,7 +80,13 @@ if(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 if(WHOA_TEST_STORMDLL)
+    # Doesn't build squall, but still builds the tests to run against a real Storm.dll
     add_definitions(-DWHOA_TEST_STORMDLL)
+    if(WHOA_STORMDLL_VERSION)
+        add_definitions(-DWHOA_STORMDLL_VERSION=${WHOA_STORMDLL_VERSION})
+    else()
+        add_definitions(-DWHOA_STORMDLL_VERSION=2016)
+    endif()
     add_subdirectory(test/stormdll)
 else()
     add_subdirectory(storm)

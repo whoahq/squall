@@ -543,6 +543,7 @@ TEST_CASE("SStrVPrintf", "[string]") {
     }
 }
 
+#if !defined(WHOA_STORMDLL_VERSION) || WHOA_STORMDLL_VERSION >= 2009
 TEST_CASE("SStrStr", "[string]") {
     char string[] = "foobar";
 
@@ -688,6 +689,7 @@ TEST_CASE("SStrStrI const", "[string]") {
         REQUIRE(substring == nullptr);
     }
 }
+#endif
 
 TEST_CASE("SStrTokenize", "[string]") {
     SECTION("finds all tokens in comma-delimited string") {
@@ -762,6 +764,7 @@ TEST_CASE("SStrTokenize", "[string]") {
     }
 }
 
+#if !defined(WHOA_STORMDLL_VERSION) || WHOA_STORMDLL_VERSION >= 2016
 TEST_CASE("SStrToDouble", "[string]") {
     SECTION("converts empty string to double") {
         auto result = SStrToDouble("");
@@ -920,6 +923,7 @@ TEST_CASE("SStrToFloat", "[string]") {
         REQUIRE(SStrToFloat("-1.79769e+310") == -HUGE_VALF);
     }
 }
+#endif
 
 TEST_CASE("SStrToInt", "[string]") {
     SECTION("converts empty string to int") {
