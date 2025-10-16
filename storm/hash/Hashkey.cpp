@@ -90,3 +90,54 @@ bool HASHKEY_STRI::operator==(const char* str) const {
 bool HASHKEY_STRI::operator==(const HASHKEY_STRI& key) const {
     return this->operator==(key.m_str);
 }
+
+HASHKEY_CONSTSTR::HASHKEY_CONSTSTR() {
+    this->m_str = nullptr;
+}
+
+HASHKEY_CONSTSTR::HASHKEY_CONSTSTR(const char* str) {
+    this->m_str = str;
+}
+
+HASHKEY_CONSTSTR::~HASHKEY_CONSTSTR() {
+}
+
+HASHKEY_CONSTSTR& HASHKEY_CONSTSTR::operator=(const char* str) {
+    this->m_str = str;
+    return *this;
+}
+
+HASHKEY_CONSTSTR& HASHKEY_CONSTSTR::operator=(const HASHKEY_CONSTSTR& key) {
+    this->operator=(key.m_str);
+    return *this;
+}
+
+bool HASHKEY_CONSTSTR::operator==(const char* str) const {
+    return this->m_str == str || SStrCmp(this->m_str, str) == 0;
+}
+
+bool HASHKEY_CONSTSTR::operator==(const HASHKEY_CONSTSTR& key) const {
+    return this->operator==(key.m_str);
+}
+
+const char* HASHKEY_CONSTSTR::GetString() const {
+    return this->m_str;
+}
+
+HASHKEY_CONSTSTRI& HASHKEY_CONSTSTRI::operator=(const char* str) {
+    static_cast<HASHKEY_CONSTSTR&>(*this) = str;
+    return *this;
+}
+
+HASHKEY_CONSTSTRI& HASHKEY_CONSTSTRI::operator=(const HASHKEY_CONSTSTRI& key) {
+    static_cast<HASHKEY_CONSTSTR&>(*this) = key.m_str;
+    return *this;
+}
+
+bool HASHKEY_CONSTSTRI::operator==(const char* str) const {
+    return this->m_str == str || SStrCmpI(this->m_str, str) == 0;
+}
+
+bool HASHKEY_CONSTSTRI::operator==(const HASHKEY_CONSTSTRI& key) const {
+    return this->operator==(key.m_str);
+}

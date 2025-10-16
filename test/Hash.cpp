@@ -54,83 +54,218 @@ TEST_CASE("HASHKEY_PTR::operator==") {
 }
 
 TEST_CASE("HASHKEY_STR", "[hash]") {
+    const char* foo = "foo";
+
     SECTION("constructs correctly") {
         HASHKEY_STR key1;
-        REQUIRE(key1.GetString() == nullptr);
+        CHECK(key1.GetString() == nullptr);
 
-        HASHKEY_STR key2 = { "foo" };
-        REQUIRE(SStrCmp(key2.GetString(), "foo") == 0);
+        HASHKEY_STR key2 = { foo };
+        CHECK(key2.GetString() != foo);
+        CHECK(SStrCmp(key2.GetString(), "foo") == 0);
     }
 }
 
 TEST_CASE("HASHKEY_STR::operator=") {
+    const char* foo = "foo";
+
     SECTION("assigns from another string") {
         HASHKEY_STR key;
-        key = "foo";
-        REQUIRE(SStrCmp(key.GetString(), "foo") == 0);
+        key = foo;
+        CHECK(key.GetString() != foo);
+        CHECK(SStrCmp(key.GetString(), "foo") == 0);
     }
 
     SECTION("assigns from another key") {
         HASHKEY_STR key1 = { "foo" };
         HASHKEY_STR key2 = { "bar" };
-        REQUIRE(!(key1 == key2));
+        CHECK(!(key1 == key2));
+        CHECK(key1.GetString() != key2.GetString());
 
         key1 = key2;
-        REQUIRE(key1 == key2);
+        CHECK(key1 == key2);
+        CHECK(key1.GetString() != key2.GetString());
     }
 }
 
 TEST_CASE("HASHKEY_STR::operator==") {
     SECTION("compares to another string") {
         HASHKEY_STR key = { "foo" };
-        REQUIRE(key == "foo");
-        REQUIRE(!(key == "FOO"));
+        CHECK(key == "foo");
+        CHECK_FALSE(key == "FOO");
+        CHECK_FALSE(key == "poop");
     }
 
     SECTION("compares to another key") {
         HASHKEY_STR key1 = { "foo" };
         HASHKEY_STR key2 = { "foo" };
-        REQUIRE(key1 == key2);
+        HASHKEY_STR key3 = { "FOO" };
+        HASHKEY_STR key4 = { "poop" };
+        CHECK(key1 == key2);
+        CHECK_FALSE(key1 == key3);
+        CHECK_FALSE(key1 == key4);
     }
 }
 
 TEST_CASE("HASHKEY_STRI", "[hash]") {
+    const char* foo = "foo";
+
     SECTION("constructs correctly") {
         HASHKEY_STRI key1;
-        REQUIRE(key1.GetString() == nullptr);
+        CHECK(key1.GetString() == nullptr);
 
-        HASHKEY_STRI key2 = { "foo" };
-        REQUIRE(SStrCmp(key2.GetString(), "foo") == 0);
+        HASHKEY_STRI key2 = { foo };
+        CHECK(key2.GetString() != foo);
+        CHECK(SStrCmp(key2.GetString(), "foo") == 0);
     }
 }
 
 TEST_CASE("HASHKEY_STRI::operator=") {
+    const char* foo = "foo";
+
     SECTION("assigns from another string") {
         HASHKEY_STRI key;
-        key = "foo";
-        REQUIRE(SStrCmp(key.GetString(), "foo") == 0);
+        key = foo;
+        CHECK(key.GetString() != foo);
+        CHECK(SStrCmp(key.GetString(), "foo") == 0);
     }
 
     SECTION("assigns from another key") {
         HASHKEY_STRI key1 = { "foo" };
         HASHKEY_STRI key2 = { "bar" };
         REQUIRE(!(key1 == key2));
+        CHECK(key1.GetString() != key2.GetString());
 
         key1 = key2;
-        REQUIRE(key1 == key2);
+        CHECK(key1 == key2);
+        CHECK(key1.GetString() != key2.GetString());
     }
 }
 
 TEST_CASE("HASHKEY_STRI::operator==") {
     SECTION("compares to another string") {
         HASHKEY_STRI key = { "foo" };
-        REQUIRE(key == "FOO");
+        CHECK(key == "foo");
+        CHECK(key == "FOO");
+        CHECK_FALSE(key == "poop");
     }
 
     SECTION("compares to another key") {
         HASHKEY_STRI key1 = { "foo" };
-        HASHKEY_STRI key2 = { "Foo" };
-        REQUIRE(key1 == key2);
+        HASHKEY_STRI key2 = { "foo" };
+        HASHKEY_STRI key3 = { "FOO" };
+        HASHKEY_STRI key4 = { "poop" };
+        CHECK(key1 == key2);
+        CHECK(key1 == key3);
+        CHECK_FALSE(key1 == key4);
+    }
+}
+
+TEST_CASE("HASHKEY_CONSTSTR", "[hash]") {
+    const char* foo = "foo";
+
+    SECTION("constructs correctly") {
+        HASHKEY_CONSTSTR key1;
+        CHECK(key1.GetString() == nullptr);
+
+        HASHKEY_CONSTSTR key2 = { foo };
+        CHECK(key2.GetString() == foo);
+        CHECK(SStrCmp(key2.GetString(), "foo") == 0);
+    }
+}
+
+TEST_CASE("HASHKEY_CONSTSTR::operator=") {
+    const char* foo = "foo";
+
+    SECTION("assigns from another string") {
+        HASHKEY_CONSTSTR key;
+        key = foo;
+        CHECK(key.GetString() == foo);
+        CHECK(SStrCmp(key.GetString(), "foo") == 0);
+    }
+
+    SECTION("assigns from another key") {
+        HASHKEY_CONSTSTR key1 = { "foo" };
+        HASHKEY_CONSTSTR key2 = { "bar" };
+        CHECK(!(key1 == key2));
+        CHECK(key1.GetString() != key2.GetString());
+
+        key1 = key2;
+        CHECK(key1 == key2);
+        CHECK(key1.GetString() == key2.GetString());
+    }
+}
+
+TEST_CASE("HASHKEY_CONSTSTR::operator==") {
+    SECTION("compares to another string") {
+        HASHKEY_CONSTSTR key = { "foo" };
+        CHECK(key == "foo");
+        CHECK_FALSE(key == "FOO");
+        CHECK_FALSE(key == "poop");
+    }
+
+    SECTION("compares to another key") {
+        HASHKEY_CONSTSTR key1 = { "foo" };
+        HASHKEY_CONSTSTR key2 = { "foo" };
+        HASHKEY_CONSTSTR key3 = { "FOO" };
+        HASHKEY_CONSTSTR key4 = { "poop" };
+        CHECK(key1 == key2);
+        CHECK_FALSE(key1 == key3);
+        CHECK_FALSE(key1 == key4);
+    }
+}
+
+TEST_CASE("HASHKEY_CONSTSTRI", "[hash]") {
+    const char* foo = "foo";
+
+    SECTION("constructs correctly") {
+        HASHKEY_CONSTSTRI key1;
+        CHECK(key1.GetString() == nullptr);
+
+        HASHKEY_CONSTSTRI key2 = { foo };
+        CHECK(key2.GetString() == foo);
+        CHECK(SStrCmp(key2.GetString(), "foo") == 0);
+    }
+}
+
+TEST_CASE("HASHKEY_CONSTSTRI::operator=") {
+    const char* foo = "foo";
+
+    SECTION("assigns from another string") {
+        HASHKEY_CONSTSTRI key;
+        key = foo;
+        CHECK(key.GetString() == foo);
+        CHECK(SStrCmp(key.GetString(), "foo") == 0);
+    }
+
+    SECTION("assigns from another key") {
+        HASHKEY_CONSTSTRI key1 = { "foo" };
+        HASHKEY_CONSTSTRI key2 = { "bar" };
+        REQUIRE(!(key1 == key2));
+        CHECK(key1.GetString() != key2.GetString());
+
+        key1 = key2;
+        CHECK(key1 == key2);
+        CHECK(key1.GetString() == key2.GetString());
+    }
+}
+
+TEST_CASE("HASHKEY_CONSTSTRI::operator==") {
+    SECTION("compares to another string") {
+        HASHKEY_CONSTSTRI key = { "foo" };
+        CHECK(key == "foo");
+        CHECK(key == "FOO");
+        CHECK_FALSE(key == "poop");
+    }
+
+    SECTION("compares to another key") {
+        HASHKEY_CONSTSTRI key1 = { "foo" };
+        HASHKEY_CONSTSTRI key2 = { "foo" };
+        HASHKEY_CONSTSTRI key3 = { "FOO" };
+        HASHKEY_CONSTSTRI key4 = { "poop" };
+        CHECK(key1 == key2);
+        CHECK(key1 == key3);
+        CHECK_FALSE(key1 == key4);
     }
 }
 

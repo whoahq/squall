@@ -253,7 +253,7 @@ TEST_CASE("SStrDupA", "[string]") {
 #endif
 
 struct TestHash {
-    const char *str;
+    const char* str;
     uint32_t hash;
 };
 

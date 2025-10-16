@@ -49,4 +49,32 @@ class HASHKEY_STRI : public HASHKEY_STR {
     bool operator==(const HASHKEY_STRI& key) const;
 };
 
+class HASHKEY_CONSTSTR {
+    public:
+    // Member functions
+    HASHKEY_CONSTSTR();
+    HASHKEY_CONSTSTR(const char* str);
+    ~HASHKEY_CONSTSTR();
+    HASHKEY_CONSTSTR& operator=(const char* str);
+    HASHKEY_CONSTSTR& operator=(const HASHKEY_CONSTSTR& key);
+    bool operator==(const char* str) const;
+    bool operator==(const HASHKEY_CONSTSTR& key) const;
+    const char* GetString() const;
+
+    protected:
+    // Member variables
+    const char* m_str;
+};
+
+class HASHKEY_CONSTSTRI : public HASHKEY_CONSTSTR {
+    public:
+    // Member functions
+    HASHKEY_CONSTSTRI() : HASHKEY_CONSTSTR() {};
+    HASHKEY_CONSTSTRI(const char* str) : HASHKEY_CONSTSTR(str) {};
+    HASHKEY_CONSTSTRI& operator=(const char* str);
+    HASHKEY_CONSTSTRI& operator=(const HASHKEY_CONSTSTRI& key);
+    bool operator==(const char* str) const;
+    bool operator==(const HASHKEY_CONSTSTRI& key) const;
+};
+
 #endif
