@@ -21,3 +21,11 @@ Only runnable on Windows. Allows running tests against the original `storm.dll` 
 3. `cmake --build .`
 4. Copy `storm.dll` from your Starcraft 1.17 installation folder to the same directory as `StormTest.exe`.
 5. Run `StormTest.exe` from the command line.
+
+To use a different version of Storm.dll, use the following arguments in the cmake command:
+
+| Arguments | Games |
+|-----------|-------|
+|`-DWHOA_STORMDLL_VERSION=2016`| Starcraft 1.17 |
+|`-DWHOA_STORMDLL_VERSION=2009`| Starcraft 1.16.1 |
+|`-DWHOA_STORMDLL_VERSION=2003`| Starcraft 1.10 ~ 1.16.0, Diablo II 1.10 ~ 1.13d |

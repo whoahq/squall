@@ -809,14 +809,13 @@ TEST_CASE("SRgnGetBoundingRecti", "[region]") {
         CHECK_THAT(result, MatchesRecti({ 0, 0, 0, 0 }));
     }
 
-    SECTION("returns invalid rect when using an invalid region object") {
+    SECTION("can be called when using an invalid region object") {
         HSRGN inval = reinterpret_cast<HSRGN>(1234);
 
-        SRgnGetBoundingRecti(inval, &result);
-        // Casting huge float values to int is inconsistent between compilers
-        // It is also inconsistent between compile and runtime with the same compiler
-        // So don't even bother comparing with a value
-        CHECK_THAT(result, !MatchesRecti({ 0, 0, 0, 0 }));
+        // Casting huge float values to int is inconsistent between compilers,
+        // compiler versions, and even between compile and runtime with the same compiler.
+        // Since this behaviour is undefined and outcomes differ greatly, don't even bother testing the value.
+        CHECK_NOTHROW(SRgnGetBoundingRecti(inval, &result));
     }
 
     SECTION("returns the dimensions of 1 rect (pass-through)") {
