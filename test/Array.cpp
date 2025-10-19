@@ -33,6 +33,21 @@ TEST_CASE("TSFixedArray", "[array]") {
         REQUIRE(array.Count() == 0);
         REQUIRE(array.Ptr() == nullptr);
     }
+
+    SECTION("constructs copy correctly") {
+        TSFixedArray<uint32_t> array;
+        array.SetCount(3);
+        array[0] = 1;
+        array[1] = 2;
+        array[2] = 3;
+
+        TSFixedArray<uint32_t> arrayCopy(array);
+
+        CHECK(arrayCopy.Count() == 3);
+        CHECK(arrayCopy[0] == 1);
+        CHECK(arrayCopy[1] == 2);
+        CHECK(arrayCopy[2] == 3);
+    }
 }
 
 TEST_CASE("TSFixedArray::Clear", "[array]") {
