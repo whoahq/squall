@@ -10,13 +10,15 @@
 template <class T>
 class TSGrowableArray : public TSFixedArray<T> {
     public:
+    // Member variables
     uint32_t m_chunk = 0;
 
+    // Member functions
     uint32_t Add(uint32_t count, const T* data);
     uint32_t Add(uint32_t count, uint32_t incr, const T* data);
     uint32_t CalcChunkSize(uint32_t count);
     void GrowToFit(uint32_t index, int32_t zero);
-    T* New(void);
+    T* New();
     void Reserve(uint32_t count, int32_t round);
     uint32_t Reserved() const;
     uint32_t RoundToChunk(uint32_t count, uint32_t chunk);

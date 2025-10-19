@@ -47,7 +47,8 @@ void TSBaseArray<T>::CheckArrayBounds(uint32_t index) const {
         1,
         "index (0x%08X), array size (0x%08X)",
         index,
-        this->Count());
+        this->Count()
+    );
 }
 
 template <class T>
