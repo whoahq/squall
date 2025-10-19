@@ -60,11 +60,20 @@ void TSFixedArray<T>::Clear() {
 
 template <class T>
 void TSFixedArray<T>::ReallocAndClearData(uint32_t count) {
-    this->m_alloc = count;
+    // Destruct existing array elements
+    for (uint32_t i = 0; i < this->Count(); i++) {
+        auto element = &this->operator[](i);
+        element->~T();
+    }
 
-    if (this->m_data || count) {
-        void* m = SMemReAlloc(this->m_data, sizeof(T) * count, this->MemFileName(), this->MemLineNo(), 0x0);
-        this->m_data = static_cast<T*>(m);
+    // Reallocate if count changed
+    if (count != this->m_count) {
+        this->m_alloc = count;
+
+        if (this->m_data || count) {
+            void* m = SMemReAlloc(this->m_data, sizeof(T) * count, this->MemFileName(), this->MemLineNo(), 0x0);
+            this->m_data = static_cast<T*>(m);
+        }
     }
 }
 
