@@ -9,6 +9,7 @@ template <class T>
 class TSFixedArray : public TSBaseArray<T> {
     public:
     TSFixedArray();
+    TSFixedArray(const TSFixedArray<T>& source);
     ~TSFixedArray();
     TSFixedArray<T>& operator=(const TSFixedArray<T>& source);
     void Clear();
@@ -21,6 +22,12 @@ class TSFixedArray : public TSBaseArray<T> {
 template <class T>
 TSFixedArray<T>::TSFixedArray() {
     this->Constructor();
+}
+
+template <class T>
+TSFixedArray<T>::TSFixedArray(const TSFixedArray<T>& source) {
+    this->Constructor();
+    this->Set(source.Count(), source.Ptr());
 }
 
 template <class T>
