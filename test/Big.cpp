@@ -10,7 +10,7 @@ TEST_CASE("SBigAdd", "[big]") {
 
         SBigAdd(a, b, c);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 1);
         CHECK(a.ToUnsigned() == 1);
     }
 
@@ -20,7 +20,7 @@ TEST_CASE("SBigAdd", "[big]") {
 
         SBigAdd(a, b, c);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 1);
         CHECK(a.ToUnsigned() == 3);
     }
 
@@ -30,7 +30,7 @@ TEST_CASE("SBigAdd", "[big]") {
 
         SBigAdd(a, b, c);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 4);
         CHECK(a.ToUnsigned() == 0x3579BE01);
     }
 
@@ -75,6 +75,7 @@ TEST_CASE("SBigAnd", "[big]") {
     }
 }
 
+#if !defined(WHOA_TEST_STORMDLL)
 TEST_CASE("SBigBitLen", "[big]") {
     BigDataTest num;
 
@@ -124,6 +125,7 @@ TEST_CASE("SBigBitLen", "[big]") {
         CHECK(len == 62);
     }
 }
+#endif
 
 TEST_CASE("SBigCompare", "[big]") {
     BigDataTest a, b;
@@ -144,11 +146,11 @@ TEST_CASE("SBigCopy", "[big]") {
         SBigFromBinary(a, num, sizeof(num));
         SBigFromUnsigned(b, 42);
 
-        CHECK(a.BitLen() == 108);
+        CHECK(a.ToBinaryBuffer().size() == sizeof(num));
 
         SBigCopy(a, b);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 1);
         CHECK(a.ToUnsigned() == 42);
     }
 }
@@ -161,7 +163,7 @@ TEST_CASE("SBigDec", "[big]") {
 
         SBigDec(a, b);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 1);
         CHECK(a.ToUnsigned() == 4);
     }
 
@@ -171,7 +173,7 @@ TEST_CASE("SBigDec", "[big]") {
 
         SBigDec(a, b);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 4);
         CHECK(a.ToUnsigned() == 0xFFFFFFFF);
     }
 #endif
@@ -186,7 +188,7 @@ TEST_CASE("SBigDiv", "[big]") {
 
         SBigDiv(a, b, c);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 1);
         CHECK(a.ToUnsigned() == 2);
     }
 
@@ -196,7 +198,7 @@ TEST_CASE("SBigDiv", "[big]") {
 
         SBigDiv(a, b, c);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 1);
         CHECK(a.ToUnsigned() == 2);
     }
 
@@ -206,7 +208,7 @@ TEST_CASE("SBigDiv", "[big]") {
 
         SBigDiv(a, b, c);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 1);
         CHECK(a.ToUnsigned() == 1);
     }
 
@@ -226,7 +228,7 @@ TEST_CASE("SBigDiv", "[big]") {
 
         SBigDiv(a, b, c);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 4);
         CHECK(a.ToUnsigned() == 0x99994445);
     }
 
@@ -236,7 +238,7 @@ TEST_CASE("SBigDiv", "[big]") {
 
         SBigDiv(a, b, c);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 1);
         CHECK(a.ToUnsigned() == 8);
     }
 }
@@ -272,7 +274,7 @@ TEST_CASE("SBigFromStr", "[big]") {
     SECTION("with string containing numbers") {
         SBigFromStr(num, "123456");
 
-        CHECK(num.BitLen() <= 32);
+        CHECK(num.ToBinaryBuffer().size() == 3);
         CHECK(num.ToUnsigned() == 123456);
     }
 
@@ -283,8 +285,8 @@ TEST_CASE("SBigFromStr", "[big]") {
         const unsigned int expected_num = ('A' - '0') * 100 + ('B' - '0') * 10 + ('C' - '0');
         CHECK(expected_num == 1899);
 
-        CHECK(num.BitLen() <= 32);
-        CHECK(num.ToUnsigned() == expected_num);
+        CHECK(num.ToBinaryBuffer().size() == 2);
+        CHECK(num.ToUnsigned() == 1899);
     }
 }
 
@@ -300,14 +302,14 @@ TEST_CASE("SBigFromUnsigned", "[big]") {
     SECTION("creates bigdata from 0x12345678") {
         SBigFromUnsigned(num, 0x12345678);
 
-        CHECK(num.BitLen() <= 32);
+        CHECK(num.ToBinaryBuffer().size() == 4);
         CHECK(num.ToUnsigned() == 0x12345678);
     }
 
     SECTION("creates bigdata from max int") {
         SBigFromUnsigned(num, UINT32_MAX);
 
-        CHECK(num.BitLen() <= 32);
+        CHECK(num.ToBinaryBuffer().size() == 4);
         CHECK(num.ToUnsigned() == UINT32_MAX);
     }
 }
@@ -319,7 +321,7 @@ TEST_CASE("SBigInc", "[big]") {
 
         SBigInc(a, b);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 1);
         CHECK(a.ToUnsigned() == 1);
     }
 
@@ -337,7 +339,7 @@ TEST_CASE("SBigInc", "[big]") {
 
         SBigInc(a, b);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 2);
         CHECK(a.ToUnsigned() == 1338);
     }
 }
@@ -430,7 +432,7 @@ TEST_CASE("SBigMod", "[big]") {
 
         SBigMod(a, b, c);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 1);
         CHECK(a.ToUnsigned() == 3);
     }
 
@@ -444,12 +446,12 @@ TEST_CASE("SBigMod", "[big]") {
 
         SBigMod(a, b1, c1);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 1);
         CHECK(a.ToUnsigned() == 3);
 
         SBigMod(a, b2, c2);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 1);
         CHECK(a.ToUnsigned() == 4);
     }
 
@@ -460,7 +462,7 @@ TEST_CASE("SBigMod", "[big]") {
 
         SBigMod(a, b, c);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 4);
         CHECK(a.ToUnsigned() == 0x2221999A);
     }
 }
@@ -483,7 +485,7 @@ TEST_CASE("SBigMul", "[big]") {
 
         SBigMul(a, b, c);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 4);  // why is this 4?
         CHECK(a.ToUnsigned() == 8);
     }
 
@@ -517,7 +519,7 @@ TEST_CASE("SBigPowMod", "[big]") {
 
         SBigPowMod(a, b, c, d);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 1);
         CHECK(a.ToUnsigned() == 160);
     }
 }
@@ -531,7 +533,7 @@ TEST_CASE("SBigNot", "[big]") {
         SBigFromUnsigned(b, v);
         SBigNot(a, b);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() <= 4);
         CHECK(a.ToUnsigned() == ~v);
     }
 
@@ -582,7 +584,7 @@ TEST_CASE("SBigOr", "[big]") {
         SBigFromUnsigned(c, v.second);
         SBigOr(a, b, c);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() <= 4);
         CHECK(a.ToUnsigned() == (v.first | v.second));
     }
 
@@ -633,7 +635,7 @@ TEST_CASE("SBigShl", "[big]") {
 
         SBigShl(a, b, 7);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 2);
         CHECK(a.ToUnsigned() == 32768);
     }
 }
@@ -646,7 +648,7 @@ TEST_CASE("SBigShr", "[big]") {
 
         SBigShr(a, b, 7);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 1);
         CHECK(a.ToUnsigned() == 2);
     }
 }
@@ -673,7 +675,7 @@ TEST_CASE("SBigSub", "[big]") {
 
         SBigSub(a, b, c);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 1);
         CHECK(a.ToUnsigned() == 1);
     }
 
@@ -684,7 +686,7 @@ TEST_CASE("SBigSub", "[big]") {
 
         SBigSub(a, b, c);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() == 4);
         CHECK(a.ToUnsigned() == 0xFFFFFFFF);
     }
 #endif
@@ -747,7 +749,7 @@ TEST_CASE("SBigToUnsigned", "[big]") {
         uint32_t result;
         SBigToUnsigned(num, &result);
 
-        CHECK(num.BitLen() > 32);
+        CHECK(num.ToBinaryBuffer().size() == 8);
         CHECK(result == 0x89ABCDEF);
     }
 }
@@ -766,7 +768,7 @@ TEST_CASE("SBigXor", "[big]") {
         SBigFromUnsigned(c, v.second);
         SBigXor(a, b, c);
 
-        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToBinaryBuffer().size() <= 4);
         CHECK(a.ToUnsigned() == (v.first ^ v.second));
     }
 
