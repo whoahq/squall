@@ -19,6 +19,26 @@ TEST_CASE("TSList::Head", "[list]") {
     }
 }
 
+TEST_CASE("TSList::IsEmpty", "[list]") {
+    SECTION("returns true if just initialized") {
+        STORM_LIST(TestListNode) list;
+        CHECK(list.IsEmpty());
+    }
+
+    SECTION("returns false if there are linked items") {
+        STORM_LIST(TestListNode) list;
+        list.NewNode(STORM_LIST_TAIL, 0, 0);
+        CHECK_FALSE(list.IsEmpty());
+    }
+
+    SECTION("returns true after clearing a populated list") {
+        STORM_LIST(TestListNode) list;
+        list.NewNode(STORM_LIST_TAIL, 0, 0);
+        list.Clear();
+        CHECK(list.IsEmpty());
+    }
+}
+
 TEST_CASE("TSList::LinkToHead", "[list]") {
     SECTION("links node to head correctly") {
         STORM_LIST(TestListNode) list;

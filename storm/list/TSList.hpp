@@ -30,6 +30,7 @@ class TSList {
     T* DeleteNode(T* ptr);
     T* Head();
     void InitializeTerminator();
+    bool IsEmpty();
     bool IsLinked(T* ptr);
     TSLink<T>* Link(const T* ptr);
     void LinkNode(T* ptr, uint32_t linktype, T* existingptr);
@@ -94,6 +95,11 @@ void TSList<T, TGetLink>::InitializeTerminator() {
 
     // Set sentinel node (indicates list end)
     this->m_terminator.m_next = reinterpret_cast<T*>(~reinterpret_cast<uintptr_t>(&this->m_terminator));
+}
+
+template <class T, class TGetLink>
+bool TSList<T, TGetLink>::IsEmpty() {
+    return this->Head() == nullptr;
 }
 
 template <class T, class TGetLink>
