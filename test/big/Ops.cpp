@@ -1,4 +1,5 @@
 #include "test/BigTest.hpp"
+#include "storm/big/BigData.hpp"
 #include "storm/big/Ops.hpp"
 #include <vector>
 

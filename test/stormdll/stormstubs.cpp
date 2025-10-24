@@ -6,7 +6,6 @@ int32_t STORMAPI StormDestroy() { return 0; }
 
 void STORMAPI SBigAdd(BigData*, BigData*, BigData*) {}
 void STORMAPI SBigAnd(BigData*, BigData*, BigData*) {}
-void STORMAPI SBigBitLen(BigData*, uint32_t*) {}
 int32_t STORMAPI SBigCompare(BigData*, BigData*) { return 0; }
 void STORMAPI SBigCopy(BigData*, BigData*) {}
 void STORMAPI SBigDec(BigData*, BigData*) {}
