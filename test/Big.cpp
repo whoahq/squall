@@ -10,8 +10,8 @@ TEST_CASE("SBigAdd", "[big]") {
 
         SBigAdd(a, b, c);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 1);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 1);
     }
 
     SECTION("adds 1 and 2") {
@@ -20,8 +20,8 @@ TEST_CASE("SBigAdd", "[big]") {
 
         SBigAdd(a, b, c);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 3);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 3);
     }
 
     SECTION("adds 0x12345678 and 0x23456789") {
@@ -30,8 +30,8 @@ TEST_CASE("SBigAdd", "[big]") {
 
         SBigAdd(a, b, c);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 0x3579BE01);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 0x3579BE01);
     }
 
     SECTION("adds 0xFFFFFFFF and 0xF0F0F0F0") {
@@ -40,9 +40,8 @@ TEST_CASE("SBigAdd", "[big]") {
 
         SBigAdd(a, b, c);
 
-        CHECK(a->Primary().Count() == 2);
-        CHECK(a->Primary()[0] == 0xF0F0F0EF);
-        CHECK(a->Primary()[1] == 0x1);
+        const std::vector<uint8_t> expected = {0xEF, 0xF0, 0xF0, 0xF0, 1};
+        CHECK(a.ToBinaryBuffer() == expected);
     }
 }
 
@@ -56,8 +55,7 @@ TEST_CASE("SBigAnd", "[big]") {
 
         SBigAnd(a, b, c);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 0);
+        CHECK(SBigIsZero(a));
     }
 
     SECTION("performs bitwise and on large nums") {
@@ -72,11 +70,8 @@ TEST_CASE("SBigAnd", "[big]") {
 
         SBigAnd(a, b, c);
 
-        CHECK(a->Primary().Count() == 4);
-        CHECK(a->Primary()[0] == 0x04000000);
-        CHECK(a->Primary()[1] == 0x00060004);
-        CHECK(a->Primary()[2] == 0x041F0200);
-        CHECK(a->Primary()[3] == 0x00000600);
+        const std::vector<uint8_t> expected = {0, 0, 0, 4, 4, 0, 6, 0, 0, 2, 31, 4, 0, 6};
+        CHECK(a.ToBinaryBuffer() == expected);
     }
 }
 
@@ -149,12 +144,12 @@ TEST_CASE("SBigCopy", "[big]") {
         SBigFromBinary(a, num, sizeof(num));
         SBigFromUnsigned(b, 42);
 
-        CHECK(a->Primary().Count() == 4);
+        CHECK(a.BitLen() == 108);
 
         SBigCopy(a, b);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 42);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 42);
     }
 }
 
@@ -166,8 +161,8 @@ TEST_CASE("SBigDec", "[big]") {
 
         SBigDec(a, b);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 4);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 4);
     }
 
 #ifdef NDEBUG
@@ -176,8 +171,8 @@ TEST_CASE("SBigDec", "[big]") {
 
         SBigDec(a, b);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 0xFFFFFFFF);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 0xFFFFFFFF);
     }
 #endif
 }
@@ -191,8 +186,8 @@ TEST_CASE("SBigDiv", "[big]") {
 
         SBigDiv(a, b, c);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 2);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 2);
     }
 
     SECTION("divides 5 by 2") {
@@ -201,8 +196,8 @@ TEST_CASE("SBigDiv", "[big]") {
 
         SBigDiv(a, b, c);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 2);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 2);
     }
 
     SECTION("divides 7 by 4") {
@@ -211,8 +206,8 @@ TEST_CASE("SBigDiv", "[big]") {
 
         SBigDiv(a, b, c);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 1);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 1);
     }
 
     SECTION("divides 0x9999444488885555 by 0x2222") {
@@ -221,9 +216,8 @@ TEST_CASE("SBigDiv", "[big]") {
 
         SBigDiv(a, b, c);
 
-        CHECK(a->Primary().Count() == 2);
-        CHECK(a->Primary()[0] == 0x00040002);
-        CHECK(a->Primary()[1] == 0x48002);
+        const std::vector<uint8_t> expected = {2, 0, 4, 0, 2, 0x80, 4};
+        CHECK(a.ToBinaryBuffer() == expected);
     }
 
     SECTION("divides 0x9999444488885555 by 0xFFFFFFFF") {
@@ -232,8 +226,8 @@ TEST_CASE("SBigDiv", "[big]") {
 
         SBigDiv(a, b, c);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 0x99994445);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 0x99994445);
     }
 
     SECTION("divides 0x9999444488885555 by 0x1111222233334444 (buffer divisor)") {
@@ -242,8 +236,8 @@ TEST_CASE("SBigDiv", "[big]") {
 
         SBigDiv(a, b, c);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 8);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 8);
     }
 }
 
@@ -254,17 +248,15 @@ TEST_CASE("SBigFromBinary", "[big]") {
         uint32_t data = 0;
         SBigFromBinary(num, reinterpret_cast<uint8_t*>(&data), sizeof(data));
 
-        CHECK(num->Primary().Count() == 1);
-        CHECK(num->Primary()[0] == 0);
+        CHECK(SBigIsZero(num));
     }
 
     SECTION("creates bigdata from 0x123456789ABCDEF0") {
         uint64_t data = 0x123456789ABCDEF0;
         SBigFromBinary(num, reinterpret_cast<uint8_t*>(&data), sizeof(data));
 
-        CHECK(num->Primary().Count() == 2);
-        CHECK(num->Primary()[0] == 0x9ABCDEF0);
-        CHECK(num->Primary()[1] == 0x12345678);
+        const std::vector<uint8_t> expected = {0xF0, 0xDE, 0xBC, 0x9A, 0x78, 0x56, 0x34, 0x12};
+        CHECK(num.ToBinaryBuffer() == expected);
     }
 }
 
@@ -274,23 +266,25 @@ TEST_CASE("SBigFromStr", "[big]") {
     SECTION("with empty string") {
         SBigFromStr(num, "");
 
-        CHECK(num->Primary().Count() == 0);
+        CHECK(SBigIsZero(num));
     }
 
     SECTION("with string containing numbers") {
         SBigFromStr(num, "123456");
 
-        CHECK(num->Primary().Count() == 1);
-        CHECK(num->Primary()[0] == 123456);
+        CHECK(num.BitLen() <= 32);
+        CHECK(num.ToUnsigned() == 123456);
     }
 
     SECTION("with string containing letters (original bug)") {
         SBigFromStr(num, "ABC");
 
+        // 1700 + 180 + 19
         const unsigned int expected_num = ('A' - '0') * 100 + ('B' - '0') * 10 + ('C' - '0');
+        CHECK(expected_num == 1899);
 
-        CHECK(num->Primary().Count() == 1);
-        CHECK(num->Primary()[0] == expected_num);
+        CHECK(num.BitLen() <= 32);
+        CHECK(num.ToUnsigned() == expected_num);
     }
 }
 
@@ -300,15 +294,21 @@ TEST_CASE("SBigFromUnsigned", "[big]") {
     SECTION("creates bigdata from 0") {
         SBigFromUnsigned(num, 0);
 
-        CHECK(num->Primary().Count() == 1);
-        CHECK(num->Primary()[0] == 0);
+        CHECK(SBigIsZero(num));
     }
 
     SECTION("creates bigdata from 0x12345678") {
         SBigFromUnsigned(num, 0x12345678);
 
-        CHECK(num->Primary().Count() == 1);
-        CHECK(num->Primary()[0] == 0x12345678);
+        CHECK(num.BitLen() <= 32);
+        CHECK(num.ToUnsigned() == 0x12345678);
+    }
+
+    SECTION("creates bigdata from max int") {
+        SBigFromUnsigned(num, UINT32_MAX);
+
+        CHECK(num.BitLen() <= 32);
+        CHECK(num.ToUnsigned() == UINT32_MAX);
     }
 }
 TEST_CASE("SBigInc", "[big]") {
@@ -319,8 +319,8 @@ TEST_CASE("SBigInc", "[big]") {
 
         SBigInc(a, b);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 1);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 1);
     }
 
     SECTION("increments from max uint") {
@@ -328,9 +328,8 @@ TEST_CASE("SBigInc", "[big]") {
 
         SBigInc(a, b);
 
-        CHECK(a->Primary().Count() == 2);
-        CHECK(a->Primary()[0] == 0);
-        CHECK(a->Primary()[1] == 1);
+        const std::vector<uint8_t> expected = {0, 0, 0, 0, 1};
+        CHECK(a.ToBinaryBuffer() == expected);
     }
 
     SECTION("increments from a number") {
@@ -338,8 +337,8 @@ TEST_CASE("SBigInc", "[big]") {
 
         SBigInc(a, b);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 1338);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 1338);
     }
 }
 
@@ -431,10 +430,8 @@ TEST_CASE("SBigMod", "[big]") {
 
         SBigMod(a, b, c);
 
-        a->Primary().Trim();
-
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 3);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 3);
     }
 
     SECTION("mods 7 by 4 then mods 9 by 5") {
@@ -447,17 +444,13 @@ TEST_CASE("SBigMod", "[big]") {
 
         SBigMod(a, b1, c1);
 
-        a->Primary().Trim();
-
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 3);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 3);
 
         SBigMod(a, b2, c2);
 
-        a->Primary().Trim();
-
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 4);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 4);
     }
 
     SECTION("mods 0x9999444488885555 by 0xFFFFFFFF") {
@@ -467,10 +460,8 @@ TEST_CASE("SBigMod", "[big]") {
 
         SBigMod(a, b, c);
 
-        a->Primary().Trim();
-
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 0x2221999A);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 0x2221999A);
     }
 }
 
@@ -483,9 +474,7 @@ TEST_CASE("SBigMul", "[big]") {
 
         SBigMul(a, b, c);
 
-        a->Primary().Trim();
-
-        CHECK(a->Primary().Count() == 0);
+        CHECK(SBigIsZero(a));
     }
 
     SECTION("multiplies 2 and 4") {
@@ -494,10 +483,8 @@ TEST_CASE("SBigMul", "[big]") {
 
         SBigMul(a, b, c);
 
-        a->Primary().Trim();
-
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 8);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 8);
     }
 
     SECTION("multiplies 0xFFFFFFFF and 0x100") {
@@ -506,11 +493,8 @@ TEST_CASE("SBigMul", "[big]") {
 
         SBigMul(a, b, c);
 
-        a->Primary().Trim();
-
-        CHECK(a->Primary().Count() == 2);
-        CHECK(a->Primary()[0] == 0xFFFFFF00);
-        CHECK(a->Primary()[1] == 0xFF);
+        const std::vector<uint8_t> expected = {0, 0xFF, 0xFF, 0xFF, 0xFF};
+        CHECK(a.ToBinaryBuffer() == expected);
     }
 
     SECTION("multiplies 0xFFFFFF and 0x11223344") {
@@ -519,11 +503,8 @@ TEST_CASE("SBigMul", "[big]") {
 
         SBigMul(a, b, c);
 
-        a->Primary().Trim();
-
-        CHECK(a->Primary().Count() == 2);
-        CHECK(a->Primary()[0] == 0x32DDCCBC);
-        CHECK(a->Primary()[1] == 0x112233);
+        const std::vector<uint8_t> expected = {0xBC, 0xCC, 0xDD, 0x32, 0x33, 0x22, 0x11};
+        CHECK(a.ToBinaryBuffer() == expected);
     }
 }
 
@@ -536,10 +517,8 @@ TEST_CASE("SBigPowMod", "[big]") {
 
         SBigPowMod(a, b, c, d);
 
-        a->Primary().Trim();
-
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 160);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 160);
     }
 }
 
@@ -552,35 +531,40 @@ TEST_CASE("SBigNot", "[big]") {
         SBigFromUnsigned(b, v);
         SBigNot(a, b);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == ~v);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == ~v);
     }
 
     SECTION("bitwise negates large values") {
-        auto v = GENERATE(10000000000000ULL, 0xFF00000000000000ULL);
+        auto v = GENERATE(
+            std::make_pair(10000000000000ULL, std::vector<uint8_t>{ 0xFF, 0x5F, 0x8D, 0xB1, 0xE7, 0xF6, 0xFF, 0xFF }),
+            std::make_pair(0xFF00000000000000ULL, std::vector<uint8_t>{ 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF })
+        );
 
-        SBigFromStr(b, std::to_string(v).c_str());
+        SBigFromStr(b, std::to_string(v.first).c_str());
         SBigNot(a, b);
 
-        CHECK(a->Primary().Count() == 2);
-        CHECK(a->Primary()[0] == ~uint32_t(v));
-        CHECK(a->Primary()[1] == ~uint32_t(v >> 32));
+        CHECK(a.ToBinaryBuffer() == v.second);
     }
 
     SECTION("bitwise negates huge value") {
-        uint32_t data[] = { 0xF00DFEED, 0xBA1D, 0xBEEBBEEB, 0x12345678, 0x9ABCDEF, 0xDEADCAD, 0xD011A };
+        uint8_t data[] = {
+            0xF0, 0x0D, 0xFE, 0xED, 0x00, 0x00, 0xBA, 0x1D,
+            0xBE, 0xEB, 0xBE, 0xEB, 0x12, 0x34, 0x56, 0x78,
+            0x09, 0xAB, 0xCD, 0xEF, 0x0D, 0xEA, 0xDC, 0xAD,
+            0x00, 0x0D, 0x01, 0x1A,
+        };
         
         SBigFromBinary(b, data, sizeof(data));
         SBigNot(a, b);
 
-        CHECK(a->Primary().Count() == 7);
-        CHECK(a->Primary()[0] == ~data[0]);
-        CHECK(a->Primary()[1] == ~data[1]);
-        CHECK(a->Primary()[2] == ~data[2]);
-        CHECK(a->Primary()[3] == ~data[3]);
-        CHECK(a->Primary()[4] == ~data[4]);
-        CHECK(a->Primary()[5] == ~data[5]);
-        CHECK(a->Primary()[6] == ~data[6]);
+        const std::vector<uint8_t> expected = {
+            0x0F, 0xF2, 0x01, 0x12, 0xFF, 0xFF, 0x45, 0xE2,
+            0x41, 0x14, 0x41, 0x14, 0xED, 0xCB, 0xA9, 0x87,
+            0xF6, 0x54, 0x32, 0x10, 0xF2, 0x15, 0x23, 0x52,
+            0xFF, 0xF2, 0xFE, 0xE5,
+        };
+        CHECK(a.ToBinaryBuffer() == expected);
     }
 }
 
@@ -598,8 +582,8 @@ TEST_CASE("SBigOr", "[big]") {
         SBigFromUnsigned(c, v.second);
         SBigOr(a, b, c);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == (v.first | v.second));
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == (v.first | v.second));
     }
 
     SECTION("performs bitwise or on large numbers") {
@@ -611,26 +595,33 @@ TEST_CASE("SBigOr", "[big]") {
         SBigFromStr(c, std::to_string(v.second).c_str());
         SBigOr(a, b, c);
 
-        CHECK(a->Primary().Count() == 2);
-        CHECK(a->Primary()[0] == 0xFFFFFFFF);
-        CHECK(a->Primary()[1] == 0xFFFFFFFF);
+        const std::vector<uint8_t> expected = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+        CHECK(a.ToBinaryBuffer() == expected);
     }
 
     SECTION("performs bitwise or on huge value") {
-        uint32_t data[] = { 0xF00DFEEDUL, 0xBA1DUL, 0xBEEBBEEBUL, 0x12345678UL, 0x9ABCDEFUL, 0xDEADCADUL, 0xD011AUL };
-
+        uint8_t data[] = {
+            0xF0, 0x0D, 0xFE, 0xED, 0xBA, 0x1D, 0xBE, 0xEB,
+            0xBE, 0xEB, 0x12, 0x34, 0x56, 0x78, 0x09, 0xAB,
+            0xCD, 0xEF, 0x0D, 0xEA, 0xDC, 0xAD, 0x00, 0x0D,
+            0x01, 0x1A,
+        };
         SBigFromBinary(b, data, sizeof(data));
-        SBigFromUnsigned(c, 0x11111111UL);
+
+        uint8_t orwith[] = {
+            0x11, 0x11, 0x11, 0x11, 0x12, 0x34, 0x56, 0x78, 0xFF
+        };
+        SBigFromBinary(c, orwith, sizeof(orwith));
+
         SBigOr(a, b, c);
 
-        CHECK(a->Primary().Count() == 7);
-        CHECK(a->Primary()[0] == 0xF11DFFFD);
-        CHECK(a->Primary()[1] == data[1]);
-        CHECK(a->Primary()[2] == data[2]);
-        CHECK(a->Primary()[3] == data[3]);
-        CHECK(a->Primary()[4] == data[4]);
-        CHECK(a->Primary()[5] == data[5]);
-        CHECK(a->Primary()[6] == data[6]);
+        const std::vector<uint8_t> expected = {
+            0xF1, 0x1D, 0xFF, 0xFD, 0xBA, 0x3D, 0xFE, 0xFB,
+            0xFF, 0xEB, 0x12, 0x34, 0x56, 0x78, 0x09, 0xAB,
+            0xCD, 0xEF, 0x0D, 0xEA, 0xDC, 0xAD, 0x00, 0x0D,
+            0x01, 0x1A,
+        };
+        CHECK(a.ToBinaryBuffer() == expected);
     }
 }
 
@@ -642,10 +633,8 @@ TEST_CASE("SBigShl", "[big]") {
 
         SBigShl(a, b, 7);
 
-        a->Primary().Trim();
-
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 32768);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 32768);
     }
 }
 
@@ -657,10 +646,8 @@ TEST_CASE("SBigShr", "[big]") {
 
         SBigShr(a, b, 7);
 
-        a->Primary().Trim();
-
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 2);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 2);
     }
 }
 
@@ -672,11 +659,8 @@ TEST_CASE("SBigSquare", "[big]") {
 
         SBigSquare(a, b);
 
-        a->Primary().Trim();
-
-        CHECK(a->Primary().Count() == 2);
-        CHECK(a->Primary()[0] == 0x1);
-        CHECK(a->Primary()[1] == 0xFFFFFFFE);
+        const std::vector<uint8_t> expected = {1, 0, 0, 0, 0xFE, 0xFF, 0xFF, 0xFF};
+        CHECK(a.ToBinaryBuffer() == expected);
     }
 }
 
@@ -689,10 +673,8 @@ TEST_CASE("SBigSub", "[big]") {
 
         SBigSub(a, b, c);
 
-        a->Primary().Trim();
-
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 1);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 1);
     }
 
 #ifdef NDEBUG
@@ -702,8 +684,8 @@ TEST_CASE("SBigSub", "[big]") {
 
         SBigSub(a, b, c);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == 0xFFFFFFFF);
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == 0xFFFFFFFF);
     }
 #endif
 }
@@ -765,6 +747,7 @@ TEST_CASE("SBigToUnsigned", "[big]") {
         uint32_t result;
         SBigToUnsigned(num, &result);
 
+        CHECK(num.BitLen() > 32);
         CHECK(result == 0x89ABCDEF);
     }
 }
@@ -783,34 +766,38 @@ TEST_CASE("SBigXor", "[big]") {
         SBigFromUnsigned(c, v.second);
         SBigXor(a, b, c);
 
-        CHECK(a->Primary().Count() == 1);
-        CHECK(a->Primary()[0] == (v.first ^ v.second));
+        CHECK(a.BitLen() <= 32);
+        CHECK(a.ToUnsigned() == (v.first ^ v.second));
     }
 
     SECTION("performs bitwise xor on large number") {
         SBigFromStr(b, std::to_string(0xFF00FF00FF00FF00ULL).c_str());
-        SBigFromStr(c, std::to_string(0xFF00FF00FF00FULL).c_str());
+        SBigFromStr(c, std::to_string(   0xFF00FF00FF00FULL).c_str());
         SBigXor(a, b, c);
 
-        CHECK(a->Primary().Count() == 2);
-        CHECK(a->Primary()[0] == 0xF0F0F0F);
-        CHECK(a->Primary()[1] == 0xFF0F0F0F);
+        const std::vector<uint8_t> expected = { 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0xFF };
+        CHECK(a.ToBinaryBuffer() == expected);
     }
 
     SECTION("performs bitwise xor on huge value") {
-        uint32_t data[] = { 0xF00DFEEDUL, 0xBA1DUL, 0xBEEBBEEBUL, 0x12345678UL, 0x9ABCDEFUL, 0xDEADCADUL, 0xD011AUL };
+        uint8_t data[] = {
+            0xF0, 0x0D, 0xFE, 0xED, 0xBA, 0x1D, 0xBE, 0xEB, 0xBE,
+            0xEB, 0x12, 0x34, 0x56, 0x78, 0x09, 0xAB, 0xCD, 0xEF,
+            0x0D, 0xEA, 0xDC, 0xAD, 0x00, 0x0D, 0x01, 0x1A,
+        };
 
         SBigFromBinary(b, data, sizeof(data));
-        SBigFromUnsigned(c, 0x1111111FUL);
+
+        uint8_t xorwith[] = { 0x11, 0x11, 0x11, 0x11, 0x12, 0x34, 0x56, 0x78, 0xFF };
+        SBigFromBinary(c, xorwith, sizeof(xorwith));
+
         SBigXor(a, b, c);
 
-        CHECK(a->Primary().Count() == 7);
-        CHECK(a->Primary()[0] == 0xE11CEFF2);
-        CHECK(a->Primary()[1] == data[1]);
-        CHECK(a->Primary()[2] == data[2]);
-        CHECK(a->Primary()[3] == data[3]);
-        CHECK(a->Primary()[4] == data[4]);
-        CHECK(a->Primary()[5] == data[5]);
-        CHECK(a->Primary()[6] == data[6]);
+        const std::vector<uint8_t> expected = {
+            0xE1, 0x1C, 0xEF, 0xFC, 0xA8, 0x29, 0xE8, 0x93, 0x41,
+            0xEB, 0x12, 0x34, 0x56, 0x78, 0x09, 0xAB, 0xCD, 0xEF,
+            0x0D, 0xEA, 0xDC, 0xAD, 0x00, 0x0D, 0x01, 0x1A,
+        };
+        CHECK(a.ToBinaryBuffer() == expected);
     }
 }
