@@ -1,4 +1,5 @@
 #include "storm/Big.hpp"
+#include "storm/big/BigData.hpp"
 #include "storm/big/Ops.hpp"
 #include "storm/Memory.hpp"
 #include <cstring>
