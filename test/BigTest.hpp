@@ -23,17 +23,8 @@ struct BigDataTest {
         return result;
     }
 
-    uint32_t BitLen() {
-        // Work around a SBigBitLen crash on 0 (original behavior)
-        if (SBigIsZero(num)) return 0;
-
-        uint32_t result = 0;
-        SBigBitLen(num, &result);
-        return result;
-    }
-
     std::vector<uint8_t> ToBinaryBuffer() {
-        uint32_t size = (this->BitLen() + 32) / 8;
+        uint32_t size = 1024 * 1024;
         std::vector<uint8_t> data(size);
 
         uint32_t bytes = 0;
