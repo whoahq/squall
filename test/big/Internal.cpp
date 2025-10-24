@@ -1,5 +1,6 @@
 // These are the original SBig tests which rely on internals
 #include "test/BigTest.hpp"
+#include "storm/big/BigData.hpp"
 #include <string>
 
 TEST_CASE("SBigAdd internal", "[big]") {

@@ -1,8 +1,9 @@
 #ifndef STORM_BIG_HPP
 #define STORM_BIG_HPP
 
-#include "storm/big/BigData.hpp"
 #include "Core.hpp"
+
+class BigData;
 
 void STORMAPI SBigAdd(BigData* a, BigData* b, BigData* c);
 
