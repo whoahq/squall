@@ -33,7 +33,7 @@ EXPORTS
     ;SNetSetBasePlayer             @129 NONAME
     ;SNetSetGameMode               @130 NONAME
     ;SNetUnregisterEventHandler    @131 NONAME
-    ;SNetGetOwnerId                @132 NONAME
+    ;SErrSetBlizzardErrorFunction  @132   ; SNetGetOwnerId in SC beta and Diablo/Hellfire, something else in WC3 1.0.7+
     ;SNetEnumGamesEx               @133 NONAME
     ;SNetSendServerChatCommand     @134 NONAME
     ;SNetSendDatagram              @135 NONAME
@@ -42,12 +42,16 @@ EXPORTS
     ;SNetCreateLadderGame          @138 NONAME
     ;SNetReportGameResult          @139 NONAME
     ;SNetCheckDataFile             @140 NONAME
+
+    ; Networking (League/Extended) - These are all different in WC3 1.0.7+
     ;SNetSendLeagueCommand         @141 NONAME
     ;SNetSendReplayPath            @142 NONAME
     ;SNetGetLeagueId               @143 NONAME
     ;SNetGetPlayerNames            @144 NONAME
     ;SNetLeagueLogout              @145 NONAME
     ;SNetGetReplyName              @146 NONAME
+    ;SNetGetCurrentProviderID      @147 NONAME
+    ;SNetSetCodeSignVerifcationFunction @148
 
     ; Dlg
     ;SDlgBeginPaint                @201 NONAME
@@ -73,7 +77,13 @@ EXPORTS
     ;SDlgBltToWindowE              @221 NONAME
     ;SDlgSetBitmapE                @222 NONAME
     ;SDlgSetLocale                 @223 NONAME
-    ;SDlgSetThrottle               @224 NONAME
+    ;SDlgSetMessageLoopThrottle    @224 NONAME
+    ;SDlgClearWindowMap            @225 NONAME
+    ;SDlgResetWindowPos            @226 NONAME
+    ;SDlgAddWindowToMap            @227 NONAME
+    ;SDlgRemoveWindowFromMap       @228 NONAME
+    ;SDlgAdjustWindowsToParent     @229 NONAME
+    ;SDlgTakeScreenshot            @230 NONAME
 
     ; File
     ;SFileAuthenticateArchive      @251 NONAME
@@ -120,9 +130,9 @@ EXPORTS
     ;SFileLoadFile2                @292 NONAME
     ;SFileOpenFileAsArchive        @293 NONAME
     ;SFileGetLocale                @294 NONAME
-    ;SFileGetInstancePath          @295 NONAME
-    ;SFileGetSavePath              @296 NONAME
-    ;SFileSetSavePath              @297 NONAME
+    ;SFileGetInstallPath           @295 NONAME  ; SFileRegisterLoadNotifyProc in WC3
+    ;SFileGetUserDataPath          @296 NONAME  ; SFileGetFileCompressedSize in WC3
+    ;SFileSetUserDataPath          @297 NONAME  ; different in WC3
     ;SFileAuthenticateArchiveEx    @299 NONAME
     ;SFileOpenPathAsArchive        @300 NONAME
 
@@ -146,8 +156,8 @@ EXPORTS
     ;SBmpSaveImage                 @324 NONAME
     ;SBmpAllocLoadImage            @325 NONAME
     ;SBmpSaveImageEx               @326 NONAME
-    ;SBmpRealign                   @327 NONAME
-    ;SBmpGetAligned                @328 NONAME
+    ;SBmpPadImage                  @327 NONAME
+    ;SBmpGetPitchForAlignment      @328 NONAME
 
     ; SCode
     ;SCodeCompile                  @331 NONAME
@@ -159,15 +169,15 @@ EXPORTS
     ; Draw
     ;SDrawAutoInitialize           @341 NONAME
     ;SDrawCaptureScreen            @342 NONAME
-    ;SDrawClearSurface             @343 NONAME
-    ;SDrawDestroy                  @344 NONAME
-    ;SDrawFlipPage                 @345 NONAME
+    ;SDrawClearSurface             @343 NONAME  ; SDrawCaptureGDIScreen in SC 1.17
+    ;SDrawDestroy                  @344 NONAME  ; SDrawClearSurface in SC 1.17
+    ;SDrawFlipPage                 @345 NONAME  ; SDrawDestroy in SC 1.17
     ;SDrawGetFrameWindow           @346 NONAME
     ;SDrawGetObjects               @347 NONAME
     ;SDrawGetScreenSize            @348 NONAME
-    ;SDrawGetServiceLevel          @349 NONAME
+    ;SDrawGetServiceLevel          @349 NONAME  ; SDrawFlush in SC 1.17
     ;SDrawLockSurface              @350 NONAME
-    ;SDrawManualInitialize         @351 NONAME
+    ;SDrawManualInitialize         @351 NONAME  ; SDrawInitialize in SC 1.17
     ;SDrawMessageBox               @352 NONAME
     ;SDrawPostClose                @353 NONAME
     ;SDrawRealizePalette           @354 NONAME
@@ -312,7 +322,7 @@ EXPORTS
     SStrHash                      @502 NONAME
     SStrPack                      @503 NONAME
     SStrTokenize                  @504 NONAME
-    ;SStrChr                       @505 NONAME
+    ;SStrChrBidir                 @505 NONAME
     SStrLen                       @506 NONAME
     SStrDupA                      @507 NONAME
     SStrCmp                       @508 NONAME
@@ -325,7 +335,7 @@ EXPORTS
     ;SMsgUnregisterKeyDown         @513 NONAME
     ;SMsgUnregisterKeyUp           @514 NONAME
     ;SMsgUnregisterMessage         @515 NONAME
-    ;SMsgGetDispatcher             @516 NONAME
+    ;SMsgGetGenericWndProc         @516 NONAME
     ;SMsgSetDefaultWindow          @517 NONAME
     ;SMsgGetDefaultWindow          @518 NONAME
     ;SMsgUnregisterSysCommand      @519 NONAME
@@ -369,12 +379,12 @@ EXPORTS
 
     ; Errors extended
     ;SLogVWrite                    @553 NONAME
-    ;SErrCheckDebugSymbolLibrary   @561 NONAME
+    SErrDisplayAppFatal           @561 NONAME
     SErrDisplayErrorFmt           @562 NONAME
     ;SErrIsDisplayingError         @563 NONAME
     SErrPrepareAppFatal           @564 NONAME
     ;SErrSetLogTitleString         @565 NONAME
-    SErrDisplayAppFatal           @566 NONAME
+    ;SErrCheckDebugSymbolLibrary   @566 NONAME
     ;SErrCatchUnhandledExceptions  @567 NONAME
     ;SErrSetLogCallback            @568 NONAME
 
@@ -394,14 +404,16 @@ EXPORTS
     SStrVPrintf                   @581 NONAME
 
     ; More drawing
-    ;SDrawSetClientRect            @582 NONAME
-    ;SDrawGetClientRect            @583 NONAME
+    ;SMsgSetDefaultWindowRect      @582 NONAME
+    ;SMsgGetDefaultWindowRect      @583 NONAME
 
     ; More strings
     ?SStrStr@@YGPADPADPBD@Z       @584 NONAME
     ?SStrStr@@YGPBDPBD0@Z         @585 NONAME
     ?SStrStrI@@YGPADPADPBD@Z      @586 NONAME
     ?SStrStrI@@YGPBDPBD0@Z        @587 NONAME
+
+    ;SysQueueUserEvent            @588 NONAME   ; SStrStr in WC3
     ;SStrHashHT                    @595 NONAME  ; Not offered in SC 1.17
 
     ; Big numbers
