@@ -1,4 +1,5 @@
 #include "storm/Error.hpp"
+#include "storm/thread/SCritSect.hpp"
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
@@ -6,6 +7,9 @@
 #if defined(WHOA_SYSTEM_WIN)
 #include <Windows.h>
 #endif
+
+
+SCritSect s_critsect;
 
 static uint32_t s_lasterror = ERROR_SUCCESS;
 static int32_t s_suppress;
@@ -81,6 +85,25 @@ int32_t STORMCDECL SErrDisplayErrorFmt(uint32_t errorcode, const char* filename,
     return SErrDisplayError(errorcode, filename, linenumber, buffer, recoverable, exitcode);
 }
 
+int32_t STORMAPI SErrGetErrorStr(uint32_t errorcode, char* buffer, uint32_t bufferchars) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(buffer);
+    STORM_VALIDATE(bufferchars);
+    STORM_VALIDATE_END;
+
+    buffer[0] = '\0';
+#if defined(WHOA_SYSTEM_WIN)
+    // half-measure
+    return FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, nullptr, errorcode, LANG_USER_DEFAULT, buffer, bufferchars, nullptr);
+#else
+    return 0;
+#endif
+}
+
+uint32_t STORMAPI SErrGetLastError() {
+    return s_lasterror;
+}
+
 int32_t STORMAPI SErrIsDisplayingError() {
     return s_displaying;
 }
@@ -94,10 +117,6 @@ void STORMAPI SErrSetLastError(uint32_t errorcode) {
 #if defined(WHOA_SYSTEM_WIN)
     SetLastError(errorcode);
 #endif
-}
-
-uint32_t STORMAPI SErrGetLastError() {
-    return s_lasterror;
 }
 
 void STORMAPI SErrSuppressErrors(int32_t suppress) {
