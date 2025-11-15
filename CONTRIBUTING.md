@@ -28,6 +28,7 @@ To use a different version of Storm.dll, use the following arguments in the cmak
 |-----------|-------|
 |`-DWHOA_STORMDLL_VERSION=2016`| Starcraft 1.17 |
 |`-DWHOA_STORMDLL_VERSION=2007`| Starcraft 1.15.0 ~ 1.16.1 |
-|`-DWHOA_STORMDLL_VERSION=2003`| Starcraft 1.10 ~ 1.14.0, Diablo II 1.10 ~ 1.13d |
+|`-DWHOA_STORMDLL_VERSION=2004`| Starcraft 1.11b ~ 1.14 |
+|`-DWHOA_STORMDLL_VERSION=2003`| Starcraft 1.10 ~ 1.11, Diablo II 1.10 ~ 1.13d |
 |`-DWHOA_STORMDLL_VERSION=2000`| Diablo 1.09, Starcraft 1.08 ~ Starcraft 1.09b, Diablo II 1.06 ~ Diablo II 1.09d, Warcraft II: BNE 2.02.1 |
 |`-DWHOA_STORMDLL_VERSION=1999`| Diablo 1.08, Diablo II 1.0 ~ Diablo II 1.05b |

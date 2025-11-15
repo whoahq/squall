@@ -472,13 +472,13 @@ EXPORTS
     ;SUniConvertUTF8to16           @904 NONAME
     SUniSGetUTF8                  @905 NONAME
     SUniSPutUTF8                  @906 NONAME
-    ;SUniFindAfterUTF8Chr          @907 NONAME
-    ;SUniFindUTF8ChrStart          @908 NONAME
-    ;SUniConvertUTF16ToWin         @909 NONAME
-    ;SUniConvertUTF16ToMac         @910 NONAME
-    ;SUniConvertUTF16ToDos         @911 NONAME
-    ;SUniConvertWinToUTF16         @912 NONAME
-    ;SUniConvertMacToUTF16         @913 NONAME
-    ;SUniConvertDosToUTF16         @914 NONAME
+    SUniFindUTF8ChrStart          @907 NONAME
+    SUniFindAfterUTF8Chr          @908 NONAME
+    SUniConvertUTF16ToWin         @909 NONAME
+    SUniConvertUTF16ToMac         @910 NONAME
+    SUniConvertUTF16ToDos         @911 NONAME
+    SUniConvertWinToUTF16         @912 NONAME
+    SUniConvertMacToUTF16         @913 NONAME
+    SUniConvertDosToUTF16         @914 NONAME
     ;SUniConvertUTF8ToWin          @915 NONAME
 
