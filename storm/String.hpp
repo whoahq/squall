@@ -14,6 +14,8 @@ char* STORMAPI SStrChr(char* string, char search);
 
 const char* STORMAPI SStrChr(const char* string, char search);
 
+const char* STORMAPI SStrChrBidir(const char* string, char search, int32_t reverse);
+
 char* STORMAPI SStrChrR(char* string, char search);
 
 const char* STORMAPI SStrChrR(const char* string, char search);

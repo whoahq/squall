@@ -122,6 +122,82 @@ TEST_CASE("SStrChrR const", "[string]") {
     }
 }
 
+TEST_CASE("SStrChrBidir", "[string]") {
+    SECTION("forwards") {
+        const char* string = "foobar";
+
+        SECTION("finds first character when it exists at start of string") {
+            const char* result = SStrChrBidir(string, 'f', 0);
+            REQUIRE(result == string);
+        }
+
+        SECTION("finds first character when it exists in middle of string") {
+            const char* result = SStrChrBidir(string, 'b', 0);
+            REQUIRE(result == string + 3);
+        }
+
+        SECTION("finds first character when it exists at end of string") {
+            const char* result = SStrChrBidir(string, 'r', 0);
+            REQUIRE(result == string + 5);
+        }
+
+        SECTION("returns nullptr when character does not exist in string") {
+            const char* result = SStrChrBidir(string, 'z', 0);
+            REQUIRE(result == nullptr);
+        }
+
+        SECTION("returns nullptr when string is empty") {
+            const char* result = SStrChrBidir("", 'z', 0);
+            REQUIRE(result == nullptr);
+        }
+
+        SECTION("returns nullptr when character is 0") {
+            const char* result = SStrChrBidir(string, '\0', 0);
+            REQUIRE(result == nullptr);
+        }
+    }
+
+    SECTION("reversed") {
+        const char* string = "ffoobbaarr";
+
+        SECTION("finds last character when it exists at start of string") {
+            const char* result = SStrChrBidir(string, 'f', 1);
+            REQUIRE(result == string + 1);
+        }
+
+        SECTION("finds last character when it exists in middle of string") {
+            const char* result = SStrChrBidir(string, 'b', 1);
+            REQUIRE(result == string + 5);
+        }
+
+        SECTION("finds last character when it exists at end of string") {
+            const char* result = SStrChrBidir(string, 'r', 1);
+            REQUIRE(result == string + 9);
+        }
+
+        SECTION("finds last character when it exists at start and end of string") {
+            const char* string = "ffoobbaarrff";
+            const char* result = SStrChrBidir(string, 'f', 1);
+            REQUIRE(result == string + 11);
+        }
+
+        SECTION("returns nullptr when character does not exist in string") {
+            const char* result = SStrChrBidir(string, 'z', 1);
+            REQUIRE(result == nullptr);
+        }
+
+        SECTION("returns nullptr when string is empty") {
+            const char* result = SStrChrBidir("", 'z', 1);
+            REQUIRE(result == nullptr);
+        }
+
+        SECTION("returns nullptr when character is 0") {
+            const char* result = SStrChrBidir(string, '\0', 1);
+            REQUIRE(result == nullptr);
+        }
+    }
+}
+
 #if !defined(WHOA_TEST_STORMDLL)
 TEST_CASE("SStrChrR", "[string]") {
     char string[] = "ffoobbaarr";

@@ -322,7 +322,7 @@ EXPORTS
     SStrHash                      @502 NONAME
     SStrPack                      @503 NONAME
     SStrTokenize                  @504 NONAME
-    ;SStrChrBidir                 @505 NONAME
+    SStrChrBidir                  @505 NONAME
     SStrLen                       @506 NONAME
     SStrDupA                      @507 NONAME
     SStrCmp                       @508 NONAME

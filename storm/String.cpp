@@ -260,6 +260,19 @@ const char* STORMAPI SStrChr(const char* string, char search) {
     return string;
 }
 
+const char* STORMAPI SStrChrBidir(const char* string, char search, int32_t reverse) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE_END;
+
+    if (reverse) {
+        return SStrChrR(string, search);
+    }
+    else {
+        return SStrChr(string, search);
+    }
+}
+
 char* STORMAPI SStrChrR(char* string, char search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
