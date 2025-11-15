@@ -257,6 +257,11 @@ struct TestHash {
     uint32_t hash;
 };
 
+struct TestHash64 {
+    const char* str;
+    uint64_t hash;
+};
+
 TEST_CASE("SStrHash", "[string]") {
     SECTION("hashes strings with case insensitivity") {
         // Results obtained by directly calling Starcraft 1.17's SStrHash
@@ -372,6 +377,180 @@ TEST_CASE("SStrHashHT", "[string]") {
     }
 }
 #endif
+
+TEST_CASE("SStrHash64", "[string]") {
+#if defined(WHOA_SSTRHASH64_SUBTRACTS)
+    SECTION("hashes strings with case insensitivity") {
+        // Results obtained by directly calling Starcraft 1.17's SStrHash64
+        auto testcase = GENERATE(
+            TestHash64{ "bloop bloop", 0xE14D89BC96BA2B0DULL },
+            TestHash64{ "BLOOP bloop", 0xE14D89BC96BA2B0DULL },
+            TestHash64{ "Objects\\CameraHelper\\CameraHelper.mdx", 0x7759083272301974ULL },
+            TestHash64{ "Objects/CameraHelper/CameraHelper.mdx", 0x7759083272301974ULL },
+            TestHash64{ "abcdefghijklmnopqrstuvwxyz", 0x73D40422F72E5B88ULL },
+            TestHash64{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0x73D40422F72E5B88ULL },
+            TestHash64{ "123456789~!@#$%^&*()_+`-=[]{}|;':\",.<>?", 0x71E9A046243BE465ULL },
+            TestHash64{ "/", 0xFBD3F11E1E46C4CCULL },
+            TestHash64{ "\\", 0xFBD3F11E1E46C4CCULL },
+            TestHash64{ "\r\n\t ", 0xA739BEA33457DEECULL }
+        );
+
+        auto hash = SStrHash64(testcase.str);
+        CHECK(hash == testcase.hash);
+    }
+
+    SECTION("hashes strings with case sensitivity") {
+        // Results obtained by directly calling Starcraft 1.17's SStrHash64
+        auto testcase = GENERATE(
+            TestHash64{ "bloop bloop", 0x4F12AE31024D45F9ULL },
+            TestHash64{ "BLOOP bloop", 0x5D851E9D86AE9B9DULL },
+            TestHash64{ "Objects\\CameraHelper\\CameraHelper.mdx", 0xA90280432B37C9C0ULL },
+            TestHash64{ "Objects/CameraHelper/CameraHelper.mdx", 0x76D3CB7BEEA8D106ULL },
+            TestHash64{ "abcdefghijklmnopqrstuvwxyz", 0xA6A43E35042C251CULL },
+            TestHash64{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0x73D40422F72E5B88ULL },
+            TestHash64{ "123456789~!@#$%^&*()_+`-=[]{}|;':\",.<>?", 0x71E9A046243BE465ULL },
+            TestHash64{ "/", 0xAA0F8720D40E831AULL },
+            TestHash64{ "\\", 0xFBD3F11E1E46C4CCULL },
+            TestHash64{ "\r\n\t ", 0xA739BEA33457DEECULL }
+        );
+
+        auto hash = SStrHash64(testcase.str, SSTR_HASH_CASESENSITIVE);
+        CHECK(hash == testcase.hash);
+    }
+
+    SECTION("hashes strings with fixed seeds case insensitive") {
+        // Results obtained by directly calling Starcraft 1.17's SStrHash64
+        auto testcase = GENERATE(
+            TestHash64{ "bloop bloop", 0x03D3898FEC03C4D9ULL },
+            TestHash64{ "BLOOP bloop", 0x03D3898FEC03C4D9ULL },
+            TestHash64{ "Objects\\CameraHelper\\CameraHelper.mdx", 0xCEACEDE00D62B2B6ULL },
+            TestHash64{ "Objects/CameraHelper/CameraHelper.mdx", 0xCEACEDE00D62B2B6ULL },
+            TestHash64{ "abcdefghijklmnopqrstuvwxyz", 0xA39E182D711E5D58ULL },
+            TestHash64{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0xA39E182D711E5D58ULL },
+            TestHash64{ "123456789~!@#$%^&*()_+`-=[]{}|;':\",.<>?", 0x5BF56F80621C969BULL },
+            TestHash64{ "/", 0x7BE1712C9E74457EULL },
+            TestHash64{ "\\", 0x7BE1712C9E74457EULL },
+            TestHash64{ "\r\n\t ", 0xEE8A467B9D01DE46ULL }
+        );
+
+        auto hash = SStrHash64(testcase.str, 0, 123LL);
+        CHECK(hash == testcase.hash);
+    }
+
+    SECTION("hashes strings with fixed seeds case sensitive") {
+        // Results obtained by directly calling Starcraft 1.17's SStrHash64
+        auto testcase = GENERATE(
+            TestHash64{ "bloop bloop", 0x6FFDAAD262D140BDULL },
+            TestHash64{ "BLOOP bloop", 0xF300F24AB99DFB15ULL },
+            TestHash64{ "Objects\\CameraHelper\\CameraHelper.mdx", 0xAE42461A0E6433CEULL },
+            TestHash64{ "Objects/CameraHelper/CameraHelper.mdx", 0x19E9DB9ACCD45BDCULL },
+            TestHash64{ "abcdefghijklmnopqrstuvwxyz", 0x1666B3E05FB2DCA8ULL },
+            TestHash64{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0xA39E182D711E5D58ULL },
+            TestHash64{ "123456789~!@#$%^&*()_+`-=[]{}|;':\",.<>?", 0x5BF56F80621C969BULL },
+            TestHash64{ "/", 0x2A3D0712543C02A8ULL },
+            TestHash64{ "\\", 0x7BE1712C9E74457EULL },
+            TestHash64{ "\r\n\t ", 0xEE8A467B9D01DE46ULL }
+        );
+
+        auto hash = SStrHash64(testcase.str, SSTR_HASH_CASESENSITIVE, 123);
+        CHECK(hash == testcase.hash);
+    }
+#else
+    SECTION("hashes strings with case insensitivity") {
+        // Results unverified
+        auto testcase = GENERATE(
+            TestHash64{ "bloop bloop", 0x84FD59305F3877FFULL },
+            TestHash64{ "BLOOP bloop", 0x84FD59305F3877FFULL },
+            TestHash64{ "Objects\\CameraHelper\\CameraHelper.mdx", 0x2B34AA2D06B98C8EULL },
+            TestHash64{ "Objects/CameraHelper/CameraHelper.mdx", 0x2B34AA2D06B98C8EULL },
+            TestHash64{ "abcdefghijklmnopqrstuvwxyz", 0x8E7D62B3AD83962AULL },
+            TestHash64{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0x8E7D62B3AD83962AULL },
+            TestHash64{ "123456789~!@#$%^&*()_+`-=[]{}|;':\",.<>?", 0xC0B7B00ECE9E2F07ULL },
+            TestHash64{ "/", 0xCDBC0A00AF83D484ULL },
+            TestHash64{ "\\", 0xCDBC0A00AF83D484ULL },
+            TestHash64{ "\r\n\t ", 0xD8904DDFC816244AULL }
+        );
+
+        auto hash = SStrHash64(testcase.str);
+        CHECK(hash == testcase.hash);
+    }
+
+    SECTION("hashes strings with case sensitivity") {
+        // Results unverified
+        auto testcase = GENERATE(
+            TestHash64{ "bloop bloop", 0xBBB2156CEDE15737ULL },
+            TestHash64{ "BLOOP bloop", 0x535CFCB6D2D7F37BULL },
+            TestHash64{ "Objects\\CameraHelper\\CameraHelper.mdx", 0x5302DB8D4BA78ABAULL },
+            TestHash64{ "Objects/CameraHelper/CameraHelper.mdx", 0xE8BF631EA4E66D58ULL },
+            TestHash64{ "abcdefghijklmnopqrstuvwxyz", 0x7D8899096CB4CC02ULL },
+            TestHash64{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0x8E7D62B3AD83962AULL },
+            TestHash64{ "123456789~!@#$%^&*()_+`-=[]{}|;':\",.<>?", 0xC0B7B00ECE9E2F07ULL },
+            TestHash64{ "/", 0xCDB97F4D1345D69EULL },
+            TestHash64{ "\\", 0xCDBC0A00AF83D484ULL },
+            TestHash64{ "\r\n\t ", 0xD8904DDFC816244AULL }
+        );
+
+        auto hash = SStrHash64(testcase.str, SSTR_HASH_CASESENSITIVE);
+        CHECK(hash == testcase.hash);
+    }
+
+    SECTION("hashes strings with fixed seeds case insensitive") {
+        // Results unverified
+        auto testcase = GENERATE(
+            TestHash64{ "bloop bloop", 0xC6F40635E6E3C117ULL },
+            TestHash64{ "BLOOP bloop", 0xC6F40635E6E3C117ULL },
+            TestHash64{ "Objects\\CameraHelper\\CameraHelper.mdx", 0x6451F965B5D0FD5CULL },
+            TestHash64{ "Objects/CameraHelper/CameraHelper.mdx", 0x6451F965B5D0FD5CULL },
+            TestHash64{ "abcdefghijklmnopqrstuvwxyz", 0x203432E33CF40F76ULL },
+            TestHash64{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0x203432E33CF40F76ULL },
+            TestHash64{ "123456789~!@#$%^&*()_+`-=[]{}|;':\",.<>?", 0xC3891C1567328CB1ULL },
+            TestHash64{ "/", 0x4D8E8A322FB15536ULL },
+            TestHash64{ "\\", 0x4D8E8A322FB15536ULL },
+            TestHash64{ "\r\n\t ", 0x2406686F9A68C604ULL }
+        );
+
+        auto hash = SStrHash64(testcase.str, 0, 123LL);
+        CHECK(hash == testcase.hash);
+    }
+
+    SECTION("hashes strings with fixed seeds case sensitive") {
+        // Results unverified
+        auto testcase = GENERATE(
+            TestHash64{ "bloop bloop", 0xE57741252C85E807ULL },
+            TestHash64{ "BLOOP bloop", 0x904B2F5E071239EFULL },
+            TestHash64{ "Objects\\CameraHelper\\CameraHelper.mdx", 0xEA1C02D18CA081F4ULL },
+            TestHash64{ "Objects/CameraHelper/CameraHelper.mdx", 0x391D997C0A76FB82ULL },
+            TestHash64{ "abcdefghijklmnopqrstuvwxyz", 0x2416669E47057DB2ULL },
+            TestHash64{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0x203432E33CF40F76ULL },
+            TestHash64{ "123456789~!@#$%^&*()_+`-=[]{}|;':\",.<>?", 0xC3891C1567328CB1ULL },
+            TestHash64{ "/", 0x4D8BFF7F9377572CULL },
+            TestHash64{ "\\", 0x4D8E8A322FB15536ULL },
+            TestHash64{ "\r\n\t ", 0x2406686F9A68C604ULL }
+        );
+
+        auto hash = SStrHash64(testcase.str, SSTR_HASH_CASESENSITIVE, 123);
+        CHECK(hash == testcase.hash);
+    }
+#endif
+
+    SECTION("hashing empty string with seed of 0 gives default seed") {
+        auto hash = SStrHash64("", 0, 0);
+        CHECK(hash == 0x7FED7FED7FED7FEDLL);
+
+        hash = SStrHash64("", SSTR_HASH_CASESENSITIVE, 0);
+        CHECK(hash == 0x7FED7FED7FED7FEDLL);
+    }
+
+    SECTION("hashing empty string with custom seed returns that seed") {
+        auto seed = GENERATE(1LL, 123LL, 0x7FED7FEDLL, 0xFFFFFFFFLL, 0x7FED7FED7FED7FEDLL, 0xFFFFFFFFFFFFFFFFLL);
+
+        auto hash = SStrHash64("", 0, seed);
+        CHECK(hash == seed);
+
+        hash = SStrHash64("", SSTR_HASH_CASESENSITIVE, seed);
+        CHECK(hash == seed);
+    }
+}
 
 TEST_CASE("SStrLen", "[string]") {
     SECTION("calculates string length correctly") {

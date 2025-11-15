@@ -38,6 +38,7 @@ if(WHOA_STORM_FLAVOR STREQUAL "SC1")
     endif()
 
     add_definitions(-DWHOA_RECT_USES_SCREEN_COORDINATES)
+    add_definitions(-DWHOA_SSTRHASH64_SUBTRACTS)
 elseif(WHOA_STORM_FLAVOR STREQUAL "WOW")
     message(STATUS "Building Storm with World of Warcraft flavoring")
 else()

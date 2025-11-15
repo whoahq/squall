@@ -98,6 +98,7 @@ size_t STORMAPI SStrCopy(char*, const char*, size_t) { return 0; }
 char* STORMAPI SStrDupA(const char*, const char*, uint32_t) { return 0; }
 uint32_t STORMAPI SStrHash(const char*, uint32_t, uint32_t) { return 0; }
 uint32_t STORMAPI SStrHashHT(const char*) { return 0; }
+int64_t STORMAPI SStrHash64(const char*, uint32_t, int64_t) { return 0; }
 size_t STORMAPI SStrLen(const char*) { return 0; }
 void STORMAPI SStrLower(char*) {}
 uint32_t STORMAPI SStrPack(char*, const char*, uint32_t) { return 0; }
