@@ -57,6 +57,13 @@ const uint32_t s_hashtable[16] = {
     0xE3061AE7, 0xA39B0FA1, 0x9797F25F, 0xE4444563,
 };
 
+const uint64_t s_hashtable64[16] = {
+    0x486E26EEDCAA16B3ULL, 0xE1918EEF202DAFDBULL, 0x341C7DC71C365303ULL, 0x40EF2D3765FD5E49ULL,
+    0xD6057177904ECE93ULL, 0x1C38024F98FD323BULL, 0xE3061AE7A39B0FA1ULL, 0x9797F25FE4444563ULL,
+    0xCD2EC20C8DC1B898ULL, 0x31759633799A306DULL, 0x8C2063852E6E9627ULL, 0x79237D9973922C66ULL,
+    0x8728628D28628824ULL, 0x8F1F7E9625887795ULL, 0x296E3281389C0D60ULL, 0x6F4893CA61636542ULL,
+};
+
 void GetNextTextUpper(uint32_t* orig, const char** string, uint32_t* upper) {
     uint8_t byte = **string;
     int32_t v3 = bytesFromUTF8[byte];
@@ -421,6 +428,50 @@ uint32_t STORMAPI SStrHashHT(const char* string) {
     *buf = 0;
 
     return bjhash((uint8_t*)&normalized, length, 0);
+}
+
+int64_t STORMAPI SStrHash64(const char* string, uint32_t flags, int64_t seed) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(string);
+    STORM_VALIDATE_END;
+
+    int64_t result = seed ? seed : 0x7FED7FED7FED7FEDLL;
+    int64_t adjust = 0xEEEEEEEEEEEEEEEELL;
+    uint32_t ch;
+
+    if (flags & SSTR_HASH_CASESENSITIVE) {
+        for (; *string; string++) {
+            ch = static_cast<uint8_t>(*string);
+
+#if defined(WHOA_SSTRHASH64_SUBTRACTS)
+            result = (s_hashtable64[ch / 16] - s_hashtable64[ch % 16]) ^ (adjust + result);
+#else
+            result = (s_hashtable64[ch / 16] + s_hashtable64[ch % 16]) ^ (adjust + result);
+#endif
+            adjust = 33 * adjust + result + ch + 3;
+        }
+    }
+    else {
+        for (; *string; string++) {
+            ch = static_cast<uint8_t>(*string);
+
+            if (ch >= 'a' && ch <= 'z') {
+                ch -= 32;
+            }
+
+            if (ch == '/') {
+                ch = '\\';
+            }
+
+#if defined(WHOA_SSTRHASH64_SUBTRACTS)
+            result = (s_hashtable64[ch / 16] - s_hashtable64[ch % 16]) ^ (adjust + result);
+#else
+            result = (s_hashtable64[ch / 16] + s_hashtable64[ch % 16]) ^ (adjust + result);
+#endif
+            adjust = 33 * adjust + result + ch + 3;
+        }
+    }
+    return result ? result : 1LL;
 }
 
 size_t STORMAPI SStrLen(const char* string) {

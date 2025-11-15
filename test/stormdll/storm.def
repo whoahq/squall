@@ -390,7 +390,7 @@ EXPORTS
     ;SStrToInt64                   @577 NONAME
     SStrPrintf                    @578 NONAME
     SStrLower                     @579 NONAME
-    ;SStrHash64                    @580 NONAME
+    SStrHash64                    @580 NONAME
     SStrVPrintf                   @581 NONAME
 
     ; More drawing
