@@ -118,5 +118,13 @@ void STORMAPI SStrUpper(char*) {}
 
 #include <storm/Unicode.hpp>
 
-uint32_t STORMAPI SUniSGetUTF8(const uint8_t*, int32_t*) {return 0; }
+ptrdiff_t STORMAPI SUniConvertUTF16ToDos(char*, const char16_t*, uint32_t) { return 0; };
+ptrdiff_t STORMAPI SUniConvertUTF16ToMac(char*, const char16_t*, uint32_t) { return 0; };
+ptrdiff_t STORMAPI SUniConvertUTF16ToWin(char*, const char16_t*, uint32_t) { return 0; };
+ptrdiff_t STORMAPI SUniConvertDosToUTF16(char16_t*, const char*, uint32_t) { return 0; };
+ptrdiff_t STORMAPI SUniConvertMacToUTF16(char16_t*, const char*, uint32_t) { return 0; };
+ptrdiff_t STORMAPI SUniConvertWinToUTF16(char16_t*, const char*, uint32_t) { return 0; };
+int32_t STORMAPI SUniFindAfterUTF8Chr(const char*, int32_t) { return 0; };
+int32_t STORMAPI SUniFindUTF8ChrStart(const char*, int32_t) { return 0; };
+uint32_t STORMAPI SUniSGetUTF8(const uint8_t*, int32_t*) { return 0; }
 void STORMAPI SUniSPutUTF8(uint32_t, char*) {}
