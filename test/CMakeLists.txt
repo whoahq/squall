@@ -9,8 +9,11 @@ if(WHOA_TEST_STORMDLL)
         Region.cpp
         String.cpp
         Test.cpp
-        Unicode.cpp
     )
+
+    if(WHOA_STORMDLL_VERSION GREATER_EQUAL 2003)
+        list(APPEND TEST_SOURCES Unicode.cpp)
+    endif()
 else()
     file(GLOB TEST_SOURCES
         "*.cpp"

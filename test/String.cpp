@@ -454,6 +454,7 @@ TEST_CASE("SStrHashHT", "[string]") {
 }
 #endif
 
+#if !defined(WHOA_STORMDLL_VERSION) || WHOA_STORMDLL_VERSION >= 2000
 TEST_CASE("SStrHash64", "[string]") {
 #if defined(WHOA_SSTRHASH64_SUBTRACTS)
     SECTION("hashes strings with case insensitivity") {
@@ -627,6 +628,7 @@ TEST_CASE("SStrHash64", "[string]") {
         CHECK(hash == seed);
     }
 }
+#endif
 
 TEST_CASE("SStrLen", "[string]") {
     SECTION("calculates string length correctly") {
@@ -638,6 +640,7 @@ TEST_CASE("SStrLen", "[string]") {
     }
 }
 
+#if !defined(WHOA_STORMDLL_VERSION) || WHOA_STORMDLL_VERSION >= 2000
 TEST_CASE("SStrLower", "[string]") {
     SECTION("rewrites uppercase string to lowercase correctly") {
         char string[] = "FOOBAR";
@@ -661,6 +664,7 @@ TEST_CASE("SStrLower", "[string]") {
     }
 }
 
+// In older versions this doesn't have a return value
 TEST_CASE("SStrPack", "[string]") {
     SECTION("truncates dest correctly when first byte in source is null") {
         char dest[10] = {};
@@ -706,6 +710,7 @@ TEST_CASE("SStrPack", "[string]") {
     }
 }
 
+// In older versions this doesn't have a return value
 TEST_CASE("SStrPrintf", "[string]") {
     SECTION("fills dest with formatted string") {
         char dest[100] = {};
@@ -797,8 +802,9 @@ TEST_CASE("SStrVPrintf", "[string]") {
         REQUIRE(!SStrCmp(dest, ""));
     }
 }
+#endif
 
-#if !defined(WHOA_STORMDLL_VERSION) || WHOA_STORMDLL_VERSION >= 2009
+#if !defined(WHOA_STORMDLL_VERSION) || WHOA_STORMDLL_VERSION >= 2007
 TEST_CASE("SStrStr", "[string]") {
     char string[] = "foobar";
 
@@ -1020,6 +1026,7 @@ TEST_CASE("SStrTokenize", "[string]") {
 }
 
 #if !defined(WHOA_STORMDLL_VERSION) || WHOA_STORMDLL_VERSION >= 2016
+// In older versions these are broken
 TEST_CASE("SStrToDouble", "[string]") {
     SECTION("converts empty string to double") {
         auto result = SStrToDouble("");
@@ -1098,6 +1105,7 @@ TEST_CASE("SStrToDouble", "[string]") {
     }
 }
 
+// In older versions these are broken
 TEST_CASE("SStrToFloat", "[string]") {
     SECTION("converts empty string to float") {
         auto result = SStrToFloat("");
@@ -1269,6 +1277,7 @@ TEST_CASE("SStrToUnsigned", "[string]") {
     }
 }
 
+#if !defined(WHOA_STORMDLL_VERSION) || WHOA_STORMDLL_VERSION >= 2000
 TEST_CASE("SStrUpper", "[string]") {
     SECTION("rewrites lowercase string to uppercase correctly") {
         char string[] = "foobar";
@@ -1291,3 +1300,4 @@ TEST_CASE("SStrUpper", "[string]") {
         REQUIRE(!SStrCmp(string, ""));
     }
 }
+#endif
