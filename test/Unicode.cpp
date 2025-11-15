@@ -2,6 +2,123 @@
 #include "storm/String.hpp"
 #include "test/Test.hpp"
 
+TEST_CASE("SUniConvertUTF16ToDos", "[unicode]") {
+    SECTION("does nothing on empty dest size") {
+        auto result = SUniConvertUTF16ToDos(nullptr, nullptr, 0);
+        CHECK(result == 0);
+    }
+
+    SECTION("operates on empty string") {
+        char resultStr[100];
+        const wchar_t str[] = L"";
+
+        auto result = SUniConvertUTF16ToDos(resultStr, str, sizeof(resultStr));
+        CHECK(std::string(resultStr) == "");
+        CHECK(result == 1); // wrote 1 null terminator
+    }
+
+    // TODO
+    // test failure to write null terminator when not enough space
+    // test writing ???? when character unsupported
+    // test one-to-one ascii
+    // test conversions
+}
+
+TEST_CASE("SUniConvertUTF16ToMac", "[unicode]") {
+    SECTION("does nothing on empty dest size") {
+        auto result = SUniConvertUTF16ToMac(nullptr, nullptr, 0);
+        CHECK(result == 0);
+    }
+
+    SECTION("operates on empty string") {
+        char resultStr[100];
+        const wchar_t str[] = L"";
+
+        auto result = SUniConvertUTF16ToMac(resultStr, str, sizeof(resultStr));
+        CHECK(std::string(resultStr) == "");
+        CHECK(result == 1); // wrote 1 null terminator
+    }
+
+    // TODO
+}
+
+TEST_CASE("SUniConvertUTF16ToWin", "[unicode]") {
+    SECTION("does nothing on empty dest size") {
+        auto result = SUniConvertUTF16ToWin(nullptr, nullptr, 0);
+        CHECK(result == 0);
+    }
+
+    SECTION("operates on empty string") {
+        char resultStr[100];
+        const wchar_t str[] = L"";
+
+        auto result = SUniConvertUTF16ToWin(resultStr, str, sizeof(resultStr));
+        CHECK(std::string(resultStr) == "");
+        CHECK(result == 1); // wrote 1 null terminator
+    }
+
+    // TODO
+    // Starcraft flavour Korean codepage
+}
+
+TEST_CASE("SUniConvertDosToUTF16", "[unicode]") {
+    SECTION("does nothing on empty dest size") {
+        auto result = SUniConvertDosToUTF16(nullptr, nullptr, 0);
+        CHECK(result == 0);
+    }
+
+    SECTION("operates on empty string") {
+        wchar_t resultStr[100];
+        const char str[] = "";
+
+        auto result = SUniConvertDosToUTF16(resultStr, str, sizeof(resultStr));
+        CHECK(std::wstring(resultStr) == L"");
+        CHECK(result == 1); // wrote 1 null terminator
+    }
+
+    // TODO
+    // test failure to write null terminator when not enough space
+    // test one-to-one ascii
+    // test conversions
+}
+
+TEST_CASE("SUniConvertMacToUTF16", "[unicode]") {
+    SECTION("does nothing on empty dest size") {
+        auto result = SUniConvertMacToUTF16(nullptr, nullptr, 0);
+        CHECK(result == 0);
+    }
+
+    SECTION("operates on empty string") {
+        wchar_t resultStr[100];
+        const char str[] = "";
+
+        auto result = SUniConvertMacToUTF16(resultStr, str, sizeof(resultStr));
+        CHECK(std::wstring(resultStr) == L"");
+        CHECK(result == 1); // wrote 1 null terminator
+    }
+
+    // TODO
+}
+
+TEST_CASE("SUniConvertWinToUTF16", "[unicode]") {
+    SECTION("does nothing on empty dest size") {
+        auto result = SUniConvertWinToUTF16(nullptr, nullptr, 0);
+        CHECK(result == 0);
+    }
+
+    SECTION("operates on empty string") {
+        wchar_t resultStr[100];
+        const char str[] = "";
+
+        auto result = SUniConvertWinToUTF16(resultStr, str, sizeof(resultStr));
+        CHECK(std::wstring(resultStr) == L"");
+        CHECK(result == 1); // wrote 1 null terminator
+    }
+
+    // TODO
+    // Starcraft flavour Korean codepage
+}
+
 TEST_CASE("SUniSGetUTF8", "[unicode]") {
     SECTION("returns ascii-range utf-8 first character") {
         auto string = "foobar";
