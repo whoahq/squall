@@ -90,6 +90,7 @@ void STORMAPI SRgnOffseti(HSRGN, int32_t, int32_t) {}
 
 char* STORMAPI SStrChr(char*, char) { return 0; }
 const char* STORMAPI SStrChr(const char*, char) { return 0; }
+const char* STORMAPI SStrChrBidir(const char*, char, int32_t) { return 0; }
 char* STORMAPI SStrChrR(char*, char) { return 0; }
 const char* STORMAPI SStrChrR(const char*, char) { return 0; }
 int32_t STORMAPI SStrCmp(const char*, const char*, size_t) { return 0; }
