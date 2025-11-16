@@ -5,10 +5,28 @@ struct TestListNode : TSLinkedNode<TestListNode> {
     uint32_t index = 0;
 };
 
+struct TestExplicitListNode {
+    uint32_t index = 0;
+    TSLink<TestExplicitListNode> m_explicitLink;
+};
+
 TEST_CASE("TSList", "[list]") {
     SECTION("constructs correctly") {
         STORM_LIST(TestListNode) list;
         REQUIRE(list.Head() == nullptr);
+    }
+
+    SECTION("constructs copy correctly") {
+        STORM_LIST(TestListNode) list;
+        auto node = new TestListNode();
+        list.LinkToHead(node);
+
+        STORM_LIST(TestListNode) listCopy(list);
+
+        // List copy constructor does not transfer ownership of nodes. It merely copies the link
+        // offset from the source list and initializes the list terminator.
+        REQUIRE(list.Head() == node);
+        REQUIRE(listCopy.Head() == nullptr);
     }
 }
 
@@ -133,5 +151,26 @@ TEST_CASE("TSList::Tail", "[list]") {
     SECTION("returns nullptr for uninitialized list") {
         STORM_LIST(TestListNode) list;
         REQUIRE(list.Tail() == nullptr);
+    }
+}
+
+TEST_CASE("TSExplicitList", "[list]") {
+    SECTION("constructs correctly") {
+        STORM_EXPLICIT_LIST(TestExplicitListNode, m_explicitLink) list;
+        REQUIRE(list.Head() == nullptr);
+    }
+
+    SECTION("constructs copy correctly") {
+        STORM_EXPLICIT_LIST(TestExplicitListNode, m_explicitLink) list;
+        auto node = new TestExplicitListNode();
+        list.LinkToHead(node);
+
+        STORM_EXPLICIT_LIST(TestExplicitListNode, m_explicitLink) listCopy(list);
+
+        // Explicit list copy constructor does not transfer ownership of nodes. It merely calls
+        // the copy constructor on the list base class, which only copies the link offset from
+        // the source list and initializes the list terminator.
+        REQUIRE(list.Head() == node);
+        REQUIRE(listCopy.Head() == nullptr);
     }
 }
