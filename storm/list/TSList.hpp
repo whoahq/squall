@@ -19,14 +19,17 @@ template <class T, class TGetLink>
 class TSList {
     public:
     // Member variables
-    ptrdiff_t m_linkoffset = 0;
+    ptrdiff_t m_linkoffset;
     TSLink<T> m_terminator;
 
     // Member functions
     TSList();
+    TSList(const TSList& source);
     ~TSList();
     void ChangeLinkOffset(ptrdiff_t linkoffset);
     void Clear();
+    void Constructor();
+    void CopyConstructor(const TSList& source);
     T* DeleteNode(T* ptr);
     T* Head();
     void InitializeTerminator();
@@ -49,7 +52,12 @@ class TSList {
 
 template <class T, class TGetLink>
 TSList<T, TGetLink>::TSList() {
-    this->InitializeTerminator();
+    this->Constructor();
+}
+
+template <class T, class TGetLink>
+TSList<T, TGetLink>::TSList(const TSList& source) {
+    this->CopyConstructor(source);
 }
 
 template <class T, class TGetLink>
@@ -72,6 +80,16 @@ void TSList<T, TGetLink>::Clear() {
     while ((node = this->Head())) {
         this->DeleteNode(node);
     }
+}
+
+template <class T, class TGetLink>
+void TSList<T, TGetLink>::Constructor() {
+    this->SetLinkOffset(0);
+}
+
+template <class T, class TGetLink>
+void TSList<T, TGetLink>::CopyConstructor(const TSList& source) {
+    this->SetLinkOffset(source.m_linkoffset);
 }
 
 template <class T, class TGetLink>
