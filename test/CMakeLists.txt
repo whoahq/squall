@@ -53,7 +53,13 @@ target_include_directories(StormTest
 
 if(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     include(CodeCoverage)
+
     target_compile_options(${PROJECT_NAME} PRIVATE -g -fprofile-arcs -ftest-coverage -O0)
+
+    # Enable ASan for debug builds on gcc
+    target_link_options(StormTest
+        PUBLIC -fsanitize=address
+    )
 endif()
 
 install(TARGETS StormTest DESTINATION "bin")
