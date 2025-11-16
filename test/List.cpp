@@ -27,6 +27,8 @@ TEST_CASE("TSList", "[list]") {
         // offset from the source list and initializes the list terminator.
         REQUIRE(list.Head() == node);
         REQUIRE(listCopy.Head() == nullptr);
+
+        delete node;
     }
 }
 
@@ -47,6 +49,8 @@ TEST_CASE("TSList::IsEmpty", "[list]") {
         STORM_LIST(TestListNode) list;
         list.NewNode(STORM_LIST_TAIL, 0, 0);
         CHECK_FALSE(list.IsEmpty());
+
+        list.Clear();
     }
 
     SECTION("returns true after clearing a populated list") {
@@ -172,5 +176,7 @@ TEST_CASE("TSExplicitList", "[list]") {
         // the source list and initializes the list terminator.
         REQUIRE(list.Head() == node);
         REQUIRE(listCopy.Head() == nullptr);
+
+        delete node;
     }
 }

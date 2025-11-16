@@ -51,7 +51,9 @@ TEST_CASE("SThread::Create", "[thread]") {
     SECTION("creates new thread") {
         SThread thread;
         auto threadName = const_cast<char*>("TestThread");
-        auto threadParam = SMemAlloc(16, nullptr, 0, 0x0);
+        auto threadParam = STORM_ALLOC(16);
         REQUIRE(SThread::Create(threadProc, threadParam, thread, threadName, 0) != 0);
+
+        STORM_FREE(threadParam);
     }
 }
