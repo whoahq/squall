@@ -8,8 +8,16 @@ void* operator new(size_t bytes) {
     return SMemAlloc(bytes, "new", -1, 0x0);
 }
 
+void* operator new(size_t bytes, const std::nothrow_t&) noexcept {
+    return SMemAlloc(bytes, "new(nothrow_t)", -1, 0x0);
+}
+
 void* operator new[](size_t bytes) {
     return SMemAlloc(bytes, "new[]", -1, 0x0);
+}
+
+void* operator new[](size_t bytes, const std::nothrow_t&) noexcept {
+    return SMemAlloc(bytes, "new[](nothrow_t)", -1, 0x0);
 }
 
 void operator delete(void* ptr) noexcept {
@@ -18,9 +26,21 @@ void operator delete(void* ptr) noexcept {
     }
 }
 
+void operator delete(void* ptr, const std::nothrow_t&) noexcept {
+    if (ptr) {
+        SMemFree(ptr, "delete(nothrow_t)", -1, 0x0);
+    }
+}
+
 void operator delete[](void* ptr) noexcept {
     if (ptr) {
         SMemFree(ptr, "delete[]", -1, 0x0);
+    }
+}
+
+void operator delete[](void* ptr, const std::nothrow_t&) noexcept {
+    if (ptr) {
+        SMemFree(ptr, "delete[](nothrow_t)", -1, 0x0);
     }
 }
 
