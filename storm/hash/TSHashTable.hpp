@@ -95,8 +95,8 @@ void TSHashTable<T, TKey>::GrowListArray(uint32_t newarraysize) {
     TSExplicitList<T, 0xDDDDDDDD> templist;
     templist.ChangeLinkOffset(linkOffset);
     for (uint32_t i = 0; i < slotmask; i++) {
-        for (T* ptr = this->m_slotlistarray[i].Head(); ptr; ptr = this->m_slotlistarray[i].Head()) {
-            templist.LinkNode(ptr, 2, 0);
+        while (T* ptr = this->m_slotlistarray[i].Head()) {
+            templist.LinkToTail(ptr);
         }
     }
 
@@ -106,9 +106,9 @@ void TSHashTable<T, TKey>::GrowListArray(uint32_t newarraysize) {
     }
 
     this->m_slotmask = newarraysize - 1;
-    for (T* ptr = templist.Head(); ptr; ptr = templist.Head()) {
+    while (T* ptr = templist.Head()) {
         auto& slot = this->m_slotlistarray[this->ComputeSlot(ptr->m_hashval)];
-        slot.LinkNode(ptr, 2, 0);
+        slot.LinkToTail(ptr);
     }
 }
 
@@ -271,24 +271,12 @@ T* TSHashTable<T, TKey>::Ptr(const char* str) {
 
     uint32_t hashval = SStrHashHT(str);
 
-    uint32_t slot = this->ComputeSlot(hashval);
-    auto slotlist = &this->m_slotlistarray[slot];
-
-    T* ptr = slotlist->Head();
-    if (!ptr) {
-        return nullptr;
-    }
-
-    while (ptr->m_hashval != hashval || !(ptr->m_key == str)) {
-        uint32_t slotIdx = this->ComputeSlot(hashval);
-        auto v9 = &this->m_slotlistarray[slotIdx];
-        ptr = v9->RawNext(ptr);
-
-        if (reinterpret_cast<intptr_t>(ptr) <= 0) {
-            return nullptr;
+    for (T* ptr = this->m_slotlistarray[this->ComputeSlot(hashval)].Head(); reinterpret_cast<intptr_t>(ptr) > 0; ptr = this->m_slotlistarray[this->ComputeSlot(hashval)].RawNext(ptr)) {
+        if (ptr->m_hashval == hashval && ptr->m_key == str) {
+            return ptr;
         }
     }
-    return ptr;
+    return nullptr;
 }
 
 template <class T, class TKey>
@@ -297,24 +285,12 @@ T* TSHashTable<T, TKey>::Ptr(uint32_t hashval, const TKey& key) {
         return nullptr;
     }
 
-    uint32_t slot = this->ComputeSlot(hashval);
-    auto slotlist = &this->m_slotlistarray[slot];
-
-    T* ptr = slotlist->Head();
-
-    if (!ptr) {
-        return nullptr;
-    }
-
-    while (ptr->m_hashval != hashval || !(ptr->m_key == key)) {
-        ptr = slotlist->RawNext(ptr);
-
-        if (reinterpret_cast<intptr_t>(ptr) <= 0) {
-            return nullptr;
+    for (T* ptr = this->m_slotlistarray[this->ComputeSlot(hashval)].Head(); reinterpret_cast<intptr_t>(ptr) > 0; ptr = this->m_slotlistarray[this->ComputeSlot(hashval)].RawNext(ptr)) {
+        if (ptr->m_hashval == hashval && ptr->m_key == key) {
+            return ptr;
         }
     }
-
-    return ptr;
+    return nullptr;
 }
 
 template <class T, class TKey>
