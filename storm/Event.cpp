@@ -145,21 +145,12 @@ int32_t STORMAPI SEvtDispatch(uint32_t type, uint32_t subtype, uint32_t id, void
     do {
         s_critsect.Enter();
 
-        int32_t breakcmd = 0;
-        BREAKCMD* curr = s_breakcmdlist.Head();
-        int32_t iterate_delete = 0;
-        while (reinterpret_cast<intptr_t>(curr) > 0) {
+        bool breakcmd = false;
+        for (BREAKCMD* curr = s_breakcmdlist.Head(); reinterpret_cast<intptr_t>(curr) > 0; curr = s_breakcmdlist.RawNext(curr)) {
             if (curr->data == data) {
-                breakcmd = 1;
-                iterate_delete = -12;
-            }
-
-            if (iterate_delete) {
-                curr = iterate_delete <= 0 ? nullptr : s_breakcmdlist.DeleteNode(curr);
-                iterate_delete = 0;
-            }
-            else {
-                curr = s_breakcmdlist.RawNext(curr);
+                breakcmd = true;
+                s_breakcmdlist.DeleteNode(curr);
+                break;
             }
         }
         if (breakcmd) {
@@ -208,20 +199,13 @@ int32_t STORMAPI SEvtDispatch(uint32_t type, uint32_t subtype, uint32_t id, void
 
     if (s_breakcmdlist.Head()) {
         s_critsect.Enter();
-        
-        BREAKCMD* ptr = s_breakcmdlist.Head();
-        int32_t iterate_delete = 0;
-        while (reinterpret_cast<intptr_t>(ptr) > 0) {
-            if (ptr->data == data) {
-                iterate_delete = 12;
-            }
 
-            if (iterate_delete) {
-                ptr = iterate_delete <= 0 ? nullptr : s_breakcmdlist.DeleteNode(ptr);
-                iterate_delete = 0;
+        for (BREAKCMD* curr = s_breakcmdlist.Head(); reinterpret_cast<intptr_t>(curr) > 0;) {
+            if (curr->data == data) {
+                curr = s_breakcmdlist.DeleteNode(curr);
             }
             else {
-                ptr = s_breakcmdlist.RawNext(ptr);
+                curr = s_breakcmdlist.RawNext(curr);
             }
         }
 
