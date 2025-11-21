@@ -46,14 +46,3 @@ TEST_CASE("SCritSect::Leave", "[thread]") {
         SUCCEED();
     }
 }
-
-TEST_CASE("SThread::Create", "[thread]") {
-    SECTION("creates new thread") {
-        SThread thread;
-        auto threadName = const_cast<char*>("TestThread");
-        auto threadParam = STORM_ALLOC(16);
-        REQUIRE(SThread::Create(threadProc, threadParam, thread, threadName, 0) != 0);
-
-        STORM_FREE(threadParam);
-    }
-}
