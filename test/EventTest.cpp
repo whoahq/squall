@@ -2,7 +2,6 @@
 
 std::deque<EventHandlerCalledWith> EventHandlerCallResults;
 
-
 void STORMAPI TestEventHandler1(void* data) {
     EventHandlerTest::RegisterCall(1, data);
 }
