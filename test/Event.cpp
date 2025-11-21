@@ -259,6 +259,9 @@ TEST_CASE("SEvtDispatch", "[event]") {
 
         CHECK(SEvtDispatch(7357, 1, 0, &data2) == 1);
         CHECK(test.NumCalls() == 1);
+
+        // CLEANUP - SEvtDestroy doesn't erase registered breaks, avoid polluting other tests
+        CHECK(SEvtDispatch(7357, 1, 0, &data) == 0);
     }
 
     SECTION("finds the correct handler among many") {
