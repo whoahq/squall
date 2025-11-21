@@ -8,7 +8,6 @@
 #include "Error.hpp"
 #include "Memory.hpp"
 
-
 struct BREAKCMD : public TSLinkedNode<BREAKCMD> {
     void* data;
 };
@@ -17,7 +16,6 @@ static CCritSect s_critsect;
 static TSList<BREAKCMD, TSGetLink<BREAKCMD>> s_breakcmdlist;
 static int32_t s_modified;
 static ATOMIC32 s_dispatchesinprogress;
-
 
 struct _IDHASHENTRY {
     uint32_t id;
@@ -194,7 +192,7 @@ int32_t STORMAPI SEvtDispatch(uint32_t type, uint32_t subtype, uint32_t id, void
             handler(data);
         }
     } while(currptr);
-    
+
     SInterlockedDecrement(&s_dispatchesinprogress);
 
     if (s_breakcmdlist.Head()) {
@@ -305,7 +303,7 @@ int32_t STORMAPI SEvtRegisterHandler(uint32_t type, uint32_t subtype, uint32_t i
         pNewTypeHash->subtype = subtype;
         pNewTypeHash->idhashtable = STORM_NEW_ZERO(_IDHASHTABLE);
         pNewTypeHash->next = s_typehashtable[idx];
-        
+
         s_typehashtable[idx] = pNewTypeHash;
         s_typehashtableused++;
 
@@ -320,7 +318,7 @@ int32_t STORMAPI SEvtRegisterHandler(uint32_t type, uint32_t subtype, uint32_t i
         for (uint32_t i = 0; i < newsize; i++) {
             pTempTable[i] = &pNewTable[i];
         }
-        
+
         if (pTypeHash->idhashtable->data && pTypeHash->idhashtable->size != 0) {
             for (uint32_t i = 0; i < pTypeHash->idhashtable->size; i++) {
                 _IDHASHENTRY* pNext;
@@ -342,14 +340,14 @@ int32_t STORMAPI SEvtRegisterHandler(uint32_t type, uint32_t subtype, uint32_t i
         pTypeHash->idhashtable->data = pNewTable;
         pTypeHash->idhashtable->size = newsize;
     }
-    
+
     uint32_t idx = (pTypeHash->idhashtable->size - 1) & id;
     _IDHASHENTRY* pNewIdHash = STORM_NEW_ZERO(_IDHASHENTRY);
 
     pNewIdHash->id = id;
     pNewIdHash->sequence = ++pTypeHash->sequence;
     pNewIdHash->handler = handler;
-    
+
     pNewIdHash->next = pTypeHash->idhashtable->data[idx];
     pTypeHash->idhashtable->data[idx] = pNewIdHash;
 
@@ -373,7 +371,7 @@ int32_t STORMAPI SEvtUnregisterHandler(uint32_t type, uint32_t subtype, uint32_t
                 if (pEntry->id == id && (!handler || pEntry->handler == handler)) {
                     *ppNextEntry = pEntry->next;
                     delete pEntry;
-                    
+
                     success = 1;
                     s_modified = 1;
                     pTable->used--;
@@ -399,7 +397,7 @@ int32_t STORMAPI SEvtUnregisterType(uint32_t type, uint32_t subtype) {
             pTypeEntry->idhashtable = pTable->next;
             DeleteIdHashTable(pTable);
         }
-        
+
         uint32_t idx = (s_typehashtablesize - 1) & (subtype ^ type);
         _TYPEHASHENTRY** ppNextEntry = &s_typehashtable[idx];
         for (_TYPEHASHENTRY* pEntry = *ppNextEntry; pEntry; pEntry = *ppNextEntry) {
@@ -412,7 +410,7 @@ int32_t STORMAPI SEvtUnregisterType(uint32_t type, uint32_t subtype) {
                 ppNextEntry = &pEntry->next;
             }
         }
-        
+
         success = 1;
         s_modified = 1;
     }
