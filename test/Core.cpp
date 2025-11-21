@@ -2,7 +2,6 @@
 #include "EventTest.hpp"
 #include "storm/Core.hpp"
 
-
 TEST_CASE("StormDestroy", "[core]") {
     SECTION("always returns 1") {
         CHECK(StormDestroy() == 1);
