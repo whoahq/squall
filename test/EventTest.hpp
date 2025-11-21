@@ -5,7 +5,6 @@
 #include <deque>
 #include <sstream>
 
-
 struct EventHandlerCalledWith {
     int handler;
     void* data;
@@ -39,12 +38,10 @@ struct EventHandlerTest {
     }
 };
 
-
 void STORMAPI TestEventHandler1(void* data);
 void STORMAPI TestEventHandler2(void* data);
 void STORMAPI TestEventHandler3(void* data);
 void STORMAPI TestEventHandler4(void* data);
-
 
 // Helpers for comparing EventHandlerCalledWith structs
 std::ostream& operator <<(std::ostream& os, EventHandlerCalledWith const& value);

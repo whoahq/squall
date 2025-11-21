@@ -1,6 +1,5 @@
 #include "EventTest.hpp"
 
-
 static void STORMAPI TestBreakEventHandlerSelf(void* data) {
     EventHandlerTest::RegisterCall(10, data);
 
@@ -255,7 +254,7 @@ TEST_CASE("SEvtDispatch", "[event]") {
         int data = 42;
         int data2 = 1337;
         SEvtBreakHandlerChain(&data);
-        
+
         SEvtRegisterHandler(7357, 1, 0, 0, &TestEventHandler1);
 
         CHECK(SEvtDispatch(7357, 1, 0, &data2) == 1);
