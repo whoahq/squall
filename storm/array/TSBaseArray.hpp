@@ -19,6 +19,7 @@ class TSBaseArray {
 
     // Member functions
     T& operator[](uint32_t index);
+    const T& operator[](uint32_t index) const;
     void CheckArrayBounds(uint32_t index) const;
     void Constructor();
     uint32_t Count() const;
@@ -29,6 +30,12 @@ class TSBaseArray {
 
 template <class T>
 T& TSBaseArray<T>::operator[](uint32_t index) {
+    this->CheckArrayBounds(index);
+    return this->m_data[index];
+}
+
+template <class T>
+const T& TSBaseArray<T>::operator[](uint32_t index) const {
     this->CheckArrayBounds(index);
     return this->m_data[index];
 }
