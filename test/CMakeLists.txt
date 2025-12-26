@@ -57,9 +57,8 @@ if(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_options(${PROJECT_NAME} PRIVATE -g -fprofile-arcs -ftest-coverage -O0)
 
     # Enable ASan for debug builds on gcc
-    target_link_options(StormTest
-        PUBLIC -fsanitize=address
-    )
+    target_compile_options(StormTest PRIVATE -fsanitize=address -fno-omit-frame-pointer)
+    target_link_options(StormTest PRIVATE -fsanitize=address)
 endif()
 
 install(TARGETS StormTest DESTINATION "bin")

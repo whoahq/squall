@@ -79,10 +79,6 @@ if(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_BUILD_TYPE STREQUAL "Debug")
         LCOV_ARGS --rc branch_coverage=1
         GENHTML_ARGS --rc genhtml_branch_coverage=1
     )
-
-    # Enable ASan for debug builds on gcc
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
 endif()
 
 if(WHOA_TEST_STORMDLL)
