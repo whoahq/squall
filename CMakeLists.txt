@@ -97,4 +97,8 @@ if(WHOA_TEST_STORMDLL)
 else()
     add_subdirectory(storm)
 endif()
-add_subdirectory(test)
+
+# Only build tests when standalone
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    add_subdirectory(test)
+endif()
