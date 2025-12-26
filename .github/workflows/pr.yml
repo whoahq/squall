@@ -7,6 +7,9 @@ jobs:
     name: ${{ matrix.flavor.name }} / ${{ matrix.build.os_name }} (${{ matrix.build.compiler_name }})
     runs-on: ${{ matrix.build.os }}
 
+    env:
+      ASAN_OPTIONS: verbosity=1
+
     strategy:
       fail-fast: false
       matrix:
