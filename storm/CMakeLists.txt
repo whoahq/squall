@@ -65,4 +65,7 @@ endif()
 if(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     include(CodeCoverage)
     target_compile_options(${PROJECT_NAME} PRIVATE -g -fprofile-arcs -ftest-coverage -O0)
+
+    # Enable ASan for debug builds on gcc
+    target_compile_options(storm PRIVATE -fsanitize=address -fno-omit-frame-pointer)
 endif()
