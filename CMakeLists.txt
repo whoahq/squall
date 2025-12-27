@@ -25,6 +25,12 @@ list(APPEND CMAKE_MODULE_PATH
 
 include(system)
 
+# Standalone builds
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    set(WHOA_STANDALONE 1)
+    message(STATUS "Building Storm as a standalone project")
+endif()
+
 if(WHOA_ASSERTIONS_ENABLED)
     add_definitions(-DWHOA_ASSERTIONS_ENABLED)
 endif()
@@ -60,25 +66,31 @@ endif()
 
 add_subdirectory(lib)
 
-if(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_BUILD_TYPE STREQUAL "Debug")
-    # Running coverage on linux+gcc:
-    #
-    #   sudo apt install lcov
-    #   cmake -DCMAKE_BUILD_TYPE=Debug ..
-    #   make
-    #   make StormCoverage
-    #
-    # Results in `StormCoverage/index.html`
-    include(CodeCoverage)
+# Code coverage reporting
+if(WHOA_STANDALONE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+    # GCC coverage configuration
+    if(CMAKE_COMPILER_IS_GNUCXX)
+        # Running coverage on linux+gcc:
+        #
+        #   sudo apt install lcov
+        #   cmake -DCMAKE_BUILD_TYPE=Debug ..
+        #   make
+        #   make StormCoverage
+        #
+        # Results in `StormCoverage/index.html`
+        include(CodeCoverage)
 
-    setup_target_for_coverage_lcov(
-        NAME StormCoverage
-        EXECUTABLE StormTest
-        DEPENDENCIES StormTest storm
-        BASE_DIRECTORY "${PROJECT_SOURCE_DIR}/storm"
-        LCOV_ARGS --rc branch_coverage=1
-        GENHTML_ARGS --rc genhtml_branch_coverage=1
-    )
+        setup_target_for_coverage_lcov(
+                NAME StormCoverage
+                EXECUTABLE StormTest
+                DEPENDENCIES StormTest storm
+                BASE_DIRECTORY "${PROJECT_SOURCE_DIR}/storm"
+                LCOV_ARGS --rc branch_coverage=1
+                GENHTML_ARGS --rc genhtml_branch_coverage=1
+        )
+
+        message(STATUS "Code coverage reporting enabled")
+    endif()
 endif()
 
 if(WHOA_TEST_STORMDLL)
@@ -94,7 +106,7 @@ else()
     add_subdirectory(storm)
 endif()
 
-# Only build tests when standalone
-if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+if(WHOA_STANDALONE)
+    # Add tests when standalone
     add_subdirectory(test)
 endif()
