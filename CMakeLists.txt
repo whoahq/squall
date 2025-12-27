@@ -59,6 +59,7 @@ if(WHOA_SYSTEM_WIN)
 endif()
 
 add_subdirectory(lib)
+add_subdirectory(vendor)
 
 if(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     # Running coverage on linux+gcc:
