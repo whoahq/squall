@@ -65,6 +65,7 @@ if(WHOA_SYSTEM_WIN)
 endif()
 
 add_subdirectory(lib)
+add_subdirectory(vendor)
 
 # Code coverage reporting
 if(WHOA_STANDALONE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
