@@ -13,6 +13,11 @@
 #endif
 #endif
 
+#if !defined(WHOA_SYSTEM_WIN)
+typedef void* HANDLE;
+typedef void* LPOVERLAPPED;
+#endif
+
 int32_t STORMAPI StormDestroy();
 
 #endif
