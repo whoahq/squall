@@ -1,13 +1,5 @@
 # StormLib 9.31 - CMake build for integration with squall
 
-cmake_minimum_required(VERSION 3.5)
-
-if(TARGET stormlib-9.31)
-    return()
-endif()
-
-project(stormlib-9.31 C CXX)
-
 set(STORMLIB_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 set(STORMLIB_SOURCES
@@ -60,7 +52,7 @@ list(APPEND STORMLIB_SOURCES
 
 # On macOS, StormPort.h defines __SYS_ZLIB and __SYS_BZLIB to use system libraries.
 # On other platforms, use the bundled versions.
-if(NOT APPLE)
+if(NOT WHOA_SYSTEM_MAC)
     file(GLOB STORMLIB_BZIP2 ${STORMLIB_SRC_DIR}/bzip2/*.c)
     file(GLOB STORMLIB_ZLIB  ${STORMLIB_SRC_DIR}/zlib/*.c)
     list(APPEND STORMLIB_SOURCES ${STORMLIB_BZIP2} ${STORMLIB_ZLIB})
@@ -81,9 +73,9 @@ target_include_directories(stormlib-9.31
 )
 
 # Platform-specific settings
-if(WIN32)
+if(WHOA_SYSTEM_WIN)
     target_link_libraries(stormlib-9.31 PRIVATE wininet)
-elseif(APPLE)
+elseif(WHOA_SYSTEM_MAC)
     # macOS uses system zlib and bzip2 (per StormPort.h __SYS_ZLIB, __SYS_BZLIB)
     find_library(COREFOUNDATION_LIBRARY CoreFoundation)
     find_package(ZLIB REQUIRED)
@@ -94,7 +86,7 @@ elseif(APPLE)
             ZLIB::ZLIB
             BZip2::BZip2
     )
-elseif(UNIX)
+elseif(WHOA_SYSTEM_LINUX)
     # Linux - typically link against system zlib
     target_link_libraries(stormlib-9.31 PRIVATE z)
 endif()
