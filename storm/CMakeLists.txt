@@ -39,11 +39,18 @@ if(WHOA_SYSTEM_LINUX)
     list(APPEND STORM_SOURCES ${STORM_LINUX_SOURCES})
 endif()
 
+if(WHOA_SFILE_MODE STREQUAL "STORMLIB")
+    list(APPEND STORM_SOURCES "file/SFile.cpp")
+else()
+    list(APPEND STORM_SOURCES "file/SFileNative.cpp")
+endif()
+
 add_library(storm STATIC
     ${STORM_SOURCES}
 )
 
 target_compile_definitions(storm PRIVATE _CRT_SECURE_NO_WARNINGS)
+target_compile_definitions(storm PUBLIC WHOA_SFILE_MODE_${WHOA_SFILE_MODE})
 
 target_include_directories(storm
     PUBLIC
