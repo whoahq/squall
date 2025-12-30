@@ -39,6 +39,8 @@ if(WHOA_SYSTEM_LINUX)
     list(APPEND STORM_SOURCES ${STORM_LINUX_SOURCES})
 endif()
 
+list(APPEND STORM_SOURCES "file/SFileClass.cpp")
+
 if(WHOA_SFILE_MODE STREQUAL "STORMLIB")
     list(APPEND STORM_SOURCES "file/SFile.cpp")
 else()
