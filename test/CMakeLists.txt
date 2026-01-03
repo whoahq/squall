@@ -1,5 +1,6 @@
 
 if(WHOA_TEST_STORMDLL)
+    # Note: Error excluded because some functions take more args than expected by older Storms
     set(TEST_SOURCES
         Big.cpp
         Core.cpp
