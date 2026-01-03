@@ -1,8 +1,9 @@
 #include "Core.hpp"
 #include "Event.hpp"
+#include "Transparency.hpp"
 
 int32_t STORMAPI StormDestroy() {
-    // Combined list of all calls from every game
+    // Combined list of all destroy calls found in every game (as documentation)
 
     // SErrSetBlizzardErrorFunction(nullptr);
     // SDlgDestroy();
@@ -17,11 +18,12 @@ int32_t STORMAPI StormDestroy() {
     // SCodeDestroy();
     // SCmdDestroy();
     // SFileDestroy();
+    // SFile::Destroy();
     // SCompDestroy();
     // SStrDestroy();
     // SRegDestroy();
     // SErrDestroy();
     // SLogDestroy();
-    // STransDestroy();
+    STransDestroy();
     return 1;
 }
