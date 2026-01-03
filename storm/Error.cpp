@@ -8,7 +8,7 @@
 #endif
 
 static uint32_t s_lasterror = ERROR_SUCCESS;
-static uint32_t s_suppress;
+static int32_t s_suppress;
 
 [[noreturn]] void STORMCDECL SErrDisplayAppFatal(const char* format, ...) {
     va_list args;
@@ -87,6 +87,6 @@ uint32_t STORMAPI SErrGetLastError() {
     return s_lasterror;
 }
 
-void STORMAPI SErrSuppressErrors(uint32_t suppress) {
+void STORMAPI SErrSuppressErrors(int32_t suppress) {
     s_suppress = suppress;
 }

@@ -41,7 +41,7 @@ int32_t STORMCDECL SErrDisplayErrorFmt(uint32_t, const char*, int32_t, int32_t, 
 void STORMAPI SErrPrepareAppFatal(const char*, int32_t) {}
 void STORMAPI SErrSetLastError(uint32_t) {}
 uint32_t STORMAPI SErrGetLastError() { return 0; }
-void STORMAPI SErrSuppressErrors(uint32_t) {}
+void STORMAPI SErrSuppressErrors(int32_t) {}
 
 #include <storm/Event.hpp>
 
