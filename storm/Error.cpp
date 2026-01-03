@@ -9,6 +9,7 @@
 
 static uint32_t s_lasterror = ERROR_SUCCESS;
 static int32_t s_suppress;
+static int32_t s_displaying;
 
 [[noreturn]] void STORMCDECL SErrDisplayAppFatal(const char* format, ...) {
     va_list args;
@@ -21,6 +22,9 @@ static int32_t s_suppress;
 }
 
 int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int32_t linenumber, const char* description, int32_t recoverable, uint32_t exitcode, uint32_t a7) {
+    if (s_suppress || s_displaying) return 0;
+    s_displaying = 1;
+
     // TODO
 
     printf("\n=========================================================\n");
@@ -53,11 +57,12 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
         printf(" Assertion:   %s\n", description);
     }
 
-    if (recoverable) {
-        return 1;
-    } else {
-        exit(exitcode);
+    s_displaying = 0;
+    if (!recoverable) {
+        SErrSuppressErrors(1);
+        std::exit(exitcode);
     }
+    return 1;
 }
 
 int32_t STORMCDECL SErrDisplayErrorFmt(uint32_t errorcode, const char* filename, int32_t linenumber, int32_t recoverable, uint32_t exitcode, const char* format, ...) {
