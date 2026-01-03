@@ -28,6 +28,6 @@ void STORMAPI SErrSetLastError(uint32_t errorcode);
 
 uint32_t STORMAPI SErrGetLastError();
 
-void STORMAPI SErrSuppressErrors(uint32_t suppress);
+void STORMAPI SErrSuppressErrors(int32_t suppress);
 
 #endif
