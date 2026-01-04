@@ -21,7 +21,11 @@ static int32_t s_displaying;
     exit(EXIT_FAILURE);
 }
 
+#ifdef WHOA_DISPLAY_ERR_EXTRA_ARG
 int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int32_t linenumber, const char* description, int32_t recoverable, uint32_t exitcode, uint32_t a7) {
+#else
+int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int32_t linenumber, const char* description, int32_t recoverable, uint32_t exitcode) {
+#endif
     if (s_suppress || s_displaying) return 0;
     s_displaying = 1;
 
@@ -34,7 +38,7 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
 
         printf(" App:         %s\n", "GenericBlizzardApp");
 
-        if (errorcode != 0x85100000) {
+        if (errorcode != STORM_ERROR_ASSERTION) {
             printf(" Error Code:  0x%08X\n", errorcode);
         }
 
@@ -48,7 +52,7 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
         printf(" File:        %s\n", filename);
         printf(" Line:        %d\n", linenumber);
 
-        if (errorcode != 0x85100000) {
+        if (errorcode != STORM_ERROR_ASSERTION) {
             printf(" Error Code:  0x%08X\n", errorcode);
         }
 
@@ -74,7 +78,7 @@ int32_t STORMCDECL SErrDisplayErrorFmt(uint32_t errorcode, const char* filename,
     buffer[sizeof(buffer) - 1] = '\0';
     va_end(args);
 
-    return SErrDisplayError(errorcode, filename, linenumber, buffer, recoverable, exitcode, 1);
+    return SErrDisplayError(errorcode, filename, linenumber, buffer, recoverable, exitcode);
 }
 
 void STORMAPI SErrPrepareAppFatal(const char* filename, int32_t linenumber) {
