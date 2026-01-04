@@ -18,7 +18,7 @@
 // Debug Build + Release Assertions Enabled Build
 #define STORM_ASSERT(x)                                                                             \
             if (!(x)) {                                                                             \
-                SErrDisplayError(STORM_ERROR_ASSERTION, __FILE__, __LINE__, #x, 0, 1, 0x11111111);  \
+                SErrDisplayError(STORM_ERROR_ASSERTION, __FILE__, __LINE__, #x, 0, 1);  \
             }
 #else
 // Release Build

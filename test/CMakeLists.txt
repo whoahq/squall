@@ -3,6 +3,7 @@ if(WHOA_TEST_STORMDLL)
     set(TEST_SOURCES
         Big.cpp
         Core.cpp
+        Error.cpp
         Event.cpp
         EventTest.cpp
         Memory.cpp

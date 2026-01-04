@@ -51,8 +51,10 @@ if(WHOA_STORM_FLAVOR STREQUAL "SC1")
     add_definitions(-DWHOA_SUPPORTS_KOREAN_CODEPAGE)
 elseif(WHOA_STORM_FLAVOR STREQUAL "WOW")
     message(STATUS "Building Storm with World of Warcraft flavoring")
+    add_definitions(-DWHOA_DISPLAY_ERR_EXTRA_ARG)
 else()
     message(STATUS "Building Storm with default flavoring")
+    add_definitions(-DWHOA_DISPLAY_ERR_EXTRA_ARG)
 endif()
 
 # OS defines
