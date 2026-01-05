@@ -381,7 +381,7 @@ EXPORTS
     ;SLogVWrite                    @553 NONAME
     SErrDisplayAppFatal           @561 NONAME
     SErrDisplayErrorFmt           @562 NONAME
-    ;SErrIsDisplayingError         @563 NONAME
+    SErrIsDisplayingError         @563 NONAME
     SErrPrepareAppFatal           @564 NONAME
     ;SErrSetLogTitleString         @565 NONAME
     ;SErrCheckDebugSymbolLibrary   @566 NONAME

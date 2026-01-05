@@ -38,6 +38,7 @@ void STORMAPI SBigToUnsigned(BigData*, uint32_t*) {}
 void STORMCDECL SErrDisplayAppFatal(const char* format, ...) {}
 int32_t STORMAPI SErrDisplayError(uint32_t, const char*, int32_t, const char*, int32_t, uint32_t) { return 0; }
 int32_t STORMCDECL SErrDisplayErrorFmt(uint32_t, const char*, int32_t, int32_t, uint32_t, const char*, ...) { return 0; }
+int32_t STORMAPI SErrIsDisplayingError() { return 0; }
 void STORMAPI SErrPrepareAppFatal(const char*, int32_t) {}
 void STORMAPI SErrSetLastError(uint32_t) {}
 uint32_t STORMAPI SErrGetLastError() { return 0; }
