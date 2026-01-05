@@ -81,6 +81,10 @@ int32_t STORMCDECL SErrDisplayErrorFmt(uint32_t errorcode, const char* filename,
     return SErrDisplayError(errorcode, filename, linenumber, buffer, recoverable, exitcode);
 }
 
+int32_t STORMAPI SErrIsDisplayingError() {
+    return s_displaying;
+}
+
 void STORMAPI SErrPrepareAppFatal(const char* filename, int32_t linenumber) {
     // TODO
 }
