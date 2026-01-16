@@ -23,6 +23,15 @@ TEST_CASE("SErrDisplayErrorFmt", "[error]") {
     }
 }
 
+TEST_CASE("SErrGetErrorStr", "[error]") {
+    SECTION("clears result buffer") {
+        // Use a fake error to almost guarantee it won't translate
+        char buffer[32] = "memes";
+        CHECK(SErrGetErrorStr(0x12345678, buffer, sizeof(buffer)) == 0);
+        CHECK(std::string(buffer) == "");
+    }
+}
+
 TEST_CASE("SErrIsDisplayingError", "[error]") {
     SECTION("returns false by default") {
         CHECK_FALSE(SErrIsDisplayingError());
