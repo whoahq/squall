@@ -5,6 +5,7 @@ CMakeSettings.json
 .vs/
 
 /build
+/build_*
 /cmake-build-*
 /dist
 /out
