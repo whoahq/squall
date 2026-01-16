@@ -10,10 +10,12 @@
 #endif
 
 #if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
-#define ERROR_SUCCESS           0x0
-#define ERROR_INVALID_HANDLE    0x6
-#define ERROR_NOT_ENOUGH_MEMORY 0x8
-#define ERROR_INVALID_PARAMETER 0x57
+#define ERROR_SUCCESS           0
+#define ERROR_FILE_NOT_FOUND    2
+#define ERROR_INVALID_HANDLE    6
+#define ERROR_NOT_ENOUGH_MEMORY 8
+#define ERROR_HANDLE_EOF        38
+#define ERROR_INVALID_PARAMETER 87
 #endif
 
 [[noreturn]] void STORMCDECL SErrDisplayAppFatal(const char* format, ...);

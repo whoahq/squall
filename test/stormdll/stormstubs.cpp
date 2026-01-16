@@ -55,6 +55,16 @@ int32_t STORMAPI SEvtRegisterHandler(uint32_t, uint32_t, uint32_t, uint32_t, SEV
 int32_t STORMAPI SEvtUnregisterHandler(uint32_t, uint32_t, uint32_t, SEVTHANDLER) { return 0; }
 int32_t STORMAPI SEvtUnregisterType(uint32_t, uint32_t) { return 0; }
 
+#include <storm/File.hpp>
+
+int32_t STORMAPI SFileCloseArchive(HSARCHIVE) { return 0; }
+int32_t STORMAPI SFileCloseFile(HSFILE) { return 0; }
+uint32_t STORMAPI SFileGetFileSize(HSFILE, uint32_t*) { return 0; }
+int32_t STORMAPI SFileOpenArchive(const char*, int32_t, uint32_t, HSARCHIVE*) { return 0; }
+int32_t STORMAPI SFileOpenFileEx(HSARCHIVE, const char*, uint32_t, HSFILE*) { return 0; }
+int32_t STORMAPI SFileReadFile(HSFILE, void*, uint32_t, uint32_t*, LPOVERLAPPED) { return 0; }
+uint32_t STORMAPI SFileSetFilePointer(HSFILE, int32_t, int32_t*, uint32_t) { return 0; }
+
 #include <storm/Memory.hpp>
 
 void* STORMAPI SMemAlloc(size_t, const char*, int32_t, uint32_t) { return 0; }

@@ -87,8 +87,8 @@ EXPORTS
 
     ; File
     ;SFileAuthenticateArchive      @251 NONAME
-    ;SFileCloseArchive             @252 NONAME
-    ;SFileCloseFile                @253 NONAME
+    SFileCloseArchive             @252 NONAME
+    SFileCloseFile                @253 NONAME
     ;SFileDdaBegin                 @254 NONAME
     ;SFileDdaBeginEx               @255 NONAME
     ;SFileDdaDestroy               @256 NONAME
@@ -100,13 +100,13 @@ EXPORTS
     ;SFileDestroy                  @262 NONAME
     ;SFileEnableDirectAccess       @263 NONAME
     ;SFileGetFileArchive           @264 NONAME
-    ;SFileGetFileSize              @265 NONAME
-    ;SFileOpenArchive              @266 NONAME
+    SFileGetFileSize              @265 NONAME
+    SFileOpenArchive              @266 NONAME
     ;SFileOpenFile                 @267 NONAME
-    ;SFileOpenFileEx               @268 NONAME
-    ;SFileReadFile                 @269 NONAME
+    SFileOpenFileEx               @268 NONAME
+    SFileReadFile                 @269 NONAME
     ;SFileSetBasePath              @270 NONAME
-    ;SFileSetFilePointer           @271 NONAME
+    SFileSetFilePointer           @271 NONAME
     ;SFileSetLocale                @272 NONAME
     ;SFileGetBasePath              @273 NONAME
     ;SFileSetIoErrorMode           @274 NONAME
@@ -280,7 +280,7 @@ EXPORTS
     ;SErrGetErrorStr               @462 NONAME
     SErrGetLastError              @463 NONAME
     ;SErrRegisterMessageSource     @464 NONAME
-    ;SErrSetLastError              @465 NONAME
+    SErrSetLastError              @465 NONAME
     ;SErrReportNamedResourceLeak   @466 NONAME
     ;SErrReportResourceLeak        @467 NONAME
     SErrSuppressErrors            @468 NONAME

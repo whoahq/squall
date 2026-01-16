@@ -6,6 +6,8 @@ if(WHOA_TEST_STORMDLL)
         Error.cpp
         Event.cpp
         EventTest.cpp
+        File.cpp
+        FileTest.cpp
         Memory.cpp
         Region.cpp
         String.cpp
@@ -23,6 +25,8 @@ else()
         "trans/*.cpp"
     )
 endif()
+
+file(GLOB TEST_FILES "file/*")
 
 if(WHOA_SYSTEM_MAC)
     set_source_files_properties(${TEST_SOURCES}
@@ -52,6 +56,12 @@ endif()
 target_include_directories(StormTest
     PRIVATE
         ${PROJECT_SOURCE_DIR}
+)
+
+add_custom_target(copy_test_files ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${TEST_FILES}
+        $<TARGET_FILE_DIR:StormTest>
 )
 
 # Debug build options
