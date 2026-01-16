@@ -42,7 +42,7 @@ endif()
 list(APPEND STORM_SOURCES "file/SFileClass.cpp")
 
 if(WHOA_SFILE_MODE STREQUAL "STORMLIB")
-    list(APPEND STORM_SOURCES "file/SFile.cpp")
+    list(APPEND STORM_SOURCES "file/SFile.cpp" "file/SFileStormLibShim.cpp")
 else()
     list(APPEND STORM_SOURCES "file/SFileNative.cpp")
 endif()
@@ -62,6 +62,7 @@ target_include_directories(storm
 target_link_libraries(storm
     PRIVATE
         system
+        stormlib-9.31
 )
 
 if(HAS_NO_INVALID_OFFSETOF)
