@@ -6,8 +6,19 @@
 
 #if defined(WHOA_SYSTEM_WIN)
 #include <Windows.h>
+#define StormGetThreadId() GetCurrentThreadId()
+#else
+#include <unistd.h>
+#define StormGetThreadId() getpid()
 #endif
 
+struct APPFATINFO {
+    const char* filename;
+    int32_t linenumber;
+    uint32_t threadId;
+};
+
+static APPFATINFO s_appFatInfo;
 
 SCritSect s_critsect;
 
@@ -15,14 +26,33 @@ static uint32_t s_lasterror = ERROR_SUCCESS;
 static int32_t s_suppress;
 static int32_t s_displaying;
 
+[[noreturn]] void SErrDisplayAppFatalCustomV(uint32_t errorcode, const char* format, va_list va) {
+    const char* filename = nullptr;
+    int32_t linenumber = 0;
+    s_critsect.Enter();
+    if (s_appFatInfo.threadId == StormGetThreadId()) {
+        filename = s_appFatInfo.filename;
+        linenumber = s_appFatInfo.linenumber;
+        s_appFatInfo = {};
+    }
+    s_critsect.Leave();
+
+    char buffer[2048];
+    std::vsnprintf(buffer, sizeof(buffer) - 1, format, va);
+    buffer[sizeof(buffer) - 1] = '\0';
+
+#ifdef WHOA_DISPLAY_ERR_EXTRA_ARG
+    SErrDisplayError(errorcode, filename, linenumber, buffer, 0, EXIT_FAILURE, 2);
+#else
+    SErrDisplayError(errorcode, filename, linenumber, buffer, 0, EXIT_FAILURE);
+#endif
+    std::exit(EXIT_FAILURE);
+}
+
 [[noreturn]] void STORMCDECL SErrDisplayAppFatal(const char* format, ...) {
     va_list args;
     va_start(args, format);
-    vprintf(format, args);
-    printf("\n");
-    va_end(args);
-
-    exit(EXIT_FAILURE);
+    SErrDisplayAppFatalCustomV(STORM_ERROR_FATAL_CONDITION, format, args);
 }
 
 #ifdef WHOA_DISPLAY_ERR_EXTRA_ARG
@@ -109,7 +139,11 @@ int32_t STORMAPI SErrIsDisplayingError() {
 }
 
 void STORMAPI SErrPrepareAppFatal(const char* filename, int32_t linenumber) {
-    // TODO
+    s_critsect.Enter();
+    s_appFatInfo.filename = filename;
+    s_appFatInfo.linenumber = linenumber;
+    s_appFatInfo.threadId = StormGetThreadId();
+    s_critsect.Leave();
 }
 
 void STORMAPI SErrSetLastError(uint32_t errorcode) {
