@@ -33,6 +33,16 @@ void STORMAPI SBigToBinaryBuffer(BigData*, uint8_t*, uint32_t, uint32_t*) {}
 void STORMAPI SBigXor(BigData*, BigData*, BigData*) {}
 void STORMAPI SBigToUnsigned(BigData*, uint32_t*) {}
 
+#include <storm/Bitmap.hpp>
+
+
+int32_t STORMAPI SBmpAllocLoadImage(const char*, STORM_PALETTEENTRY*, uint8_t**, uint32_t*, uint32_t*, uint32_t*, uint32_t, SBMPALLOCPROC) { return 0; }
+int32_t STORMAPI SBmpDecodeImage(int32_t, uint8_t*, uint32_t, STORM_PALETTEENTRY*, uint8_t*, uint32_t, uint32_t*, uint32_t*, uint32_t*) { return 0; }
+int32_t STORMAPI SBmpGetPitchForAlignment(int32_t, int32_t) { return 0; }
+int32_t STORMAPI SBmpLoadImage(const char*, STORM_PALETTEENTRY*, uint8_t*, uint32_t, uint32_t*, uint32_t*, uint32_t*) { return 0; }
+int32_t STORMAPI SBmpPadImage(uint8_t*, uint32_t, int32_t, int32_t, int32_t, int32_t*) { return 0; }
+
+
 #include <storm/Error.hpp>
 
 void STORMCDECL SErrDisplayAppFatal(const char* format, ...) {}

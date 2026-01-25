@@ -151,13 +151,13 @@ EXPORTS
     ;SBltROP3Tiled                 @315 NONAME
 
     ; BMP
-    ;SBmpDecodeImage               @321 NONAME
-    ;SBmpLoadImage                 @323 NONAME
+    SBmpDecodeImage               @321 NONAME
+    SBmpLoadImage                 @323 NONAME
     ;SBmpSaveImage                 @324 NONAME
-    ;SBmpAllocLoadImage            @325 NONAME
+    SBmpAllocLoadImage            @325 NONAME
     ;SBmpSaveImageEx               @326 NONAME
-    ;SBmpPadImage                  @327 NONAME
-    ;SBmpGetPitchForAlignment      @328 NONAME
+    SBmpPadImage                  @327 NONAME
+    SBmpGetPitchForAlignment      @328 NONAME
 
     ; SCode
     ;SCodeCompile                  @331 NONAME
