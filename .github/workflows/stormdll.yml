@@ -1,0 +1,90 @@
+name: Test runner against storm.dll
+on: [workflow_dispatch]
+jobs:
+  build:
+    name: ${{ matrix.game.flavor }} ${{ matrix.game.version }} (${{ matrix.game.year }})
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        game:
+          # Starcraft
+          - prefix: sc1-bw
+            version: 1.17.0
+            flavor: SC1
+            year: 2016
+          - prefix: sc1-bw
+            version: 1.16.1
+            flavor: SC1
+            year: 2007
+          - prefix: sc1-bw
+            version: 1.14
+            flavor: SC1
+            year: 2004
+          - prefix: sc1-bw
+            version: 1.11
+            flavor: SC1
+            year: 2003
+          - prefix: sc1-bw
+            version: 1.08
+            flavor: SC1
+            year: 2000
+
+          # Diablo 1
+          - prefix: d1
+            version: 1.09
+            flavor: D1
+            year: 2000
+          - prefix: d1
+            version: 1.08
+            flavor: D1
+            year: 1999
+
+          # Diablo 2
+          - prefix: d2-lod
+            version: 1.13d
+            flavor: D2
+            year: 2003
+          - prefix: d2-lod
+            version: 1.09d
+            flavor: D2
+            year: 2000
+          - prefix: d2
+            version: 1.05b
+            flavor: D2
+            year: 1999
+
+          # Warcraft II
+          - prefix: w2-bne
+            version: 2.02b
+            flavor: WC2
+            year: 2000
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: true
+
+      - name: Download fixtures
+        run: curl -o test/fixture/whoa-fixture.tgz https://whoa.reliquaryhq.com/squall-fixture.tgz
+
+      - name: Unpack Fixtures
+        run: tar -xvzf whoa-fixture.tgz
+        working-directory: test/fixture
+
+      - name: Prepare
+        run: mkdir build
+
+      - name: Configure
+        run: cd build && cmake .. -A Win32 -DWHOA_TEST_STORMDLL=1 -DCMAKE_BUILD_TYPE=Release -DWHOA_STORM_FLAVOR=${{ matrix.game.flavor }} -DWHOA_STORMDLL_VERSION=${{ matrix.game.year }}
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Copy storm.dll into test directory
+        run: Copy-Item test/fixture/storm/${{ matrix.game.prefix }}-${{ matrix.game.version }}-storm.dll "build/test/Release/storm.dll" -Force
+
+      - name: Test
+        shell: cmd
+        run: |
+          "build/test/Release/StormTest.exe"
