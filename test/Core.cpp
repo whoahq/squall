@@ -1,6 +1,7 @@
 #include "test/Test.hpp"
 #include "EventTest.hpp"
 #include "storm/Core.hpp"
+#include "storm/Region.hpp"
 
 TEST_CASE("StormDestroy", "[core]") {
     SECTION("always returns 1") {
@@ -34,6 +35,21 @@ TEST_CASE("StormDestroy", "[core]") {
             SEvtRegisterHandler(0, 0, 0, 0, &TestEventHandler1);
             CHECK(SEvtDispatch(0, 0, 0, nullptr) == 0);
             CHECK(SEvtDispatch(0, 0, 0, nullptr) == 1);
+        }
+    }
+
+    SECTION("SRgn") {
+        SECTION("destroys region handles") {
+            HSRGN rgn = nullptr;
+            SRgnCreate(&rgn);
+            REQUIRE(rgn != nullptr);    // valid handle
+
+            CHECK(StormDestroy() == 1);
+
+            // fails to duplicate because handle is invalid
+            HSRGN newrgn;
+            SRgnDuplicate(rgn, &newrgn);
+            CHECK(newrgn == nullptr);
         }
     }
 }

@@ -14,6 +14,8 @@ void STORMAPI SRgnCreate(HSRGN* handlePtr, uint32_t reserved = 0);
 
 void STORMAPI SRgnDelete(HSRGN handle);
 
+void STORMAPI SRgnDestroy();
+
 void STORMAPI SRgnDuplicate(HSRGN origHandle, HSRGN* handle, uint32_t reserved = 0);
 
 void STORMAPI SRgnGetBoundingRectf(HSRGN handle, RECTF* rect);
