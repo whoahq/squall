@@ -208,7 +208,7 @@ TEST_CASE("STransBltUsingMask", "[transparency]") {
     }
 
     SECTION("reproduces image with no colorkey") {
-        STransCreateI(t.MaskBits.data(), ImageWidth, ImageHeight, 8, nullptr, 0, &trans);
+        STransCreateE(t.MaskBits.data(), ImageWidth, ImageHeight, 8, nullptr, 0, &trans);
 
         std::vector<uint8_t> dest(ImageBytes, '.');
         CHECK(STransBltUsingMask(dest.data(), t.ImageBits.data(), ImageWidth, ImageWidth, trans) == 1);
@@ -216,7 +216,7 @@ TEST_CASE("STransBltUsingMask", "[transparency]") {
     }
 
     SECTION("reproduces image with no mask colorkey") {
-        STransCreateMaskI(t.MaskBits.data(), ImageWidth, ImageHeight, 8, nullptr, 0, &trans);
+        STransCreateMaskE(t.MaskBits.data(), ImageWidth, ImageHeight, 8, nullptr, 0, &trans);
 
         std::vector<uint8_t> dest(ImageBytes, '.');
         CHECK(STransBltUsingMask(dest.data(), t.ImageBits.data(), ImageWidth, ImageWidth, trans) == 1);
@@ -224,7 +224,7 @@ TEST_CASE("STransBltUsingMask", "[transparency]") {
     }
 
     SECTION("produces trans mask bytes only") {
-        STransCreateI(t.MaskBits.data(), ImageWidth, ImageHeight, 8, nullptr, STRANS_COLORKEY('.'), &trans);
+        STransCreateE(t.MaskBits.data(), ImageWidth, ImageHeight, 8, nullptr, STRANS_COLORKEY('.'), &trans);
 
         std::vector<uint8_t> result(ImageBytes);
         CHECK(STransBltUsingMask(result.data(), t.MaskBits.data(), ImageWidth, ImageWidth, trans) == 1);
@@ -245,7 +245,7 @@ TEST_CASE("STransBltUsingMask", "[transparency]") {
             ".#### dreams #"
         };
 
-        STransCreateMaskI(rawmask, 14, 7, 8, nullptr, STRANS_COLORKEY('.'), &trans);
+        STransCreateMaskE(rawmask, 14, 7, 8, nullptr, STRANS_COLORKEY('.'), &trans);
 
         std::vector<uint8_t> result = t.ImageBits;
         CHECK(STransBltUsingMask(result.data(), rawmask, ImageWidth, 14, trans) == 1);
@@ -266,8 +266,8 @@ TEST_CASE("STransBltUsingMask", "[transparency]") {
     }
 
     SECTION("produces cutout from trans rect to target") {
-        RECT rct = { 45, 1, 96, 7 };
-        STransCreateMaskI(t.ImageBits.data(), ImageWidth, ImageHeight, 8, &rct, STRANS_COLORKEY('.'), &trans);
+        RECT rct = { 45, 1, 97, 8 };
+        STransCreateMaskE(t.ImageBits.data(), ImageWidth, ImageHeight, 8, &rct, STRANS_COLORKEY('.'), &trans);
 
         std::vector<uint8_t> result(ImageBytes, '.');
         CHECK(STransBltUsingMask(result.data(), t.ImageBits.data(), ImageWidth, ImageWidth, trans) == 1);
@@ -786,6 +786,8 @@ TEST_CASE("STransCreateMaskE", "[transparency]") {
     }
 }
 
+// NOTE: storm.dll STransCreateMaskI enters an infinite recursive call in its first iteration
+#if !defined(WHOA_STORMDLL_VERSION) || (WHOA_STORMDLL_VERSION >= 2000 && !defined(WHOA_FLAVOR_D2)) || WHOA_STORMDLL_VERSION > 2000
 TEST_CASE("STransCreateMaskI", "[transparency]") {
     TransTest t;
 
@@ -850,6 +852,7 @@ TEST_CASE("STransCreateMaskI", "[transparency]") {
         CHECK(result == t.InvertedMaskResultBits);
     }
 }
+#endif
 
 TEST_CASE("STransDelete", "[transparency]") {
     TransTest t;
@@ -949,7 +952,7 @@ TEST_CASE("STransIntersectDirtyArray", "[transparency]") {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         };
 
-        STransCreateMaskI(t.MaskBits.data(), ImageWidth, ImageHeight, 8, nullptr, STRANS_COLORKEY('.'), &mask);
+        STransCreateMaskE(t.MaskBits.data(), ImageWidth, ImageHeight, 8, nullptr, STRANS_COLORKEY('.'), &mask);
         CHECK(STransIntersectDirtyArray(mask, dirty, 1, &trans) == 1);
 
         std::vector<uint8_t> dest(ImageBytes, '.');

@@ -39,8 +39,9 @@ if(WHOA_ASSERTIONS_ENABLED)
 endif()
 
 # Storm flavors
-if(WHOA_STORM_FLAVOR STREQUAL "SC1")
-    message(STATUS "Building Storm with StarCraft flavoring")
+if(WHOA_STORM_FLAVOR MATCHES "(SC1|WC2|D1|D2)")
+    message(STATUS "Building Storm with Classic Games flavoring")
+    add_definitions(-DWHOA_FLAVOR_${WHOA_STORM_FLAVOR})
 
     if (WHOA_SYSTEM_MAC OR WHOA_SYSTEM_LINUX)
         add_definitions(-DWHOA_STORM_C_CRIT_SECT_RECURSIVE)
@@ -51,9 +52,11 @@ if(WHOA_STORM_FLAVOR STREQUAL "SC1")
     add_definitions(-DWHOA_SUPPORTS_KOREAN_CODEPAGE)
 elseif(WHOA_STORM_FLAVOR STREQUAL "WOW")
     message(STATUS "Building Storm with World of Warcraft flavoring")
+    add_definitions(-DWHOA_FLAVOR_WOW)
     add_definitions(-DWHOA_DISPLAY_ERR_EXTRA_ARG)
 else()
     message(STATUS "Building Storm with default flavoring")
+    add_definitions(-DWHOA_FLAVOR_GENERIC)
     add_definitions(-DWHOA_DISPLAY_ERR_EXTRA_ARG)
 endif()
 
@@ -70,7 +73,9 @@ if(WHOA_SYSTEM_WIN)
 endif()
 
 add_subdirectory(lib)
-add_subdirectory(vendor)
+if(NOT WHOA_TEST_STORMDLL)
+    add_subdirectory(vendor)
+endif()
 
 # Code coverage reporting
 if(WHOA_STANDALONE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
