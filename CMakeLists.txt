@@ -70,7 +70,9 @@ if(WHOA_SYSTEM_WIN)
 endif()
 
 add_subdirectory(lib)
-add_subdirectory(vendor)
+if(NOT WHOA_TEST_STORMDLL)
+    add_subdirectory(vendor)
+endif()
 
 # Code coverage reporting
 if(WHOA_STANDALONE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
