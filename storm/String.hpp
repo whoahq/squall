@@ -26,6 +26,8 @@ int32_t STORMAPI SStrCmpI(const char* string1, const char* string2, size_t maxch
 
 size_t STORMAPI SStrCopy(char* dest, const char* source, size_t destsize = STORM_MAX_STR);
 
+void STORMAPI SStrDestroy();
+
 char* STORMAPI SStrDupA(const char* string, const char* filename, uint32_t linenumber);
 
 uint32_t STORMAPI SStrHash(const char* string, uint32_t flags = 0, uint32_t seed = 0);
