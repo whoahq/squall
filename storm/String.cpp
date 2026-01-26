@@ -364,6 +364,10 @@ size_t STORMAPI SStrCopy(char* dest, const char* source, size_t destsize) {
     return static_cast<size_t>(destbuf - dest);
 }
 
+void STORMAPI SStrDestroy() {
+    // nothing to do
+}
+
 char* STORMAPI SStrDupA(const char* string, const char* filename, uint32_t linenumber) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
