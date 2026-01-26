@@ -691,6 +691,36 @@ TEST_CASE("SRgnDelete", "[region]") {
     }
 }
 
+#if !defined(WHOA_TEST_STORMDLL)
+TEST_CASE("SRgnDestroy", "[event]") {
+    SECTION("destroys all region handles") {
+        HSRGN rgn1 = nullptr, rgn2 = nullptr, rgn3 = nullptr;
+        HSRGN newrgn1, newrgn2, newrgn3, testrgn1, newtestrgn1;
+
+        SRgnCreate(&rgn1);
+        SRgnCreate(&rgn2);
+        SRgnCreate(&rgn3);
+        REQUIRE(rgn1 != nullptr);
+        REQUIRE(rgn2 != nullptr);
+        REQUIRE(rgn3 != nullptr);
+
+        SRgnDuplicate(rgn1, &testrgn1);
+        CHECK(testrgn1 != nullptr);
+
+        SRgnDestroy();
+
+        SRgnDuplicate(rgn1, &newrgn1);
+        SRgnDuplicate(rgn2, &newrgn2);
+        SRgnDuplicate(rgn3, &newrgn3);
+        SRgnDuplicate(testrgn1, &newtestrgn1);
+        CHECK(newrgn1 == nullptr);
+        CHECK(newrgn2 == nullptr);
+        CHECK(newrgn3 == nullptr);
+        CHECK(newtestrgn1 == nullptr);
+    }
+}
+#endif
+
 TEST_CASE("SRgnDuplicate", "[region]") {
     RgnDataTest region;
     RECTF baseRect = { -1.0f, 1.0f, 1.0f, 2.0f };

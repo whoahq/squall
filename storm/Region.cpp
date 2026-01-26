@@ -578,6 +578,10 @@ void STORMAPI SRgnDelete(HSRGN handle) {
     s_rgntable.Delete(handle);
 }
 
+void STORMAPI SRgnDestroy() {
+    s_rgntable.Destroy();
+}
+
 void STORMAPI SRgnDuplicate(HSRGN origHandle, HSRGN* handle, uint32_t reserved) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(handle);

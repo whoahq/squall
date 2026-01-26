@@ -1,7 +1,8 @@
 #include "Core.hpp"
 #include "Event.hpp"
-#include "Transparency.hpp"
+#include "Region.hpp"
 #include "String.hpp"
+#include "Transparency.hpp"
 
 int32_t STORMAPI StormDestroy() {
     // Combined list of all destroy calls found in every game (as documentation)
@@ -11,7 +12,7 @@ int32_t STORMAPI StormDestroy() {
     // SGdiDestroy();       // SC 1.17
     // SVidDestroy();       // SC 1.17
     // SDrawDestroy();      // SC 1.17
-    // SRgnDestroy();       // WoW 3.3.5 (win), SC 1.17
+    SRgnDestroy();          // WoW 3.3.5 (win), SC 1.17
     // SMsgDestroy();       // WoW 3.3.5 (win), SC 1.17
     // SNetDestroy();       // SC 1.17
     SEvtDestroy();          // WoW 3.3.5 (win)
