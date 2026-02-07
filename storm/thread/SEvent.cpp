@@ -6,7 +6,7 @@ SEvent::SEvent(int32_t manualReset, int32_t initialValue)
     this->m_opaqueData = CreateEventA(nullptr, manualReset, initialValue, nullptr);
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     this->int0 = 2 - (manualReset >= 1);
     this->m_value1 = initialValue;
 
@@ -19,7 +19,7 @@ int32_t SEvent::Reset() {
     return ResetEvent(this->m_opaqueData);
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     pthread_mutex_lock(&this->m_mutex);
     this->m_value1 = 0;
     pthread_mutex_unlock(&this->m_mutex);
@@ -33,7 +33,7 @@ int32_t SEvent::Set() {
     return SetEvent(this->m_opaqueData);
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     pthread_mutex_lock(&this->m_mutex);
 
     this->m_value1 = 1;

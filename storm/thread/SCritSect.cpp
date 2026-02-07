@@ -5,7 +5,7 @@ SCritSect::SCritSect() {
     InitializeCriticalSection(&this->m_opaqueData);
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
     pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
@@ -19,7 +19,7 @@ SCritSect::~SCritSect() {
     DeleteCriticalSection(&this->m_opaqueData);
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     pthread_mutex_destroy(&this->m_mutex);
 #endif
 }
@@ -29,7 +29,7 @@ void SCritSect::Enter() {
     EnterCriticalSection(&this->m_opaqueData);
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     pthread_mutex_lock(&this->m_mutex);
 #endif
 }
@@ -39,7 +39,7 @@ void SCritSect::Leave() {
     LeaveCriticalSection(&this->m_opaqueData);
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     pthread_mutex_unlock(&this->m_mutex);
 #endif
 }

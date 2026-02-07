@@ -9,7 +9,7 @@ ATOMIC32 SInterlockedDecrement(ATOMIC32* ptr) {
     return InterlockedDecrement(ptr);
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     return __sync_fetch_and_sub(ptr, 1) - 1;
 #endif
 }
@@ -19,7 +19,7 @@ ATOMIC32 SInterlockedIncrement(ATOMIC32* ptr) {
     return InterlockedIncrement(ptr);
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     return __sync_fetch_and_add(ptr, 1) + 1;
 #endif
 }

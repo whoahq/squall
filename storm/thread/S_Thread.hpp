@@ -16,7 +16,7 @@ struct SThreadParmBlock {
 #if defined(WHOA_SYSTEM_WIN)
     HANDLE threadH;
 #endif
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     SyncObjectData* syncObject;
 #endif
 };
@@ -49,7 +49,7 @@ class S_Thread {
     static uint32_t s_SLaunchThread(void* threadParam);
 #endif
 
-#if defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     static void* s_SLaunchThread(void* threadParam);
 #endif
 };

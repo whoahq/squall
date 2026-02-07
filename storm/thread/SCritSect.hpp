@@ -5,7 +5,7 @@
 #include <windows.h>
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
 #include <pthread.h>
 #endif
 
@@ -16,7 +16,7 @@ class SCritSect {
     CRITICAL_SECTION m_opaqueData;
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     pthread_mutex_t m_mutex;
 #endif
 

@@ -5,7 +5,7 @@ CCritSect::CCritSect() {
     InitializeCriticalSection(&this->m_critsect);
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
 #if defined(WHOA_STORM_C_CRIT_SECT_RECURSIVE)
     // Use of SRgnDuplicate on systems with pthreads needs recursive locking (inside s_rgntable) to prevent deadlocks.
     // This behavior doesn't appear to have carried forward to World of Warcraft, probably because SCritSect was
@@ -26,7 +26,7 @@ CCritSect::~CCritSect() {
     DeleteCriticalSection(&this->m_critsect);
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     pthread_mutex_destroy(&this->m_critsect);
 #endif
 }
@@ -36,7 +36,7 @@ void CCritSect::Enter() {
     EnterCriticalSection(&this->m_critsect);
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     pthread_mutex_lock(&this->m_critsect);
 #endif
 }
@@ -51,7 +51,7 @@ void CCritSect::Leave() {
     LeaveCriticalSection(&this->m_critsect);
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     pthread_mutex_unlock(&this->m_critsect);
 #endif
 }

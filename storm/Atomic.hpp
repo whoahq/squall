@@ -7,7 +7,7 @@
 typedef long ATOMIC32;
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
 typedef int32_t ATOMIC32;
 #endif
 

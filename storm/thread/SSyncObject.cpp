@@ -1,13 +1,13 @@
 #include "storm/thread/SSyncObject.hpp"
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
 #include <cerrno>
 #include <sys/time.h>
 #include <unistd.h>
 #endif
 
 SSyncObject::SSyncObject() {
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     pthread_mutex_init(&this->m_mutex, nullptr);
 #endif
 }
@@ -17,7 +17,7 @@ SSyncObject::~SSyncObject() {
     this->Close();
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     pthread_mutex_destroy(&this->m_mutex);
 #endif
 }
@@ -36,7 +36,7 @@ bool SSyncObject::Valid() {
     return this->m_opaqueData != nullptr;
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     return this->int0 - 1 <= 4;
 #endif
 }
@@ -44,6 +44,43 @@ bool SSyncObject::Valid() {
 uint32_t SSyncObject::Wait(uint32_t timeoutMs) {
 #if defined(WHOA_SYSTEM_WIN)
     return WaitForSingleObject(this->m_opaqueData, timeoutMs);
+#endif
+
+#if defined(WHOA_SYSTEM_WEB)
+    // Web builds cannot block - check signal state and return immediately
+    if (this->int0 == 6) {
+        // WAIT_FAILED
+        return 0xFFFFFFFF;
+    }
+
+    if (this->int0 == 3) {
+        // Mutex type - always signaled
+        // WAIT_OBJECT_0
+        return 0;
+    }
+
+    // Check if event is signaled without blocking
+    pthread_mutex_lock(&this->m_mutex);
+    int32_t signaled = this->m_value1;
+
+    if (signaled) {
+        // Event is signaled
+        if (this->int0 == 2) {
+            // Auto-reset event
+            this->m_value1 = 0;
+        } else if (this->int0 == 4) {
+            // Semaphore
+            this->m_value1 = signaled - 1;
+        }
+        pthread_mutex_unlock(&this->m_mutex);
+        // WAIT_OBJECT_0
+        return 0;
+    }
+
+    pthread_mutex_unlock(&this->m_mutex);
+    // Not signaled, return timeout immediately (don't block)
+    // WAIT_TIMEOUT
+    return 0x00000102;
 #endif
 
 #if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)

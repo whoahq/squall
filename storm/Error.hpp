@@ -9,7 +9,7 @@
 #include <WinError.h>
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
 #define ERROR_SUCCESS           0x0
 #define ERROR_INVALID_HANDLE    0x6
 #define ERROR_NOT_ENOUGH_MEMORY 0x8

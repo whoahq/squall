@@ -6,7 +6,7 @@ SSemaphore::SSemaphore(uint32_t initialCount, uint32_t maximumCount)
     this->m_opaqueData = CreateSemaphoreA(nullptr, initialCount, maximumCount, nullptr);
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     this->m_value1 = initialCount;
     this->m_value2 = maximumCount;
     this->int0 = 4;
@@ -19,7 +19,7 @@ int32_t SSemaphore::Signal(uint32_t count) {
     return ReleaseSemaphore(this->m_opaqueData, count, nullptr);
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     pthread_mutex_lock(&this->m_mutex);
 
     if (this->m_value1 + count > this->m_value2) {

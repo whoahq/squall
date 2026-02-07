@@ -7,7 +7,7 @@
 #include <windows.h>
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
 #include <pthread.h>
 #endif
 
@@ -18,7 +18,7 @@ class SSyncObject {
     HANDLE m_opaqueData = nullptr;
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     int32_t int0 = 6;
     int32_t m_value1;
     int32_t m_value2;

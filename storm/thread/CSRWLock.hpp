@@ -7,7 +7,7 @@
 #include "storm/thread/win/SRWLock.hpp"
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
 #include <pthread.h>
 #endif
 
@@ -18,7 +18,7 @@ class CSRWLock {
     SRWLock::SURWLOCK m_opaqueData;
 #endif
 
-#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX)
+#if defined(WHOA_SYSTEM_MAC) || defined(WHOA_SYSTEM_LINUX) || defined(WHOA_SYSTEM_WEB)
     pthread_rwlock_t m_lock;
 #endif
 
