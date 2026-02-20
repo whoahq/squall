@@ -1,0 +1,25 @@
+#ifndef STORM_OPTION_OPTION_HPP
+#define STORM_OPTION_OPTION_HPP
+
+#include <cstdint>
+#include "Core.hpp"
+
+#define STORM_OPTION_SERR_LEAK_SILENT_WARN 1
+#define STORM_OPTION_WAV_CHUNK_SIZE 2
+#define STORM_OPTION_SMEM_LEAK_SILENT_WARN 3
+#define STORM_OPTION_WAV_STREAMING_ALIGNED 4
+#define STORM_OPTION_ECHO_OUTPUT_DEBUG_STR 5
+#define STORM_OPTION_SMEM_COUNTS 6
+#define STORM_OPTION_SERR_SUPPRESS_LOGS 7
+#define STORM_OPTION_CD_THREAD 8
+#define STORM_OPTION_CRC_ENABLED 9
+#define STORM_OPTION_ORDERED_PRINTF_ENABLED 10
+#define STORM_OPTION_SREG_UNICODE 11
+#define STORM_OPTION_NO_READ_ERROR_DLG 12
+#define STORM_OPTION_ASSERT_LOG_ONLY 13
+
+int32_t STORMAPI StormSetOption(int32_t optname, const void* optval, uint32_t optlen);
+
+int32_t STORMAPI StormGetOption(int32_t optname, void* optval, uint32_t* optlen);
+
+#endif

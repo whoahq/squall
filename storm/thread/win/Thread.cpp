@@ -22,20 +22,6 @@ void* SCreateThread(uint32_t (*threadProc)(void*), void* threadParam, void* a3, 
         SStrCopy(mainThread.name, "main", sizeof(mainThread.name));
 
         S_Thread::s_numthreads++;
-
-        // TODO
-        /*
-        if (StormGetOption(8, &v32, v33)) {
-            auto& cdThread = S_Thread::s_threads[S_Thread::s_numthreads];
-            cdThread.suspended = 0;
-            cdThread.live = 1;
-            cdThread.threadId = v32.cdThreadId;
-            cdThread.threadH = v32.threadH;
-            SStrCopy(cdThread.name, "CdThreadProc", sizeof(cdThread.name));
-
-            S_Thread::s_numthreads++;
-        }
-        */
     }
 
     auto params = STORM_NEW(SThreadParmBlock);
