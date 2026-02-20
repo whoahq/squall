@@ -4,6 +4,10 @@
 #include "String.hpp"
 #include "Transparency.hpp"
 
+#if defined(WHOA_SYSTEM_WIN)
+#include <Windows.h>
+#endif
+
 int32_t STORMAPI StormDestroy() {
     // Combined list of all destroy calls found in every game (as documentation)
 
@@ -28,4 +32,14 @@ int32_t STORMAPI StormDestroy() {
     // SLogDestroy();       // WoW 3.3.5 (mac)
     STransDestroy();        // SC 1.17
     return 1;
+}
+
+// NOTE: If squall is built as a DLL in the future, this should be updated to return hinstDLL from DllMain instead.
+// No idea what the mac/linux equivalents would be, since the old Mac OS versions have an entire WinAPI emulator.
+HINSTANCE STORMAPI StormGetInstance() {
+#if defined(WHOA_SYSTEM_WIN)
+    return GetModuleHandle(nullptr);
+#else
+    return nullptr;
+#endif
 }
