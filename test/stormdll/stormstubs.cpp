@@ -66,6 +66,11 @@ void STORMAPI SMemMove(void*, void*, size_t) {}
 void* STORMAPI SMemReAlloc(void*, size_t, const char*, int32_t, uint32_t) { return 0; }
 void STORMAPI SMemZero(void*, size_t) {}
 
+#include <storm/Option.hpp>
+
+int32_t STORMAPI StormSetOption(int32_t, const void*, uint32_t) { return 0; }
+int32_t STORMAPI StormGetOption(int32_t, void*, uint32_t*) { return 0; }
+
 #include <storm/Region.hpp>
 
 void STORMAPI SRgnClear(HSRGN) {}

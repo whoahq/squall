@@ -140,8 +140,8 @@ EXPORTS
     ; This is the only *Destroy function exported, tests will need to use it instead
     StormDestroy                   @301 NONAME
     ;StormGetInstance              @302 NONAME
-    ;StormGetOption                @303 NONAME
-    ;StormSetOption                @304 NONAME
+    StormGetOption                 @303 NONAME
+    StormSetOption                 @304 NONAME
 
     ; Blit
     ;SBltDestroy                   @311 NONAME
