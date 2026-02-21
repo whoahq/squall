@@ -27,13 +27,15 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
 
 int32_t STORMCDECL SErrDisplayErrorFmt(uint32_t errorcode, const char* filename, int32_t linenumber, int32_t recoverable, uint32_t exitcode, const char* format, ...);
 
+int32_t STORMAPI SErrGetErrorStr(uint32_t errorcode, char* buffer, uint32_t bufferchars);
+
+uint32_t STORMAPI SErrGetLastError();
+
 int32_t STORMAPI SErrIsDisplayingError();
 
 void STORMAPI SErrPrepareAppFatal(const char* filename, int32_t linenumber);
 
 void STORMAPI SErrSetLastError(uint32_t errorcode);
-
-uint32_t STORMAPI SErrGetLastError();
 
 void STORMAPI SErrSuppressErrors(int32_t suppress);
 
