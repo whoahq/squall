@@ -1,5 +1,6 @@
 #include "Core.hpp"
 #include "Event.hpp"
+#include "Message.hpp"
 #include "Region.hpp"
 #include "String.hpp"
 #include "Transparency.hpp"
@@ -13,7 +14,7 @@ int32_t STORMAPI StormDestroy() {
     // SVidDestroy();       // SC 1.17
     // SDrawDestroy();      // SC 1.17
     SRgnDestroy();          // WoW 3.3.5 (win), SC 1.17
-    // SMsgDestroy();       // WoW 3.3.5 (win), SC 1.17
+    SMsgDestroy();          // WoW 3.3.5 (win), SC 1.17
     // SNetDestroy();       // SC 1.17
     SEvtDestroy();          // WoW 3.3.5 (win)
     // SBltDestroy();       // SC 1.17

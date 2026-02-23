@@ -16,6 +16,7 @@
 #if !defined(WHOA_SYSTEM_WIN)
 typedef void* HANDLE;
 typedef void* LPOVERLAPPED;
+typedef struct HWND__* HWND;
 #endif
 
 int32_t STORMAPI StormDestroy();

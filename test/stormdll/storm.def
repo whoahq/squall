@@ -222,15 +222,15 @@ EXPORTS
 
     ; Message handling
     ;SMsgDestroy                   @411 NONAME
-    ;SMsgDispatchMessage           @412 NONAME
-    ;SMsgDoMessageLoop             @413 NONAME
-    ;SMsgRegisterCommand           @414 NONAME
-    ;SMsgRegisterKeyDown           @415 NONAME
-    ;SMsgRegisterKeyUp             @416 NONAME
-    ;SMsgRegisterMessage           @417 NONAME
-    ;SMsgPopRegisterState          @418 NONAME
-    ;SMsgPushRegisterState         @419 NONAME
-    ;SMsgRegisterSysCommand        @420 NONAME
+    SMsgDispatchMessage            @412 NONAME
+    ;SMsgDoMessageLoop              @413 NONAME
+    SMsgRegisterCommand            @414 NONAME
+    SMsgRegisterKeyDown            @415 NONAME
+    SMsgRegisterKeyUp              @416 NONAME
+    SMsgRegisterMessage            @417 NONAME
+    SMsgPopRegisterState           @418 NONAME
+    SMsgPushRegisterState          @419 NONAME
+    SMsgRegisterSysCommand         @420 NONAME
 
     ; Registry
     ;SRegLoadData                  @421 NONAME
@@ -330,15 +330,15 @@ EXPORTS
     SStrUpper                     @510 NONAME
 
     ; Messages extended
-    ;SMsgBreakHandlerChain         @511 NONAME
-    ;SMsgUnregisterCommand         @512 NONAME
-    ;SMsgUnregisterKeyDown         @513 NONAME
-    ;SMsgUnregisterKeyUp           @514 NONAME
-    ;SMsgUnregisterMessage         @515 NONAME
-    ;SMsgGetGenericWndProc         @516 NONAME
-    ;SMsgSetDefaultWindow          @517 NONAME
-    ;SMsgGetDefaultWindow          @518 NONAME
-    ;SMsgUnregisterSysCommand      @519 NONAME
+    SMsgBreakHandlerChain          @511 NONAME
+    SMsgUnregisterCommand          @512 NONAME
+    SMsgUnregisterKeyDown          @513 NONAME
+    SMsgUnregisterKeyUp            @514 NONAME
+    SMsgUnregisterMessage          @515 NONAME
+    ;SMsgGetGenericWndProc          @516 NONAME
+    SMsgSetDefaultWindow           @517 NONAME
+    SMsgGetDefaultWindow           @518 NONAME
+    SMsgUnregisterSysCommand       @519 NONAME
 
     ; Regions
     SRgnClear                     @521 NONAME
@@ -404,8 +404,8 @@ EXPORTS
     SStrVPrintf                   @581 NONAME
 
     ; More drawing
-    ;SMsgSetDefaultWindowRect      @582 NONAME
-    ;SMsgGetDefaultWindowRect      @583 NONAME
+    SMsgSetDefaultWindowRect      @582 NONAME
+    SMsgGetDefaultWindowRect      @583 NONAME
 
     ; More strings
     ?SStrStr@@YGPADPADPBD@Z       @584 NONAME

@@ -76,6 +76,28 @@ void STORMAPI SMemMove(void*, void*, size_t) {}
 void* STORMAPI SMemReAlloc(void*, size_t, const char*, int32_t, uint32_t) { return 0; }
 void STORMAPI SMemZero(void*, size_t) {}
 
+#include <storm/Message.hpp>
+
+int32_t STORMAPI SMsgBreakHandlerChain(PARAMS*) { return 0; }
+int32_t STORMAPI SMsgDestroy() { return 0; }
+int32_t STORMAPI SMsgDispatchMessage(HWND, uint32_t, uint32_t, int32_t, int32_t*, int32_t*) { return 0; }
+HWND STORMAPI SMsgGetDefaultWindow() { return 0; }
+int32_t STORMAPI SMsgGetDefaultWindowRect(RECT*) { return 0; }
+int32_t STORMAPI SMsgPopRegisterState(HWND) { return 0; }
+int32_t STORMAPI SMsgPushRegisterState(HWND) { return 0; }
+int32_t STORMAPI SMsgRegisterCommand(HWND, uint32_t, SMSGHANDLER) { return 0; }
+int32_t STORMAPI SMsgRegisterKeyDown(HWND, uint32_t, SMSGHANDLER) { return 0; }
+int32_t STORMAPI SMsgRegisterKeyUp(HWND, uint32_t, SMSGHANDLER) { return 0; }
+int32_t STORMAPI SMsgRegisterMessage(HWND, uint32_t, SMSGHANDLER) { return 0; }
+int32_t STORMAPI SMsgRegisterSysCommand(HWND, uint32_t, SMSGHANDLER) { return 0; }
+int32_t STORMAPI SMsgSetDefaultWindow(HWND) { return 0; }
+void STORMAPI SMsgSetDefaultWindowRect(RECT*) { return; }
+int32_t STORMAPI SMsgUnregisterCommand(HWND, uint32_t, SMSGHANDLER) { return 0; }
+int32_t STORMAPI SMsgUnregisterKeyDown(HWND, uint32_t, SMSGHANDLER) { return 0; }
+int32_t STORMAPI SMsgUnregisterKeyUp(HWND, uint32_t, SMSGHANDLER) { return 0; }
+int32_t STORMAPI SMsgUnregisterMessage(HWND, uint32_t, SMSGHANDLER) { return 0; }
+int32_t STORMAPI SMsgUnregisterSysCommand(HWND, uint32_t, SMSGHANDLER) { return 0; }
+
 #include <storm/Region.hpp>
 
 void STORMAPI SRgnClear(HSRGN) {}

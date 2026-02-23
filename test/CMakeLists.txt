@@ -9,6 +9,7 @@ if(WHOA_TEST_STORMDLL)
         File.cpp
         FileTest.cpp
         Memory.cpp
+        Message.cpp
         Region.cpp
         String.cpp
         Test.cpp
