@@ -1,6 +1,7 @@
 #include <storm/Core.hpp>
 
 int32_t STORMAPI StormDestroy() { return 0; }
+HINSTANCE STORMAPI StormGetInstance() { return 0; }
 
 #include <storm/Big.hpp>
 

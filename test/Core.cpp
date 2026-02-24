@@ -3,6 +3,16 @@
 #include "storm/Core.hpp"
 #include "storm/Region.hpp"
 
+#if defined(WHOA_SYSTEM_WIN)
+#include <Windows.h>
+
+#if defined(WHOA_TEST_STORMDLL)
+#define EXPECTED_MODULE_NAME "Storm.dll"
+#else
+#define EXPECTED_MODULE_NAME "StormTest.exe"
+#endif
+#endif
+
 TEST_CASE("StormDestroy", "[core]") {
     SECTION("always returns 1") {
         CHECK(StormDestroy() == 1);
@@ -52,4 +62,26 @@ TEST_CASE("StormDestroy", "[core]") {
             CHECK(newrgn == nullptr);
         }
     }
+}
+
+TEST_CASE("StormGetInstance", "[core]") {
+#if defined(WHOA_SYSTEM_WIN)
+    SECTION("returns a valid handle") {
+        HINSTANCE instance = StormGetInstance();
+        REQUIRE(instance != nullptr);
+
+        SetLastError(ERROR_SUCCESS);
+        CHECK(GetProcAddress(instance, "memes") == nullptr);
+        // Error would be something else if the pointer was not an HMODULE/HINSTANCE
+        CHECK(GetLastError() == ERROR_PROC_NOT_FOUND);
+
+        char path[1024];
+        CHECK(GetModuleFileNameA(instance, path, sizeof(path)) != 0);
+        CHECK_THAT(path, Catch::Matchers::EndsWith("\\" EXPECTED_MODULE_NAME, Catch::CaseSensitive::No));
+    }
+#else
+    SECTION("not implemented on unsupported system") {
+        CHECK(StormGetInstance() == nullptr);
+    }
+#endif
 }
