@@ -1,24 +1,58 @@
 #include "storm/Error.hpp"
+#include "storm/thread/SCritSect.hpp"
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
 
 #if defined(WHOA_SYSTEM_WIN)
 #include <Windows.h>
+#define StormGetThreadId() GetCurrentThreadId()
+#else
+#include <unistd.h>
+#define StormGetThreadId() getpid()
 #endif
+
+struct APPFATINFO {
+    const char* filename;
+    int32_t linenumber;
+    uint32_t threadId;
+};
+
+static APPFATINFO s_appFatInfo;
+
+SCritSect s_critsect;
 
 static uint32_t s_lasterror = ERROR_SUCCESS;
 static int32_t s_suppress;
 static int32_t s_displaying;
 
+[[noreturn]] void SErrDisplayAppFatalCustomV(uint32_t errorcode, const char* format, va_list va) {
+    const char* filename = nullptr;
+    int32_t linenumber = 0;
+    s_critsect.Enter();
+    if (s_appFatInfo.threadId == StormGetThreadId()) {
+        filename = s_appFatInfo.filename;
+        linenumber = s_appFatInfo.linenumber;
+        s_appFatInfo = {};
+    }
+    s_critsect.Leave();
+
+    char buffer[2048];
+    std::vsnprintf(buffer, sizeof(buffer) - 1, format, va);
+    buffer[sizeof(buffer) - 1] = '\0';
+
+#ifdef WHOA_DISPLAY_ERR_EXTRA_ARG
+    SErrDisplayError(errorcode, filename, linenumber, buffer, 0, EXIT_FAILURE, 2);
+#else
+    SErrDisplayError(errorcode, filename, linenumber, buffer, 0, EXIT_FAILURE);
+#endif
+    std::exit(EXIT_FAILURE);
+}
+
 [[noreturn]] void STORMCDECL SErrDisplayAppFatal(const char* format, ...) {
     va_list args;
     va_start(args, format);
-    vprintf(format, args);
-    printf("\n");
-    va_end(args);
-
-    exit(EXIT_FAILURE);
+    SErrDisplayAppFatalCustomV(STORM_ERROR_FATAL_CONDITION, format, args);
 }
 
 #ifdef WHOA_DISPLAY_ERR_EXTRA_ARG
@@ -81,12 +115,35 @@ int32_t STORMCDECL SErrDisplayErrorFmt(uint32_t errorcode, const char* filename,
     return SErrDisplayError(errorcode, filename, linenumber, buffer, recoverable, exitcode);
 }
 
+int32_t STORMAPI SErrGetErrorStr(uint32_t errorcode, char* buffer, uint32_t bufferchars) {
+    STORM_VALIDATE_BEGIN;
+    STORM_VALIDATE(buffer);
+    STORM_VALIDATE(bufferchars);
+    STORM_VALIDATE_END;
+
+    buffer[0] = '\0';
+#if defined(WHOA_SYSTEM_WIN)
+    // half-measure
+    return FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, nullptr, errorcode, LANG_USER_DEFAULT, buffer, bufferchars, nullptr);
+#else
+    return 0;
+#endif
+}
+
+uint32_t STORMAPI SErrGetLastError() {
+    return s_lasterror;
+}
+
 int32_t STORMAPI SErrIsDisplayingError() {
     return s_displaying;
 }
 
 void STORMAPI SErrPrepareAppFatal(const char* filename, int32_t linenumber) {
-    // TODO
+    s_critsect.Enter();
+    s_appFatInfo.filename = filename;
+    s_appFatInfo.linenumber = linenumber;
+    s_appFatInfo.threadId = StormGetThreadId();
+    s_critsect.Leave();
 }
 
 void STORMAPI SErrSetLastError(uint32_t errorcode) {
@@ -94,10 +151,6 @@ void STORMAPI SErrSetLastError(uint32_t errorcode) {
 #if defined(WHOA_SYSTEM_WIN)
     SetLastError(errorcode);
 #endif
-}
-
-uint32_t STORMAPI SErrGetLastError() {
-    return s_lasterror;
 }
 
 void STORMAPI SErrSuppressErrors(int32_t suppress) {
