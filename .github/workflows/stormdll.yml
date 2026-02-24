@@ -1,0 +1,129 @@
+name: Test runner against storm.dll
+on: [workflow_dispatch]
+jobs:
+  build:
+    name: ${{ matrix.patch.flavor }} / ${{ matrix.patch.name }} (${{ matrix.patch.year }})
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        patch:
+          # Starcraft
+          - name: BW-1.17.0
+            url: http://ftp.blizzard.com/pub/broodwar/patches/PC/BW-1170.exe
+            flavor: SC1
+            year: 2016
+          - name: BW-1.16.1
+            url: http://ftp.blizzard.com/pub/broodwar/patches/PC/BW-1161.exe
+            flavor: SC1
+            year: 2007
+          - name: BW-1.14
+            url: http://ftp.blizzard.com/pub/broodwar/patches/PC/BW-114.exe
+            flavor: SC1
+            year: 2004
+          # These don't have a full storm.dll in the archive
+          #- name: BW-1.11
+          #  url: http://ftp.blizzard.com/pub/broodwar/patches/PC/BW-111.exe
+          #  flavor: SC1
+          #  year: 2003
+          #- name: BW-1.09b
+          #  url: http://ftp.blizzard.com/pub/broodwar/patches/PC/BW_109b.exe
+          #  flavor: SC1
+          #  year: 2000
+
+          # Diablo 1
+          - name: Diablo-1.09
+            url: http://ftp.blizzard.com/pub/diablo/patches/pc/drtl109.exe
+            flavor: SC1
+            year: 2000
+          - name: Diablo-1.08
+            url: http://ftp.blizzard.com/pub/diablo/patches/pc/drtl108.exe
+            flavor: SC1
+            year: 1999
+
+          # Diablo 2
+          - name: D2-1.13d
+            url: http://ftp.blizzard.com/pub/diablo2/patches/PC/D2Patch_113d.exe
+            flavor: SC1
+            year: 2003
+          # These don't have a full storm.dll in the archive
+          #- name: D2-1.09d
+          #  url: http://ftp.blizzard.com/pub/diablo2/patches/PC/D2Patch_109d.exe
+          #  flavor: SC1
+          #  year: 2000
+          #- name: D2-1.05b
+          #  url: http://ftp.blizzard.com/pub/diablo2/patches/PC/D2Patch_105b.exe
+          #  flavor: SC1
+          #  year: 1999
+
+          # Warcraft II
+          - name: War2BNE-2.02
+            url: http://ftp.blizzard.com/pub/war2/patches/PC/War2Patch_202.exe
+            flavor: SC1
+            year: 2000
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Restore storm.dll cache
+        id: cache-storm
+        uses: actions/cache/restore@v4
+        with:
+          path: storm.dll
+          key: storm-dll-${{ matrix.patch.name }}
+
+      - name: Download patch
+        if: steps.cache-storm.outputs.cache-hit != 'true'
+        run: curl -L -o patch.exe "${{ matrix.patch.url }}"
+
+      - name: Install MPQ extractor
+        if: steps.cache-storm.outputs.cache-hit != 'true'
+        run: curl -L -o mpqcli.exe "https://github.com/TheGrayDot/mpqcli/releases/download/v0.9.6/mpqcli-windows-amd64.exe"
+
+      - name: Extract storm.dll from embedded MPQ
+        if: steps.cache-storm.outputs.cache-hit != 'true'
+        run: |
+          .\mpqcli.exe extract -f storm.dll -o . patch.exe
+
+      - name: Fix up storm.dll file
+        if: steps.cache-storm.outputs.cache-hit != 'true'
+        run: |
+          $bytes = [IO.File]::ReadAllBytes("storm.dll")
+          $last = $bytes.Length - 1
+
+          $offset = 0
+          while ($offset -lt $last -and ($bytes[$offset] -ne 0x4D -or $bytes[$offset + 1] -ne 0x5A)) {
+            $offset++
+          }
+
+          if ($offset -ge $last) {
+            Write-Error "Retrieved storm.dll is invalid"
+            exit 1
+          }
+          [IO.File]::WriteAllBytes("storm.dll", $bytes[$offset..$last])
+
+      - name: Save storm.dll cache
+        if: steps.cache-storm.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: storm.dll
+          key: storm-dll-${{ matrix.patch.name }}
+
+      - name: Prepare
+        run: mkdir build
+
+      - name: Configure
+        run: cd build && cmake .. -A Win32 -DWHOA_TEST_STORMDLL=1 -DCMAKE_BUILD_TYPE=Release -DWHOA_STORM_FLAVOR=${{ matrix.patch.flavor }} -DWHOA_STORMDLL_VERSION=${{ matrix.patch.year }}
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Copy storm.dll into test directory
+        run: Copy-Item storm.dll "build/test/Release/storm.dll" -Force
+
+      - name: Test
+        shell: cmd
+        run: |
+          "build/test/Release/StormTest.exe"
