@@ -197,7 +197,7 @@ int32_t STORMAPI SUniFindUTF8ChrStart(const char* utf8String, int32_t index) {
     return FindUTF8Character(utf8String, index, -1);
 }
 
-uint32_t STORMAPI SUniSGetUTF8(const uint8_t* strptr, int32_t* chars) {
+uint32_t SUNIGET_CALL SUniSGetUTF8(const uint8_t* strptr, int32_t* chars) {
     if (chars) {
         *chars = 0;
     }
