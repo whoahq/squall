@@ -2,6 +2,9 @@
 
 #include <cstring>
 
+void IncrementAllocCount();
+void IncrementFreeCount();
+
 constexpr size_t ALIGNMENT = 8;
 
 void* operator new(size_t bytes) {
@@ -56,6 +59,9 @@ void* STORMAPI SMemAlloc(size_t bytes, const char* filename, int32_t linenumber,
     }
 
     if (result) {
+#if defined(WHOA_TRACKS_ALLOC_COUNTS)
+        IncrementAllocCount();
+#endif
         return result;
     } else {
         // TODO handle errors
@@ -78,6 +84,9 @@ void STORMAPI SMemFill(void* ptr, size_t bytes, uint8_t value) {
 void STORMAPI SMemFree(void* ptr, const char* filename, int32_t linenumber, uint32_t flags) {
     if (ptr) {
         free(ptr);
+#if defined(WHOA_TRACKS_ALLOC_COUNTS)
+        IncrementFreeCount();
+#endif
     }
 }
 
@@ -101,6 +110,12 @@ void* STORMAPI SMemReAlloc(void* ptr, size_t bytes, const char* filename, int32_
     size_t alignedBytes = (bytes + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1);
 
     void* result = realloc(ptr, alignedBytes);
+#if defined(WHOA_TRACKS_ALLOC_COUNTS)
+    if (result != ptr) {
+        IncrementAllocCount();
+        IncrementFreeCount();
+    }
+#endif
 
     if (result) {
         if (flags & 0x8) {
