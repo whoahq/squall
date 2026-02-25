@@ -9,6 +9,7 @@ static std::pair<std::u16string, std::string> make_testcase(const std::u16string
     return std::make_pair(strA, strB);
 }
 
+#if !defined(WHOA_TEST_WOWREAL)
 TEST_CASE("SUniConvertUTF16ToDos", "[unicode]") {
     SECTION("does nothing on empty dest size") {
         auto result = SUniConvertUTF16ToDos(nullptr, nullptr, 0);
@@ -1089,6 +1090,7 @@ TEST_CASE("SUniFindUTF8ChrStart", "[unicode]") {
         CHECK(SUniFindUTF8ChrStart(str, 9) == 7);
     }
 }
+#endif
 
 TEST_CASE("SUniSGetUTF8", "[unicode]") {
     SECTION("returns ascii-range utf-8 first character") {
@@ -1120,6 +1122,7 @@ TEST_CASE("SUniSGetUTF8", "[unicode]") {
     }
 }
 
+#if !defined(WHOA_TEST_WOWREAL)
 TEST_CASE("SUniSPutUTF8", "[unicode]") {
     SECTION("writes ascii-range utf-8 first character") {
         auto code = 'f';
@@ -1147,3 +1150,4 @@ TEST_CASE("SUniSPutUTF8", "[unicode]") {
         REQUIRE(SStrLen(buffer) == 0);
     }
 }
+#endif

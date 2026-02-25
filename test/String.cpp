@@ -41,7 +41,7 @@ TEST_CASE("SStrChr const", "[string]") {
     }
 }
 
-#if !defined(WHOA_TEST_STORMDLL)
+#if !defined(WHOA_TEST_STORMDLL) && !defined(WHOA_TEST_WOWREAL)
 TEST_CASE("SStrChr", "[string]") {
     char string[] = "foobar";
 
@@ -122,6 +122,7 @@ TEST_CASE("SStrChrR const", "[string]") {
     }
 }
 
+#if !defined(WHOA_TEST_WOWREAL)
 TEST_CASE("SStrChrBidir", "[string]") {
     SECTION("forwards") {
         const char* string = "foobar";
@@ -197,8 +198,9 @@ TEST_CASE("SStrChrBidir", "[string]") {
         }
     }
 }
+#endif
 
-#if !defined(WHOA_TEST_STORMDLL)
+#if !defined(WHOA_TEST_STORMDLL) && !defined(WHOA_TEST_WOWREAL)
 TEST_CASE("SStrChrR", "[string]") {
     char string[] = "ffoobbaarr";
 
@@ -454,6 +456,7 @@ TEST_CASE("SStrHashHT", "[string]") {
 }
 #endif
 
+#if !defined(WHOA_TEST_WOWREAL)
 #if !defined(WHOA_STORMDLL_VERSION) || WHOA_STORMDLL_VERSION >= 2000
 TEST_CASE("SStrHash64", "[string]") {
 #if defined(WHOA_SSTRHASH64_SUBTRACTS)
@@ -628,6 +631,7 @@ TEST_CASE("SStrHash64", "[string]") {
         CHECK(hash == seed);
     }
 }
+#endif
 #endif
 
 TEST_CASE("SStrLen", "[string]") {
@@ -804,6 +808,7 @@ TEST_CASE("SStrVPrintf", "[string]") {
 }
 #endif
 
+#if !defined(WHOA_TEST_WOWREAL)
 #if !defined(WHOA_STORMDLL_VERSION) || WHOA_STORMDLL_VERSION >= 2007
 TEST_CASE("SStrStr", "[string]") {
     char string[] = "foobar";
@@ -841,6 +846,7 @@ TEST_CASE("SStrStr", "[string]") {
         REQUIRE(substring == nullptr);
     }
 }
+#endif
 
 TEST_CASE("SStrStr const", "[string]") {
     const char* string = "foobar";
@@ -878,6 +884,7 @@ TEST_CASE("SStrStr const", "[string]") {
     }
 }
 
+#if !defined(WHOA_TEST_WOWREAL)
 TEST_CASE("SStrStrI", "[string]") {
     char string[] = "foobar";
 
@@ -914,6 +921,7 @@ TEST_CASE("SStrStrI", "[string]") {
         REQUIRE(substring == nullptr);
     }
 }
+#endif
 
 TEST_CASE("SStrStrI const", "[string]") {
     const char* string = "foobar";
@@ -1027,6 +1035,7 @@ TEST_CASE("SStrTokenize", "[string]") {
 
 #if !defined(WHOA_STORMDLL_VERSION) || WHOA_STORMDLL_VERSION >= 2016
 // In older versions these are broken
+#if !defined(WHOA_TEST_WOWREAL)
 TEST_CASE("SStrToDouble", "[string]") {
     SECTION("converts empty string to double") {
         auto result = SStrToDouble("");
@@ -1104,6 +1113,7 @@ TEST_CASE("SStrToDouble", "[string]") {
         REQUIRE(SStrToDouble("-1.79769e+310") == -HUGE_VAL);
     }
 }
+#endif
 
 // In older versions these are broken
 TEST_CASE("SStrToFloat", "[string]") {

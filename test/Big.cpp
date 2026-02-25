@@ -45,6 +45,7 @@ TEST_CASE("SBigAdd", "[big]") {
     }
 }
 
+#if !defined(WHOA_TEST_WOWREAL)
 TEST_CASE("SBigAnd", "[big]") {
     BigDataTest a, b, c;
 
@@ -55,7 +56,7 @@ TEST_CASE("SBigAnd", "[big]") {
 
         SBigAnd(a, b, c);
 
-        CHECK(SBigIsZero(a));
+        CHECK(a.ToUnsigned() == 0);
     }
 
     SECTION("performs bitwise and on large nums") {
@@ -74,6 +75,7 @@ TEST_CASE("SBigAnd", "[big]") {
         CHECK(a.ToBinaryBuffer() == expected);
     }
 }
+#endif
 
 #if !defined(WHOA_TEST_STORMDLL)
 TEST_CASE("SBigBitLen", "[big]") {
@@ -138,6 +140,7 @@ TEST_CASE("SBigCompare", "[big]") {
     }
 }
 
+#if !defined(WHOA_TEST_WOWREAL)
 TEST_CASE("SBigCopy", "[big]") {
     BigDataTest a, b;
 
@@ -242,6 +245,7 @@ TEST_CASE("SBigDiv", "[big]") {
         CHECK(a.ToUnsigned() == 8);
     }
 }
+#endif
 
 TEST_CASE("SBigFromBinary", "[big]") {
     BigDataTest num;
@@ -250,7 +254,7 @@ TEST_CASE("SBigFromBinary", "[big]") {
         uint32_t data = 0;
         SBigFromBinary(num, reinterpret_cast<uint8_t*>(&data), sizeof(data));
 
-        CHECK(SBigIsZero(num));
+        CHECK(num.ToUnsigned() == 0);
     }
 
     SECTION("creates bigdata from 0x123456789ABCDEF0") {
@@ -262,13 +266,14 @@ TEST_CASE("SBigFromBinary", "[big]") {
     }
 }
 
+#if !defined(WHOA_TEST_WOWREAL)
 TEST_CASE("SBigFromStr", "[big]") {
     BigDataTest num;
 
     SECTION("with empty string") {
         SBigFromStr(num, "");
 
-        CHECK(SBigIsZero(num));
+        CHECK(num.ToUnsigned() == 0);
     }
 
     SECTION("with string containing numbers") {
@@ -289,6 +294,7 @@ TEST_CASE("SBigFromStr", "[big]") {
         CHECK(num.ToUnsigned() == 1899);
     }
 }
+#endif
 
 TEST_CASE("SBigFromUnsigned", "[big]") {
     BigDataTest num;
@@ -296,7 +302,7 @@ TEST_CASE("SBigFromUnsigned", "[big]") {
     SECTION("creates bigdata from 0") {
         SBigFromUnsigned(num, 0);
 
-        CHECK(SBigIsZero(num));
+        CHECK(num.ToUnsigned() == 0);
     }
 
     SECTION("creates bigdata from 0x12345678") {
@@ -313,6 +319,8 @@ TEST_CASE("SBigFromUnsigned", "[big]") {
         CHECK(num.ToUnsigned() == UINT32_MAX);
     }
 }
+
+#if !defined(WHOA_TEST_WOWREAL)
 TEST_CASE("SBigInc", "[big]") {
     BigDataTest a, b;
 
@@ -423,6 +431,7 @@ TEST_CASE("SBigIsZero", "[big]") {
         CHECK_FALSE(SBigIsZero(a));
     }
 }
+#endif
 
 TEST_CASE("SBigMod", "[big]") {
     BigDataTest a, b, c;
@@ -476,7 +485,7 @@ TEST_CASE("SBigMul", "[big]") {
 
         SBigMul(a, b, c);
 
-        CHECK(SBigIsZero(a));
+        CHECK(a.ToUnsigned() == 0);
     }
 
     SECTION("multiplies 2 and 4") {
@@ -524,6 +533,7 @@ TEST_CASE("SBigPowMod", "[big]") {
     }
 }
 
+#if !defined(WHOA_TEST_WOWREAL)
 TEST_CASE("SBigNot", "[big]") {
     BigDataTest a, b;
 
@@ -556,7 +566,7 @@ TEST_CASE("SBigNot", "[big]") {
             0x09, 0xAB, 0xCD, 0xEF, 0x0D, 0xEA, 0xDC, 0xAD,
             0x00, 0x0D, 0x01, 0x1A,
         };
-        
+
         SBigFromBinary(b, data, sizeof(data));
         SBigNot(a, b);
 
@@ -665,6 +675,7 @@ TEST_CASE("SBigSquare", "[big]") {
         CHECK(a.ToBinaryBuffer() == expected);
     }
 }
+#endif
 
 TEST_CASE("SBigSub", "[big]") {
     BigDataTest a, b, c;
@@ -729,6 +740,7 @@ TEST_CASE("SBigToBinaryBuffer", "[big]") {
     }
 }
 
+#if !defined(WHOA_TEST_WOWREAL)
 TEST_CASE("SBigToUnsigned", "[big]") {
     BigDataTest num;
 
@@ -803,3 +815,4 @@ TEST_CASE("SBigXor", "[big]") {
         CHECK(a.ToBinaryBuffer() == expected);
     }
 }
+#endif

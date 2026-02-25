@@ -18,8 +18,13 @@ struct BigDataTest {
     BigData* operator->() const { return num; }
 
     uint32_t ToUnsigned() {
-        uint32_t result;
-        SBigToUnsigned(num, &result);
+        // SBigToUnsigned is not available in WoW so do the next best thing
+        uint32_t result = 0;
+        auto vec = this->ToBinaryBuffer();
+        for (auto i = vec.rbegin(); i != vec.rend(); i++) {
+            result *= 256;
+            result += *i;
+        }
         return result;
     }
 

@@ -220,7 +220,7 @@ void STORMAPI SStrInitialize() {
     }
 }
 
-char* STORMAPI SStrChr(char* string, char search) {
+char* SSTRCHR_CALL SStrChr(char* string, char search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE_END;
@@ -240,7 +240,7 @@ char* STORMAPI SStrChr(char* string, char search) {
     return string;
 }
 
-const char* STORMAPI SStrChr(const char* string, char search) {
+const char* SSTRCHR_CALL SStrChr(const char* string, char search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE_END;
@@ -273,7 +273,7 @@ const char* STORMAPI SStrChrBidir(const char* string, char search, int32_t rever
     }
 }
 
-char* STORMAPI SStrChrR(char* string, char search) {
+char* SSTRCHR_CALL SStrChrR(char* string, char search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE_END;
@@ -289,7 +289,7 @@ char* STORMAPI SStrChrR(char* string, char search) {
     return result;
 }
 
-const char* STORMAPI SStrChrR(const char* string, char search) {
+const char* SSTRCHR_CALL SStrChrR(const char* string, char search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE_END;
@@ -577,7 +577,7 @@ size_t STORMCDECL SStrVPrintf(char* dest, size_t maxchars, const char* format, v
     return ISStrVPrintf(dest, maxchars, format, arglist);
 }
 
-char* STORMAPI SStrStr(char* string, const char* search) {
+char* SSTRCHR_CALL SStrStr(char* string, const char* search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE(search);
@@ -593,7 +593,7 @@ char* STORMAPI SStrStr(char* string, const char* search) {
     return nullptr;
 }
 
-const char* STORMAPI SStrStr(const char* string, const char* search) {
+const char* SSTRCHR_CALL SStrStr(const char* string, const char* search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE(search);
@@ -609,7 +609,7 @@ const char* STORMAPI SStrStr(const char* string, const char* search) {
     return nullptr;
 }
 
-char* STORMAPI SStrStrI(char* string, const char* search) {
+char* SSTRCHR_CALL SStrStrI(char* string, const char* search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE(search);
@@ -625,7 +625,7 @@ char* STORMAPI SStrStrI(char* string, const char* search) {
     return nullptr;
 }
 
-const char* STORMAPI SStrStrI(const char* string, const char* search) {
+const char* SSTRCHR_CALL SStrStrI(const char* string, const char* search) {
     STORM_VALIDATE_BEGIN;
     STORM_VALIDATE(string);
     STORM_VALIDATE(search);

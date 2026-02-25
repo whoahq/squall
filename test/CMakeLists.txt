@@ -18,6 +18,18 @@ if(WHOA_TEST_STORMDLL)
     if(WHOA_STORMDLL_VERSION GREATER_EQUAL 2003)
         list(APPEND TEST_SOURCES Unicode.cpp)
     endif()
+elseif(WHOA_TEST_WOWREAL)
+    set(TEST_SOURCES
+        Big.cpp
+        Core.cpp
+        Crypto.cpp
+        Error.cpp
+        EventTest.cpp
+        Memory.cpp
+        String.cpp
+        Test.cpp
+        Unicode.cpp
+    )
 else()
     file(GLOB TEST_SOURCES
         "*.cpp"
@@ -42,15 +54,19 @@ if(WHOA_SYSTEM_MAC)
             "-framework Carbon"
             "-framework IOKit"
     )
-endif()
+elseif(WHOA_TEST_WOWREAL AND WHOA_SYSTEM_WIN)
+    add_executable(StormTest wowwrapper/StubLoader.cpp)
+    add_library(StormTestActual SHARED ${TEST_SOURCES})
+    add_library(DivxDecoder SHARED wowwrapper/DivxDecoder.cpp)
 
-if(WHOA_SYSTEM_LINUX OR WHOA_SYSTEM_WIN)
+    target_link_libraries(StormTest PRIVATE storm)
+    target_link_libraries(StormTestActual PRIVATE storm)
+
+    target_include_directories(StormTestActual PRIVATE ${PROJECT_SOURCE_DIR})
+elseif(WHOA_SYSTEM_LINUX OR WHOA_SYSTEM_WIN)
     add_executable(StormTest ${TEST_SOURCES})
 
-    target_link_libraries(StormTest
-        PRIVATE
-            storm
-    )
+    target_link_libraries(StormTest PRIVATE storm)
 endif()
 
 target_include_directories(StormTest

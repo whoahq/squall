@@ -18,6 +18,12 @@ typedef void* HANDLE;
 typedef void* LPOVERLAPPED;
 #endif
 
-int32_t STORMAPI StormDestroy();
+#if defined(WHOA_DESTROY_HAS_RETVAL)
+#define STORM_DESTROY_RETTYPE int32_t
+#else
+#define STORM_DESTROY_RETTYPE void
+#endif
+
+STORM_DESTROY_RETTYPE STORMAPI StormDestroy();
 
 #endif

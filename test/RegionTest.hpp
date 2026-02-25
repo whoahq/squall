@@ -30,11 +30,13 @@ struct RgnDataTest {
     operator HSRGN() const { return rgn; }
     HSRGN operator->() const { return rgn; }
 
+#if !defined(WHOA_TEST_WOWREAL)
     void AddTestRectsi(std::initializer_list<RECT> rects) {
         for (RECT rct : rects) {
             SRgnCombineRecti(this->rgn, &rct, nullptr, SRGN_OR);
         }
     }
+#endif
 
     void AddTestRectsf(std::initializer_list<RECTF> rects) {
         for (RECTF rct : rects) {
@@ -42,6 +44,7 @@ struct RgnDataTest {
         }
     }
 
+#if !defined(WHOA_TEST_WOWREAL)
     std::vector<RECT> GetResultRectsi() {
         uint32_t numRects = 0;
         SRgnGetRectsi(this->rgn, &numRects, nullptr);
@@ -61,6 +64,7 @@ struct RgnDataTest {
 
         return result;
     }
+#endif
 };
 
 // Helpers for comparing RECTF structs

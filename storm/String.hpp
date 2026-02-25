@@ -10,15 +10,21 @@
 
 #define SSTR_HASH_CASESENSITIVE 1
 
-char* STORMAPI SStrChr(char* string, char search);
+#if defined(WHOA_SSTRCHR_IS_CDECL)
+#define SSTRCHR_CALL STORMCDECL
+#else
+#define SSTRCHR_CALL STORMAPI
+#endif
 
-const char* STORMAPI SStrChr(const char* string, char search);
+char* SSTRCHR_CALL SStrChr(char* string, char search);
+
+const char* SSTRCHR_CALL SStrChr(const char* string, char search);
 
 const char* STORMAPI SStrChrBidir(const char* string, char search, int32_t reverse);
 
-char* STORMAPI SStrChrR(char* string, char search);
+char* SSTRCHR_CALL SStrChrR(char* string, char search);
 
-const char* STORMAPI SStrChrR(const char* string, char search);
+const char* SSTRCHR_CALL SStrChrR(const char* string, char search);
 
 int32_t STORMAPI SStrCmp(const char* string1, const char* string2, size_t maxchars = STORM_MAX_STR);
 
@@ -46,13 +52,13 @@ size_t STORMCDECL SStrPrintf(char* dest, size_t maxchars, const char* format, ..
 
 size_t STORMCDECL SStrVPrintf(char* dest, size_t maxchars, const char* format, va_list arglist);
 
-char* STORMAPI SStrStr(char* string, const char* search);
+char* SSTRCHR_CALL SStrStr(char* string, const char* search);
 
-const char* STORMAPI SStrStr(const char* string, const char* search);
+const char* SSTRCHR_CALL SStrStr(const char* string, const char* search);
 
-char* STORMAPI SStrStrI(char* string, const char* search);
+char* SSTRCHR_CALL SStrStrI(char* string, const char* search);
 
-const char* STORMAPI SStrStrI(const char* string, const char* search);
+const char* SSTRCHR_CALL SStrStrI(const char* string, const char* search);
 
 void STORMAPI SStrTokenize(const char** string, char* buffer, size_t bufferchars, const char* whitespace, int32_t* quoted);
 

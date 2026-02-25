@@ -55,6 +55,7 @@ TEST_CASE("SMemAlloc", "[memory]") {
     }
 }
 
+#if !defined(WHOA_TEST_WOWREAL)
 TEST_CASE("SMemCmp", "[memory]") {
     std::vector<uint8_t> data = { 1, 255, 128, 42, 69, 99, 13, 37 };
 
@@ -131,6 +132,7 @@ TEST_CASE("SMemFill", "[memory]") {
         CHECK_THAT(changedata, Catch::Matchers::Equals(data));
     }
 }
+#endif
 
 TEST_CASE("SMemFree", "[memory]") {
     SECTION("does nothing on nullptr") {
@@ -143,6 +145,7 @@ TEST_CASE("SMemFree", "[memory]") {
     }
 }
 
+#if !defined(WHOA_TEST_WOWREAL)
 TEST_CASE("SMemMove", "[memory]") {
     std::vector<uint8_t> data = { 1, 255, 128, 42, 69, 99, 13, 37 };
 
@@ -174,6 +177,7 @@ TEST_CASE("SMemMove", "[memory]") {
         CHECK_THAT(data, Catch::Matchers::Equals(result));
     }
 }
+#endif
 
 TEST_CASE("SMemReAlloc", "[memory]") {
     SECTION("allocates memory") {
@@ -223,6 +227,7 @@ TEST_CASE("SMemReAlloc", "[memory]") {
     }
 }
 
+#if !defined(WHOA_TEST_WOWREAL)
 TEST_CASE("SMemZero", "[memory]") {
     std::vector<uint8_t> data = { 1, 255, 128, 42, 69, 99, 13, 37 };
 
@@ -240,3 +245,4 @@ TEST_CASE("SMemZero", "[memory]") {
         CHECK_THAT(change, Catch::Matchers::Equals(data));
     }
 }
+#endif

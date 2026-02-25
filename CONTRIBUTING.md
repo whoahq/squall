@@ -11,12 +11,21 @@ Only runnable with GCC.
 
 Open the resulting `html` file for the report.
 
+### Against an original copy of Wow-3.3.5a.exe
+Only runnable on Windows + MSVC. Runs tests against the original `Wow-3.3.5a.exe` rather than against the recreated code, to test accuracy.
+
+1. `mkdir build_wow`
+2. `cd build_wow`
+2. `cmake -DWHOA_TEST_WOWREAL=1 -DWHOA_STORM_FLAVOR=WOW -A Win32 ..`.
+3. `cmake --build .`
+4. Copy `Wow-3.3.5a.exe` from your World of Warcraft installation folder to the same directory as `StormTest.exe`.
+5. Run `StormTest.exe` from the command line.
 
 ### Against an original copy of Storm.dll
-Only runnable on Windows. Allows running tests against the original `storm.dll` rather than against the recreated code, to test accuracy.
+Only runnable on Windows. Runs tests against the original `storm.dll` rather than against the recreated code, to test accuracy.
 
-1. `mkdir build`
-2. `cd build`
+1. `mkdir build_dll`
+2. `cd build_dll`
 2. `cmake -DWHOA_TEST_STORMDLL=1 -DWHOA_STORM_FLAVOR=SC1 -A Win32 ..`.
 3. `cmake --build .`
 4. Copy `storm.dll` from your Starcraft 1.17 installation folder to the same directory as `StormTest.exe`.
