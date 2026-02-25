@@ -4,6 +4,12 @@
 #include "Core.hpp"
 #include <cstddef>
 
+#if defined(WHOA_SUNIGET_IS_APICALL)
+#define SUNIGET_CALL STORMAPI
+#else
+#define SUNIGET_CALL
+#endif
+
 ptrdiff_t STORMAPI SUniConvertUTF16ToDos(char* dest, const char16_t* source, uint32_t destsize);
 
 ptrdiff_t STORMAPI SUniConvertUTF16ToMac(char* dest, const char16_t* source, uint32_t destsize);
@@ -22,7 +28,7 @@ int32_t STORMAPI SUniFindAfterUTF8Chr(const char* utf8String, int32_t index);
 // Assumes index is within the bounds of utf8String
 int32_t STORMAPI SUniFindUTF8ChrStart(const char* utf8String, int32_t index);
 
-uint32_t STORMAPI SUniSGetUTF8(const uint8_t* strptr, int32_t* chars);
+uint32_t SUNIGET_CALL SUniSGetUTF8(const uint8_t* strptr, int32_t* chars);
 
 void STORMAPI SUniSPutUTF8(uint32_t c, char* strptr);
 

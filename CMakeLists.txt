@@ -49,9 +49,17 @@ if(WHOA_STORM_FLAVOR STREQUAL "SC1")
     add_definitions(-DWHOA_RECT_USES_SCREEN_COORDINATES)
     add_definitions(-DWHOA_SSTRHASH64_SUBTRACTS)
     add_definitions(-DWHOA_SUPPORTS_KOREAN_CODEPAGE)
+    add_definitions(-DWHOA_DESTROY_HAS_RETVAL)
+    add_definitions(-DWHOA_SSTRCHR_IS_APICALL)
+    add_definitions(-DWHOA_SUNIGET_IS_APICALL)
 elseif(WHOA_STORM_FLAVOR STREQUAL "WOW")
     message(STATUS "Building Storm with World of Warcraft flavoring")
     add_definitions(-DWHOA_DISPLAY_ERR_EXTRA_ARG)
+
+    # Not sure which version this was changed
+    if(WHOA_WOW_VERSION LESS_EQUAL 3368)
+        add_definitions(-DWHOA_SUNIGET_IS_APICALL)
+    endif()
 else()
     message(STATUS "Building Storm with default flavoring")
     add_definitions(-DWHOA_DISPLAY_ERR_EXTRA_ARG)
@@ -70,7 +78,9 @@ if(WHOA_SYSTEM_WIN)
 endif()
 
 add_subdirectory(lib)
-add_subdirectory(vendor)
+if(NOT WHOA_TEST_STORMDLL)
+    add_subdirectory(vendor)
+endif()
 
 # Code coverage reporting
 if(WHOA_STANDALONE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
