@@ -7,20 +7,27 @@
 // Support:
 //   SC1, WC2, D1, D2: Huffman, PKWare, and ADPCM mono/stereo
 //   Early WoW and WC3: SC1 + ZLIB
-//   Later WoW and WC3: All but LZMA
-//   SC2: All
+//   Later WoW and WC3: All but LZMA, Huffman and ADPCM no longer supported on their own
+//   SC2: Same as above + LZMA
 //
 // ADPCM:
 //      - Lossy
 //      - 16-bit PCM audio
 //      - Only operates on raw PCM data (i.e. NOT wav file headers, only the data)
 //      - `optimization` can be from 0 to 3 (1 and 2 are the same)
+//      - ADPCM decompression by itself is unsupported in newer versions of SCompDecompress.
 //
 // PKWare:
 //      - If `hint` is SCOMP_HINT_TEXT, a special mode is used. All other values are the same as SCOMP_HINT_NONE.
 //
 // Huffman:
 //      - Uses a different distribution table based on the `hint`.
+//      - Huffman decompression by itself is unsupported in newer versions of SCompDecompress.
+// ZLIB:
+//      - WC3 (storm.dll): 1.1.3
+//      - Early WOW: 1.2.3
+//      - StormLib: 1.2.5
+//      - WC3:R, SC:R, and D2:R: 1.2.11
 //
 // If *destsize == sourcesize then compression would have created a larger file and it is left uncompressed.
 

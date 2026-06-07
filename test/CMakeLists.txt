@@ -2,6 +2,7 @@
 if(WHOA_TEST_STORMDLL)
     set(TEST_SOURCES
         Big.cpp
+        Comp.cpp
         Core.cpp
         Error.cpp
         Event.cpp
@@ -25,8 +26,6 @@ else()
         "trans/*.cpp"
     )
 endif()
-
-file(GLOB TEST_FILES "fixture/*")
 
 if(WHOA_SYSTEM_MAC)
     set_source_files_properties(${TEST_SOURCES}
@@ -58,11 +57,10 @@ target_include_directories(StormTest
         ${PROJECT_SOURCE_DIR}
 )
 
-file(GLOB TEST_FILES "fixture/*")
-
-add_custom_target(copy_test_files ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${TEST_FILES}
+add_custom_command(TARGET StormTest POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E echo "Copying fixtures..."
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/fixture
         $<TARGET_FILE_DIR:StormTest>
 )
 

@@ -50,6 +50,18 @@ if(WHOA_STORM_FLAVOR MATCHES "(SC1|WC2|D1|D2)")
     add_definitions(-DWHOA_RECT_USES_SCREEN_COORDINATES)
     add_definitions(-DWHOA_SSTRHASH64_SUBTRACTS)
     add_definitions(-DWHOA_SUPPORTS_KOREAN_CODEPAGE)
+
+    add_definitions(-DWHOA_SCOMP_OLD)
+    add_definitions(-DWHOA_SCOMP_NO_ZLIB)
+elseif(WHOA_STORM_FLAVOR STREQUAL "WC3")
+    message(STATUS "Building Storm with Warcraft III flavoring")
+    add_definitions(-DWHOA_FLAVOR_WC3)
+
+    if (WHOA_SYSTEM_MAC OR WHOA_SYSTEM_LINUX)
+        add_definitions(-DWHOA_STORM_C_CRIT_SECT_RECURSIVE)
+    endif()
+
+    add_definitions(-DWHOA_RECT_USES_SCREEN_COORDINATES)
     add_definitions(-DWHOA_SCOMP_OLD)
 elseif(WHOA_STORM_FLAVOR STREQUAL "WOW")
     message(STATUS "Building Storm with World of Warcraft flavoring")

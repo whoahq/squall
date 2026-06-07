@@ -10,6 +10,9 @@ file(GLOB STORM_SOURCES
     "queue/*.cpp"
     "string/*.cpp"
     "thread/*.cpp"
+    "file/SFileStormLibShim.cpp"
+    "file/SComp.cpp"
+    "file/SFileClass.cpp"
 )
 
 if(WHOA_SYSTEM_WIN)
@@ -19,9 +22,7 @@ if(WHOA_SYSTEM_WIN)
         "thread/win/*.cpp"
     )
     list(APPEND STORM_SOURCES ${STORM_WIN_SOURCES})
-endif()
-
-if(WHOA_SYSTEM_MAC)
+elseif(WHOA_SYSTEM_MAC)
     file(GLOB STORM_MAC_SOURCES
         "mac/*.cpp"
         "mac/*.mm"
@@ -29,9 +30,7 @@ if(WHOA_SYSTEM_MAC)
         "thread/mac/*.mm"
     )
     list(APPEND STORM_SOURCES ${STORM_MAC_SOURCES})
-endif()
-
-if(WHOA_SYSTEM_LINUX)
+elseif(WHOA_SYSTEM_LINUX)
     file(GLOB STORM_LINUX_SOURCES
         "linux/*.cpp"
         "thread/linux/*.cpp"
@@ -39,14 +38,8 @@ if(WHOA_SYSTEM_LINUX)
     list(APPEND STORM_SOURCES ${STORM_LINUX_SOURCES})
 endif()
 
-list(APPEND STORM_SOURCES "file/SFileClass.cpp")
-
 if(WHOA_SFILE_MODE STREQUAL "STORMLIB")
-    list(APPEND STORM_SOURCES
-        "file/SFile.cpp"
-        "file/SFileStormLibShim.cpp"
-        "file/SComp.cpp"
-    )
+    list(APPEND STORM_SOURCES "file/SFile.cpp")
 else()
     list(APPEND STORM_SOURCES "file/SFileNative.cpp")
 endif()
@@ -55,7 +48,7 @@ add_library(storm STATIC
     ${STORM_SOURCES}
 )
 
-target_compile_definitions(storm PRIVATE _CRT_SECURE_NO_WARNINGS)
+target_compile_definitions(storm PRIVATE _CRT_SECURE_NO_WARNINGS __STORMLIB_NO_STATIC_LINK__)
 target_compile_definitions(storm PUBLIC WHOA_SFILE_MODE_${WHOA_SFILE_MODE})
 
 target_include_directories(storm

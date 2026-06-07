@@ -1,0 +1,43 @@
+{
+    "version": 3,
+    "configurePresets": [{
+            "name": "sc1",
+            "displayName": "StarCraft 1",
+            "cacheVariables": {
+                "WHOA_STORM_FLAVOR": "SC1"
+            }
+        },
+        {
+            "name": "wow",
+            "displayName": "World of Warcraft",
+            "cacheVariables": {
+                "WHOA_STORM_FLAVOR": "WOW"
+            }
+        }
+    ],
+    "buildPresets": [{
+            "name": "sc1-debug",
+            "displayName": "StarCraft 1 Debug",
+            "configurePreset": "sc1",
+            "configuration": "Debug"
+        },
+        {
+            "name": "sc1-release",
+            "displayName": "StarCraft 1 Release",
+            "configurePreset": "sc1",
+            "configuration": "Release"
+        },
+        {
+            "name": "wow-debug",
+            "displayName": "World of Warcraft Debug",
+            "configurePreset": "wow",
+            "configuration": "Debug"
+        },
+        {
+            "name": "wow-release",
+            "displayName": "World of Warcraft Release",
+            "configurePreset": "wow",
+            "configuration": "Release"
+        }
+    ]
+}
