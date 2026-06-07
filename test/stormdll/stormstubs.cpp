@@ -34,6 +34,11 @@ void STORMAPI SBigToBinaryBuffer(BigData*, uint8_t*, uint32_t, uint32_t*) {}
 void STORMAPI SBigXor(BigData*, BigData*, BigData*) {}
 void STORMAPI SBigToUnsigned(BigData*, uint32_t*) {}
 
+#include <storm/Comp.hpp>
+
+int32_t STORMAPI SCompCompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize, uint32_t compressiontypes, uint32_t hint, uint32_t optimization) { return 0; }
+int32_t STORMAPI SCompDecompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize) { return 0; }
+
 #include <storm/Error.hpp>
 
 void STORMCDECL SErrDisplayAppFatal(const char* format, ...) {}

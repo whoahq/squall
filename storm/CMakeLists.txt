@@ -42,7 +42,11 @@ endif()
 list(APPEND STORM_SOURCES "file/SFileClass.cpp")
 
 if(WHOA_SFILE_MODE STREQUAL "STORMLIB")
-    list(APPEND STORM_SOURCES "file/SFile.cpp" "file/SFileStormLibShim.cpp")
+    list(APPEND STORM_SOURCES
+        "file/SFile.cpp"
+        "file/SFileStormLibShim.cpp"
+        "file/SComp.cpp"
+    )
 else()
     list(APPEND STORM_SOURCES "file/SFileNative.cpp")
 endif()
