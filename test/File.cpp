@@ -6,16 +6,16 @@ TEST_CASE("SFileCloseArchive", "[file]") {
     HSARCHIVE archive = nullptr;
 
     SECTION("closes an archive") {
-        SFileOpenArchive("wowtest1.mpq", 0, 0, &archive);
+        SFileOpenArchive("file/wowtest1.mpq", 0, 0, &archive);
         REQUIRE(archive != nullptr);
 
         HSFILE file;
-        CHECK(SFileOpenFileEx(nullptr, "test.txt", 0, &file));
+        CHECK(SFileOpenFileEx(nullptr, "file/test.txt", 0, &file));
         CHECK(SFileCloseFile(file));
 
         CHECK(SFileCloseArchive(archive) == 1);
 
-        CHECK_FALSE(SFileOpenFileEx(nullptr, "test.txt", 0, &file));
+        CHECK_FALSE(SFileOpenFileEx(nullptr, "file/test.txt", 0, &file));
     }
 
     // TODO determine how to test this
@@ -44,7 +44,7 @@ TEST_CASE("SFileGetFileSize", "[file]") {
     HSFILE file;
 
     SECTION("retrieves MPQ file size") {
-        SFileOpenArchive("wowtest1.mpq", 0, 0, &archive);
+        SFileOpenArchive("file/wowtest1.mpq", 0, 0, &archive);
 
         REQUIRE(SFileOpenFileEx(archive, "test2.txt", 0, &file));
         CHECK(SFileGetFileSize(file) == 13);
@@ -59,11 +59,11 @@ TEST_CASE("SFileGetFileSize", "[file]") {
     }
 
     SECTION("retrieves filesystem file size") {
-        REQUIRE(SFileOpenFileEx(nullptr, "empty_diskonly.txt", SFILE_OPENFLAG_CHECKDISK, &file));
+        REQUIRE(SFileOpenFileEx(nullptr, "file/empty_diskonly.txt", SFILE_OPENFLAG_CHECKDISK, &file));
         CHECK(SFileGetFileSize(file) == 0);
 
         uint32_t filesizehigh = 1234;
-        REQUIRE(SFileOpenFileEx(nullptr, "test_diskonly.txt", SFILE_OPENFLAG_CHECKDISK, &file));
+        REQUIRE(SFileOpenFileEx(nullptr, "file/test_diskonly.txt", SFILE_OPENFLAG_CHECKDISK, &file));
         CHECK(SFileGetFileSize(file, &filesizehigh) == 6);
         CHECK(filesizehigh == 0);
     }
@@ -74,7 +74,7 @@ TEST_CASE("SFileOpenArchive", "[file]") {
     SErrSetLastError(ERROR_SUCCESS);
 
     SECTION("opens a MPQ archive") {
-        CHECK(SFileOpenArchive("wowtest1.mpq", 0, 0, &mpq) == 1);
+        CHECK(SFileOpenArchive("file/wowtest1.mpq", 0, 0, &mpq) == 1);
         CHECK(mpq != nullptr);
     }
 
@@ -83,7 +83,7 @@ TEST_CASE("SFileOpenArchive", "[file]") {
 
     SECTION("fails if archive file is nonexistent") {
         mpq = reinterpret_cast<HSARCHIVE>(1234);
-        CHECK_FALSE(SFileOpenArchive("nice_try.mpq", 0, 0, &mpq));
+        CHECK_FALSE(SFileOpenArchive("file/nice_try.mpq", 0, 0, &mpq));
 
         CHECK(mpq == nullptr);
         CHECK(SErrGetLastError() == ERROR_SUCCESS);
@@ -91,7 +91,7 @@ TEST_CASE("SFileOpenArchive", "[file]") {
 
     SECTION("fails if archive file is too small") {
         mpq = reinterpret_cast<HSARCHIVE>(1234);
-        CHECK_FALSE(SFileOpenArchive("bad_toosmall.mpq", 0, 0, &mpq));
+        CHECK_FALSE(SFileOpenArchive("file/bad_toosmall.mpq", 0, 0, &mpq));
         CHECK(mpq == nullptr);
 
         CHECK(SErrGetLastError() == STORM_ERROR_NOT_ARCHIVE);
@@ -99,7 +99,7 @@ TEST_CASE("SFileOpenArchive", "[file]") {
 
     SECTION("fails if using a directory") {
         mpq = reinterpret_cast<HSARCHIVE>(1234);
-        CHECK_FALSE(SFileOpenArchive("directorytest", 0, 0, &mpq));
+        CHECK_FALSE(SFileOpenArchive("file/directorytest", 0, 0, &mpq));
         CHECK(mpq == nullptr);
 
         CHECK(SErrGetLastError() == ERROR_SUCCESS);
@@ -107,7 +107,7 @@ TEST_CASE("SFileOpenArchive", "[file]") {
 
     SECTION("fails if archive header magic doesn't match") {
         mpq = reinterpret_cast<HSARCHIVE>(1234);
-        CHECK_FALSE(SFileOpenArchive("bad_nomagic.mpq", 0, 0, &mpq));
+        CHECK_FALSE(SFileOpenArchive("file/bad_nomagic.mpq", 0, 0, &mpq));
         CHECK(mpq == nullptr);
 
         CHECK(SErrGetLastError() == STORM_ERROR_NOT_ARCHIVE);
@@ -115,7 +115,7 @@ TEST_CASE("SFileOpenArchive", "[file]") {
 
     SECTION("fails if archive header size doesn't match") {
         mpq = reinterpret_cast<HSARCHIVE>(1234);
-        CHECK_FALSE(SFileOpenArchive("bad_headertoosmall.mpq", 0, 0, &mpq));
+        CHECK_FALSE(SFileOpenArchive("file/bad_headertoosmall.mpq", 0, 0, &mpq));
         CHECK(mpq == nullptr);
 
         CHECK(SErrGetLastError() == STORM_ERROR_NOT_ARCHIVE);
@@ -148,7 +148,7 @@ TEST_CASE("SFileOpenFileEx", "[file]") {
     SECTION("fails when trying to open a directory") {
         SErrSetLastError(ERROR_SUCCESS);
         HSFILE file = reinterpret_cast<HSFILE>(1234);
-        CHECK_FALSE(SFileOpenFileEx(nullptr, "directorytest", SFILE_OPENFLAG_CHECKDISK, &file));
+        CHECK_FALSE(SFileOpenFileEx(nullptr, "file/directorytest", SFILE_OPENFLAG_CHECKDISK, &file));
         CHECK(file == nullptr);
         CHECK(SErrGetLastError() == ERROR_FILE_NOT_FOUND);
     }
@@ -158,9 +158,9 @@ TEST_CASE("SFileOpenFileEx", "[file]") {
         HSFILE file;
 
         SECTION("opens the highest priority file from all MPQs") {
-            SFileOpenArchive("wowtest1.mpq", 100, 0, &mpq1);
-            SFileOpenArchive("wowtest2.mpq", 500, 0, &mpq2);
-            SFileOpenArchive("wowtest3.mpq", 400, 0, &mpq3);
+            SFileOpenArchive("file/wowtest1.mpq", 100, 0, &mpq1);
+            SFileOpenArchive("file/wowtest2.mpq", 500, 0, &mpq2);
+            SFileOpenArchive("file/wowtest3.mpq", 400, 0, &mpq3);
 
             CHECK(SFileOpenFileEx(nullptr, "test.txt", 0, &file) == 1);
 
@@ -171,9 +171,9 @@ TEST_CASE("SFileOpenFileEx", "[file]") {
         }
 
         SECTION("opens the most recently opened file from same priority MPQs") {
-            SFileOpenArchive("wowtest1.mpq", 100, 0, &mpq1);
-            SFileOpenArchive("wowtest2.mpq", 500, 0, &mpq2);
-            SFileOpenArchive("wowtest3.mpq", 500, 0, &mpq3);
+            SFileOpenArchive("file/wowtest1.mpq", 100, 0, &mpq1);
+            SFileOpenArchive("file/wowtest2.mpq", 500, 0, &mpq2);
+            SFileOpenArchive("file/wowtest3.mpq", 500, 0, &mpq3);
 
             CHECK(SFileOpenFileEx(nullptr, "test.txt", 0, &file) == 1);
 
@@ -187,9 +187,9 @@ TEST_CASE("SFileOpenFileEx", "[file]") {
         // SECTION("opens the file for the currently selected locale") {}
 
         SECTION("fails if file not found in target MPQ") {
-            SFileOpenArchive("wowtest1.mpq", 100, 0, &mpq1);
-            SFileOpenArchive("wowtest2.mpq", 500, 0, &mpq2);
-            SFileOpenArchive("wowtest3.mpq", 400, 0, &mpq3);
+            SFileOpenArchive("file/wowtest1.mpq", 100, 0, &mpq1);
+            SFileOpenArchive("file/wowtest2.mpq", 500, 0, &mpq2);
+            SFileOpenArchive("file/wowtest3.mpq", 400, 0, &mpq3);
 
             CHECK(SFileOpenFileEx(nullptr, "test2.txt", 0, &file) == 1);
             SFileCloseFile(file);
@@ -200,9 +200,9 @@ TEST_CASE("SFileOpenFileEx", "[file]") {
         }
 
         SECTION("fails if file not found in any MPQ") {
-            SFileOpenArchive("wowtest1.mpq", 100, 0, &mpq1);
-            SFileOpenArchive("wowtest2.mpq", 500, 0, &mpq2);
-            SFileOpenArchive("wowtest3.mpq", 400, 0, &mpq3);
+            SFileOpenArchive("file/wowtest1.mpq", 100, 0, &mpq1);
+            SFileOpenArchive("file/wowtest2.mpq", 500, 0, &mpq2);
+            SFileOpenArchive("file/wowtest3.mpq", 400, 0, &mpq3);
 
             SErrSetLastError(ERROR_SUCCESS);
             CHECK_FALSE(SFileOpenFileEx(nullptr, "yep not here", 0, &file));
@@ -210,12 +210,12 @@ TEST_CASE("SFileOpenFileEx", "[file]") {
         }
 
         SECTION("can open attributes file") {
-            SFileOpenArchive("wowtest1.mpq", 100, 0, &mpq1);
+            SFileOpenArchive("file/wowtest1.mpq", 100, 0, &mpq1);
             CHECK(SFileOpenFileEx(nullptr, "(attributes)", 0, &file) == 1);
         }
 
         SECTION("can open listfile") {
-            SFileOpenArchive("wowtest1.mpq", 100, 0, &mpq1);
+            SFileOpenArchive("file/wowtest1.mpq", 100, 0, &mpq1);
             CHECK(SFileOpenFileEx(nullptr, "(listfile)", 0, &file) == 1);
         }
     }

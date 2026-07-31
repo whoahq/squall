@@ -6,20 +6,20 @@ HSARCHIVE OpenNullArchive() {
 
 HSARCHIVE OpenTestArchive() {
     HSARCHIVE archive = nullptr;
-    SFileOpenArchive("wowtest1.mpq", 0, 0, &archive);
+    SFileOpenArchive("file/wowtest1.mpq", 0, 0, &archive);
     REQUIRE(archive != nullptr);
     return archive;
 }
 
 HSFILE ReadTestFileFromDisk() {
     HSFILE file = nullptr;
-    SFileOpenFileEx(nullptr, "test_diskonly.txt", SFILE_OPENFLAG_CHECKDISK, &file);
+    SFileOpenFileEx(nullptr, "file/test_diskonly.txt", SFILE_OPENFLAG_CHECKDISK, &file);
     return file;
 }
 
 HSFILE ReadTestFileFromMpq() {
     HSARCHIVE archive = nullptr;
-    SFileOpenArchive("wowtest1.mpq", 0, 0, &archive);
+    SFileOpenArchive("file/wowtest1.mpq", 0, 0, &archive);
 
     HSFILE file = nullptr;
     SFileOpenFileEx(archive, "test.txt", 0, &file);

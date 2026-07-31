@@ -8,4 +8,6 @@ CMakeSettings.json
 /build_*
 /cmake-build-*
 /dist
+/test/fixture
+!/test/fixture/README.md
 /out
