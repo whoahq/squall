@@ -50,6 +50,13 @@ jobs:
         run: sudo apt install -y lcov
         if: matrix.build.os == 'ubuntu-latest'
 
+      - name: Download Fixtures
+        run: curl -o test/fixture/squall-fixture.tgz https://whoa.reliquaryhq.com/squall-fixture.tgz
+
+      - name: Unpack Fixtures
+        run: tar -xvzf squall-fixture.tgz
+        working-directory: test/fixture
+
       - name: Prepare
         run: mkdir build
 
@@ -60,4 +67,5 @@ jobs:
         run: cmake --build build --config ${{ matrix.build.build_type }}
 
       - name: Test
-        run: ./build/test/${{ matrix.build.test_path }}
+        run: ../../build/test/${{ matrix.build.test_path }}
+        working-directory: test/fixture
