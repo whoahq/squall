@@ -87,4 +87,5 @@ jobs:
       - name: Test
         shell: cmd
         run: |
-          "build/test/Release/StormTest.exe"
+          "../../build/test/Release/StormTest.exe"
+        working-directory: test/fixture
