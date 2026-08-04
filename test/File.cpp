@@ -2,6 +2,7 @@
 
 // most of these only pass against storm.dll for now
 #if defined(WHOA_TEST_STORMDLL)
+
 TEST_CASE("SFileCloseArchive", "[file]") {
     HSARCHIVE archive = nullptr;
 
@@ -10,12 +11,12 @@ TEST_CASE("SFileCloseArchive", "[file]") {
         REQUIRE(archive != nullptr);
 
         HSFILE file;
-        CHECK(SFileOpenFileEx(nullptr, "file/test.txt", 0, &file));
+        REQUIRE(SFileOpenFileEx(nullptr, "test.txt", 0, &file));
         CHECK(SFileCloseFile(file));
 
         CHECK(SFileCloseArchive(archive) == 1);
 
-        CHECK_FALSE(SFileOpenFileEx(nullptr, "file/test.txt", 0, &file));
+        CHECK_FALSE(SFileOpenFileEx(nullptr, "test.txt", 0, &file));
     }
 
     // TODO determine how to test this
@@ -40,11 +41,12 @@ TEST_CASE("SFileCloseFile", "[file]") {
 }
 
 TEST_CASE("SFileGetFileSize", "[file]") {
-    HSARCHIVE archive;
-    HSFILE file;
+    HSARCHIVE archive = nullptr;
+    HSFILE file = nullptr;
 
     SECTION("retrieves MPQ file size") {
-        SFileOpenArchive("file/wowtest1.mpq", 0, 0, &archive);
+        REQUIRE(SFileOpenArchive("file/wowtest1.mpq", 0, 0, &archive));
+        REQUIRE(archive != nullptr);
 
         REQUIRE(SFileOpenFileEx(archive, "test2.txt", 0, &file));
         CHECK(SFileGetFileSize(file) == 13);
@@ -131,9 +133,8 @@ TEST_CASE("SFileOpenFileEx", "[file]") {
         HSFILE file = nullptr;
 
         SECTION("opens a file") {
-            CHECK(SFileOpenFileEx(archive, "test.txt", testcase.flags, &file) == 1);
+            CHECK(SFileOpenFileEx(archive, "file/test.txt", testcase.flags, &file) == 1);
             CHECK(file != nullptr);
-            CHECK(file != reinterpret_cast<HSFILE>(1234));
         }
 
         SECTION("fails if file not found") {
@@ -162,7 +163,7 @@ TEST_CASE("SFileOpenFileEx", "[file]") {
             SFileOpenArchive("file/wowtest2.mpq", 500, 0, &mpq2);
             SFileOpenArchive("file/wowtest3.mpq", 400, 0, &mpq3);
 
-            CHECK(SFileOpenFileEx(nullptr, "test.txt", 0, &file) == 1);
+            REQUIRE(SFileOpenFileEx(nullptr, "test.txt", 0, &file) == 1);
 
             char result[16] = {};
             SFileReadFile(file, result, sizeof(result));
@@ -175,7 +176,7 @@ TEST_CASE("SFileOpenFileEx", "[file]") {
             SFileOpenArchive("file/wowtest2.mpq", 500, 0, &mpq2);
             SFileOpenArchive("file/wowtest3.mpq", 500, 0, &mpq3);
 
-            CHECK(SFileOpenFileEx(nullptr, "test.txt", 0, &file) == 1);
+            REQUIRE(SFileOpenFileEx(nullptr, "test.txt", 0, &file) == 1);
 
             char result[16] = {};
             SFileReadFile(file, result, sizeof(result));
@@ -191,7 +192,7 @@ TEST_CASE("SFileOpenFileEx", "[file]") {
             SFileOpenArchive("file/wowtest2.mpq", 500, 0, &mpq2);
             SFileOpenArchive("file/wowtest3.mpq", 400, 0, &mpq3);
 
-            CHECK(SFileOpenFileEx(nullptr, "test2.txt", 0, &file) == 1);
+            REQUIRE(SFileOpenFileEx(nullptr, "test2.txt", 0, &file) == 1);
             SFileCloseFile(file);
 
             SErrSetLastError(ERROR_SUCCESS);
@@ -217,6 +218,26 @@ TEST_CASE("SFileOpenFileEx", "[file]") {
         SECTION("can open listfile") {
             SFileOpenArchive("file/wowtest1.mpq", 100, 0, &mpq1);
             CHECK(SFileOpenFileEx(nullptr, "(listfile)", 0, &file) == 1);
+        }
+
+        SECTION("opens file with backslash") {
+            SFileOpenArchive("file/wowtest1.mpq", 100, 0, &mpq1);
+            REQUIRE(SFileOpenFileEx(nullptr, "file\\test.txt", 0, &file) == 1);
+
+            char result[32] = {};
+            SFileReadFile(file, result, sizeof(result));
+
+            CHECK(std::string(result) == "backslashfile");
+        }
+
+        SECTION("opens file with forward slash") {
+            SFileOpenArchive("file/wowtest1.mpq", 100, 0, &mpq1);
+            REQUIRE(SFileOpenFileEx(nullptr, "file/test.txt", 0, &file) == 1);
+
+            char result[32] = {};
+            SFileReadFile(file, result, sizeof(result));
+
+            CHECK(std::string(result) == "forwardslashfile");
         }
     }
 }
