@@ -27,10 +27,8 @@
 #ifndef __STORMPORT_H__
 #define __STORMPORT_H__
 
-#ifndef __cplusplus
-  #define bool char
-  #define true 1
-  #define false 0
+#if !defined(__cplusplus) && !defined(_MSC_VER)
+  #include <stdbool.h>
 #endif
 
 //-----------------------------------------------------------------------------
@@ -388,6 +386,18 @@
   #define ftruncate64 ftruncate
   #define off64_t off_t
   #define O_LARGEFILE 0
+#endif
+
+// 64-bit calls are supplied by "normal" calls on musl (like Mac)
+#if defined(__linux__) && !defined(__GLIBC__)
+  #define stat64  stat
+  #define fstat64 fstat
+  #define lseek64 lseek
+  #define ftruncate64 ftruncate
+  #define off64_t off_t
+  #ifndef O_LARGEFILE
+    #define O_LARGEFILE 0
+  #endif
 #endif
 
 // Platform-specific error codes for non-Windows platforms

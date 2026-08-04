@@ -279,7 +279,7 @@ void StringCat(TCHAR * szTarget, size_t cchTargetMax, const char * szSource);
 //-----------------------------------------------------------------------------
 // UTF-8 support
 
-DWORD UTF8_DecodeCodePoint(const BYTE * pbString, const BYTE * pbStringEnd, DWORD & dwCodePoint, size_t & ccBytesEaten);
+DWORD  UTF8_DecodeCodePoint(const BYTE * pbString, const BYTE * pbStringEnd, DWORD & dwCodePoint, size_t & ccBytesEaten, DWORD dwFlags = 0);
 size_t UTF8_EncodeCodePoint(DWORD dwCodePoint, LPBYTE Utf8Buffer);
 
 //-----------------------------------------------------------------------------
@@ -410,8 +410,10 @@ DWORD WriteSectorOffsets(TMPQFile * hf);
 DWORD WriteSectorChecksums(TMPQFile * hf);
 DWORD WriteMemDataMD5(TFileStream * pStream, ULONGLONG RawDataOffs, void * pvRawData, DWORD dwRawDataSize, DWORD dwChunkSize, LPDWORD pcbTotalSize);
 DWORD WriteMpqDataMD5(TFileStream * pStream, ULONGLONG RawDataOffs, DWORD dwRawDataSize, DWORD dwChunkSize);
+
+bool DereferenceArchiveFiles(TMPQArchive * ha);
+bool DereferenceArchive(TMPQArchive * ha);
 void FreeFileHandle(TMPQFile *& hf);
-void FreeArchiveHandle(TMPQArchive *& ha);
 
 //-----------------------------------------------------------------------------
 // Patch functions
