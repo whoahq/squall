@@ -1,4 +1,4 @@
-# StormLib 9.31 - CMake build for integration with squall
+# StormLib 9.40 - CMake build for integration with squall
 
 set(STORMLIB_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
@@ -29,7 +29,6 @@ set(STORMLIB_SOURCES
 file(GLOB STORMLIB_ADPCM   ${STORMLIB_SRC_DIR}/adpcm/*.c ${STORMLIB_SRC_DIR}/adpcm/*.cpp)
 file(GLOB STORMLIB_HUFFMAN ${STORMLIB_SRC_DIR}/huffman/*.cpp)
 file(GLOB STORMLIB_JENKINS ${STORMLIB_SRC_DIR}/jenkins/*.c)
-file(GLOB STORMLIB_LZMA    ${STORMLIB_SRC_DIR}/lzma/*.c)
 file(GLOB STORMLIB_PKLIB   ${STORMLIB_SRC_DIR}/pklib/*.c)
 file(GLOB STORMLIB_SPARSE  ${STORMLIB_SRC_DIR}/sparse/*.cpp)
 
@@ -44,7 +43,9 @@ list(APPEND STORMLIB_SOURCES
     ${STORMLIB_ADPCM}
     ${STORMLIB_HUFFMAN}
     ${STORMLIB_JENKINS}
-    ${STORMLIB_LZMA}
+    ${STORMLIB_SRC_DIR}/lzma/C/LzFind.c
+    ${STORMLIB_SRC_DIR}/lzma/C/LzmaDec.c
+    ${STORMLIB_SRC_DIR}/lzma/C/LzmaEnc.c
     ${STORMLIB_PKLIB}
     ${STORMLIB_SPARSE}
     ${STORMLIB_CRYPTO}
@@ -58,29 +59,31 @@ if(NOT WHOA_SYSTEM_MAC)
     list(APPEND STORMLIB_SOURCES ${STORMLIB_BZIP2} ${STORMLIB_ZLIB})
 endif()
 
-add_library(stormlib-9.31 STATIC ${STORMLIB_SOURCES})
+add_library(stormlib-9.40 STATIC ${STORMLIB_SOURCES})
 
 # define to avoid auto-linking pragmas in StormLib.h
-target_compile_definitions(stormlib-9.31
+target_compile_definitions(stormlib-9.40
     PRIVATE
         __STORMLIB_SELF__
         _CRT_SECURE_NO_WARNINGS
+        _7ZIP_ST
+        BZ_STRICT_ANSI
 )
 
-target_include_directories(stormlib-9.31
+target_include_directories(stormlib-9.40
     PUBLIC
         ${STORMLIB_SRC_DIR}
 )
 
 # Platform-specific settings
 if(WHOA_SYSTEM_WIN)
-    target_link_libraries(stormlib-9.31 PRIVATE wininet)
+    target_link_libraries(stormlib-9.40 PRIVATE wininet)
 elseif(WHOA_SYSTEM_MAC)
     # macOS uses system zlib and bzip2 (per StormPort.h __SYS_ZLIB, __SYS_BZLIB)
     find_library(COREFOUNDATION_LIBRARY CoreFoundation)
     find_package(ZLIB REQUIRED)
     find_package(BZip2 REQUIRED)
-    target_link_libraries(stormlib-9.31
+    target_link_libraries(stormlib-9.40
         PRIVATE
             ${COREFOUNDATION_LIBRARY}
             ZLIB::ZLIB
@@ -88,12 +91,12 @@ elseif(WHOA_SYSTEM_MAC)
     )
 elseif(WHOA_SYSTEM_LINUX)
     # Linux - typically link against system zlib
-    target_link_libraries(stormlib-9.31 PRIVATE z)
+    target_link_libraries(stormlib-9.40 PRIVATE z)
 endif()
 
 # Suppress warnings from third-party code
 if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
-    target_compile_options(stormlib-9.31 PRIVATE
+    target_compile_options(stormlib-9.40 PRIVATE
         -Wno-implicit-function-declaration
         -Wno-deprecated-declarations
         -Wno-unused-parameter
@@ -102,7 +105,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
-    target_compile_options(stormlib-9.31 PRIVATE
+    target_compile_options(stormlib-9.40 PRIVATE
         -Wno-deprecated-declarations
     )
 endif()

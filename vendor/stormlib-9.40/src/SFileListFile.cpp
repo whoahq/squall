@@ -17,7 +17,7 @@
 // Listfile entry structure
 
 #define CACHE_BUFFER_SIZE  0x1000       // Size of the cache buffer
-#define MAX_LISTFILE_SIZE  0x8000000    // Maximum accepted listfile size is 128 MB
+#define MAX_LISTFILE_SIZE  0xC000000    // Maximum accepted listfile size is 192 MB
 
 union TListFileHandle
 {
