@@ -1,3 +1,4 @@
+#include "Comp.hpp"
 #include "Core.hpp"
 #include "Event.hpp"
 #include "Region.hpp"
@@ -25,7 +26,7 @@ int32_t STORMAPI StormDestroy() {
     // SCmdDestroy();       // WoW 3.3.5 (win+mac), SC 1.17
     // SFileDestroy();      // WoW 3.3.5 (mac)?, SC 1.17
     // SFile::Destroy();    // WoW 0.5.3 (win)?
-    // SCompDestroy();      // WoW 3.3.5 (win)?
+    SCompDestroy();         // WoW 3.3.5 (win)?
     SStrDestroy();          // WoW 3.3.5 (mac), SC 1.17
     // SRegDestroy();       // WoW 3.3.5 (mac)
     // SErrDestroy();       // WoW 3.3.5 (mac)

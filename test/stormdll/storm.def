@@ -374,8 +374,8 @@ EXPORTS
     ;SLogSetIndent                 @550 NONAME
 
     ; Compression
-    ;SCompCompress                 @551 NONAME
-    ;SCompDecompress               @552 NONAME
+    SCompCompress                 @551 NONAME
+    SCompDecompress               @552 NONAME
 
     ; Errors extended
     ;SLogVWrite                    @553 NONAME
