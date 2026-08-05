@@ -8,7 +8,7 @@
 #include <Windows.h>
 #endif
 
-int32_t STORMAPI StormDestroy() {
+STORM_DESTROY_RETTYPE STORMAPI StormDestroy() {
     // Combined list of all destroy calls found in every game (as documentation)
 
     // SErrSetBlizzardErrorFunction(nullptr);   // SC 1.17
@@ -31,7 +31,7 @@ int32_t STORMAPI StormDestroy() {
     // SErrDestroy();       // WoW 3.3.5 (mac)
     // SLogDestroy();       // WoW 3.3.5 (mac)
     STransDestroy();        // SC 1.17
-    return 1;
+    return (STORM_DESTROY_RETTYPE)1;
 }
 
 // NOTE: If squall is built as a DLL in the future, this should be updated to return hinstDLL from DllMain instead.

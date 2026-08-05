@@ -5,18 +5,27 @@
 
 #if defined(WHOA_SYSTEM_WIN)
 #include <Windows.h>
+#endif
 
 #if defined(WHOA_TEST_STORMDLL)
 #define EXPECTED_MODULE_NAME "Storm.dll"
 #else
 #define EXPECTED_MODULE_NAME "StormTest.exe"
 #endif
+
+#if defined(WHOA_DESTROY_HAS_RETVAL)
+#define CHECK_DESTROY(x) CHECK(x == 1);
+#else
+#define CHECK_DESTROY(x) x;
 #endif
 
 TEST_CASE("StormDestroy", "[core]") {
+
+#if defined(WHOA_DESTROY_HAS_RETVAL)
     SECTION("always returns 1") {
         CHECK(StormDestroy() == 1);
     }
+#endif
 
     SECTION("SEvt") {
         EventHandlerTest test;
@@ -29,7 +38,7 @@ TEST_CASE("StormDestroy", "[core]") {
             CHECK(SEvtDispatch(1, 1, 1, nullptr) == 1);
             CHECK(test.NumCalls() == 2);
 
-            CHECK(StormDestroy() == 1);
+            CHECK_DESTROY(StormDestroy());
 
             // Can't increment calls since the handler was destroyed
             CHECK(SEvtDispatch(1, 1, 1, nullptr) == 0);
@@ -40,7 +49,7 @@ TEST_CASE("StormDestroy", "[core]") {
             // not ideal but it's official behaviour
             SEvtBreakHandlerChain(nullptr);
 
-            CHECK(StormDestroy() == 1);
+            CHECK_DESTROY(StormDestroy());
 
             SEvtRegisterHandler(0, 0, 0, 0, &TestEventHandler1);
             CHECK(SEvtDispatch(0, 0, 0, nullptr) == 0);
@@ -54,7 +63,7 @@ TEST_CASE("StormDestroy", "[core]") {
             SRgnCreate(&rgn);
             REQUIRE(rgn != nullptr);    // valid handle
 
-            CHECK(StormDestroy() == 1);
+            CHECK_DESTROY(StormDestroy());
 
             // fails to duplicate because handle is invalid
             HSRGN newrgn;
